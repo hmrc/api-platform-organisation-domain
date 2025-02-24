@@ -109,6 +109,39 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your organsation name cannot be blank", "Enter your organisation name").some
     )
 
+    val questionDate = Question.DateQuestion(
+      Question.Id("0622cacd-e670-4a6c-879a-8fe2d54e4d3d"),
+      Wording("What date was your organisation founded?"),
+      statement = Statement(CompoundFragment(StatementText("This is some details"), StatementLink("with a link", "https://example.com"))).some,
+      errorInfo = ErrorInfo("Invalid Date", "Enter your organisation name").some
+    )
+
+    val questionMultiple = Question.MultiChoiceQuestion(
+      Question.Id("99e32823-f075-47c6-a9d5-112cb9eaef30"),
+      Wording("What is your favourite Colour?"),
+      statement = None,
+      marking = ListMap(
+        (PossibleAnswer("Red")   -> Mark.Pass),
+        (PossibleAnswer("Blue")  -> Mark.Pass),
+        (PossibleAnswer("Green") -> Mark.Pass)
+      )
+    )
+
+    val questionAcknowledgement = Question.AcknowledgementOnly(
+      Question.Id("95da25e8-af3a-4e05-a621-4a5f4ca788f6"),
+      Wording("Customers authorising your software"),
+      statement = Statement(
+        StatementText("Your customers will see the information you provide here when they authorise your software to interact with HMRC."),
+        StatementText("Before you continue, you will need:"),
+        StatementBullets(
+          StatementText("the name of your software"),
+          StatementText("the location of your servers which store customer data"),
+          StatementText("a link to your privacy policy"),
+          StatementText("a link to your terms and conditions")
+        )
+      ).some
+    )
+
     val questionRsOrgName = Question.TextQuestion(
       Question.Id("a2dbf9a7-e31b-4c89-a755-21f0652de91c"),
       Wording("What is your organisation’s name?"),
@@ -190,6 +223,9 @@ trait QuestionnaireTestData {
         QuestionItem(questionLtdOrgName, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionLtdOrgAddress, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionLtdOrgUtr, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
+        QuestionItem(questionDate, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
+        QuestionItem(questionMultiple, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
+        QuestionItem(questionAcknowledgement, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionSoleName, AskWhen.AskWhenAnswer(questionOrgType, "Sole trader")),
         QuestionItem(questionRsOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Registered society")),
         QuestionItem(questionCioOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Charitable Incorporated Organisation (CIO)")),

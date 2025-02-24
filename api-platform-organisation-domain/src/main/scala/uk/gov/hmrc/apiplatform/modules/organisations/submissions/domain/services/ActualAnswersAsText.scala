@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
-
 import java.time.format.DateTimeFormatter
+
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
 
 object ActualAnswersAsText {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")

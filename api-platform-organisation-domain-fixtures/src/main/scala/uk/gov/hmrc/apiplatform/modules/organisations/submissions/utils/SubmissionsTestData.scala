@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils
 
+import scala.util.Random
+
 import cats.data.NonEmptyList
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
+
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.AskWhen.Context.Keys
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
-
-import scala.util.Random
 
 trait StatusTestDataHelper {
   self: FixedClock =>
@@ -240,7 +242,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
             case (pa, Mark.Pass) => true; case _ => false
           }.head._1.value))
         case Question.AcknowledgementOnly(id, wording, statement)                                       => ActualAnswer.AcknowledgedAnswer
-        case Question.DateQuestion(_,_,_,_,_,_,_,_)                                                                 => ActualAnswer.DateAnswer(now.toLocalDate)
+        case Question.DateQuestion(_, _, _, _, _, _, _, _)                                              => ActualAnswer.DateAnswer(now.toLocalDate)
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _) =>
           if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
       }
@@ -274,7 +276,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   val vatContext    = Map(Keys.IN_HOUSE_SOFTWARE -> "Yes", Keys.VAT_OR_ITSA -> "Yes")
 }
 
-trait AnsweringQuestionsHelper {
+trait AnsweringQuestionsHelper extends FixedClock {
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
@@ -302,7 +304,8 @@ trait AnsweringQuestionsHelper {
         else
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
-      case Question.AcknowledgementOnly(id, _, _) => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.AcknowledgementOnly(id, _, _)        => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.DateQuestion(_, _, _, _, _, _, _, _) => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
 
       case Question.MultiChoiceQuestion(id, _, _, _, _, _, marking, absence, _) =>
         marking.map {

@@ -150,6 +150,93 @@
           }
         }, {
           "question" : {
+            "id" : "0622cacd-e670-4a6c-879a-8fe2d54e4d3d",
+            "wording" : "What date was your organisation founded?",
+            "statement" : {
+              "fragments" : [ {
+                "fragments" : [ {
+                  "text" : "This is some details",
+                  "statementType" : "text"
+                }, {
+                  "text" : "with a link",
+                  "url" : "https://example.com",
+                  "statementType" : "link"
+                } ],
+                "statementType" : "compound"
+              } ]
+            },
+            "errorInfo" : {
+              "summary" : "Invalid Date",
+              "message" : "Enter your organisation name"
+            },
+            "questionType" : "date"
+          },
+          "askWhen" : {
+            "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
+            "expectedValue" : {
+              "value" : "UK limited company"
+            },
+            "askWhen" : "askWhenAnswer"
+          }
+        }, {
+          "question" : {
+            "id" : "99e32823-f075-47c6-a9d5-112cb9eaef30",
+            "wording" : "What is your favourite Colour?",
+            "marking" : [ {
+              "Red" : "pass"
+            }, {
+              "Blue" : "pass"
+            }, {
+              "Green" : "pass"
+            } ],
+            "questionType" : "multi"
+          },
+          "askWhen" : {
+            "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
+            "expectedValue" : {
+              "value" : "UK limited company"
+            },
+            "askWhen" : "askWhenAnswer"
+          }
+        }, {
+          "question" : {
+            "id" : "95da25e8-af3a-4e05-a621-4a5f4ca788f6",
+            "wording" : "Customers authorising your software",
+            "statement" : {
+              "fragments" : [ {
+                "text" : "Your customers will see the information you provide here when they authorise your software to interact with HMRC.",
+                "statementType" : "text"
+              }, {
+                "text" : "Before you continue, you will need:",
+                "statementType" : "text"
+              }, {
+                "bullets" : [ {
+                  "text" : "the name of your software",
+                  "statementType" : "text"
+                }, {
+                  "text" : "the location of your servers which store customer data",
+                  "statementType" : "text"
+                }, {
+                  "text" : "a link to your privacy policy",
+                  "statementType" : "text"
+                }, {
+                  "text" : "a link to your terms and conditions",
+                  "statementType" : "text"
+                } ],
+                "statementType" : "bullets"
+              } ]
+            },
+            "questionType" : "acknowledgement"
+          },
+          "askWhen" : {
+            "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
+            "expectedValue" : {
+              "value" : "UK limited company"
+            },
+            "askWhen" : "askWhenAnswer"
+          }
+        }, {
+          "question" : {
             "id" : "d1abf9a7-e31b-4c89-a755-21f0652ca23a",
             "wording" : "What is your organisation’s name?",
             "validation" : {
