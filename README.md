@@ -1,7 +1,8 @@
 
-# api-platform-organisation-domain
+# API Platform Organisation Domain
 
-This is a placeholder README.md for a new repository
+This is where the domain objects and test fixtures are kept for the API platform
+organisations structure
 
 ### License
 
