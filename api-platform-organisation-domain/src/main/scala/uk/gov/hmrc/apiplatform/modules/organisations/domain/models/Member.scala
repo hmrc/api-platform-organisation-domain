@@ -17,9 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
 import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 
-case class Member(userId: UserId, emailAddress: LaxEmailAddress)
+case class Member(userId: UserId)
 
 object Member {
   implicit val format: OFormat[Member] = Json.format[Member]
