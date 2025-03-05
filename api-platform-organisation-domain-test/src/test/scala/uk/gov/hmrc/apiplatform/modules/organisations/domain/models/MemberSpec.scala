@@ -17,28 +17,26 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class MemberSpec extends BaseJsonFormattersSpec {
 
-  def jsonMember(userId: UserId, email: LaxEmailAddress) = {
+  def jsonMember(userId: UserId) = {
     s"""{
-       |  "userId" : "${userId.value.toString()}",
-       |  "emailAddress" : "${email.text}"
+       |  "userId" : "${userId.value.toString()}"
        |}""".stripMargin
   }
 
   val userId = UserId.random
-  val email  = LaxEmailAddress("my-email@example.com")
 
   "Member" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[Member](Member(userId, email))) shouldBe jsonMember(userId, email)
+      Json.prettyPrint(Json.toJson[Member](Member(userId))) shouldBe jsonMember(userId)
     }
 
     "read from json" in {
-      testFromJson[Member](jsonMember(userId, email))(Member(userId, email))
+      testFromJson[Member](jsonMember(userId))(Member(userId))
     }
   }
 }

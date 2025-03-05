@@ -17,34 +17,32 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.{LaxEmailAddress, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class OrganisationSpec extends BaseJsonFormattersSpec {
 
-  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, userId: UserId, email: LaxEmailAddress) = {
+  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, userId: UserId) = {
     s"""{
        |  "id" : "${organisationId.value.toString()}",
        |  "organisationName" : "${organisationName.value}",
        |  "members" : [ {
-       |    "userId" : "${userId.value.toString()}",
-       |    "emailAddress" : "${email.text}"
+       |    "userId" : "${userId.value.toString()}"
        |  } ]
        |}""".stripMargin
   }
 
   val userId  = UserId.random
-  val email   = LaxEmailAddress("my-email@example.com")
   val orgId   = OrganisationId.random
   val orgName = OrganisationName("My org")
 
   "Organisation" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, Set(Member(userId, email))))) shouldBe jsonOrganisation(orgId, orgName, userId, email)
+      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, Set(Member(userId))))) shouldBe jsonOrganisation(orgId, orgName, userId)
     }
 
     "read from json" in {
-      testFromJson[Organisation](jsonOrganisation(orgId, orgName, userId, email))(Organisation(orgId, orgName, Set(Member(userId, email))))
+      testFromJson[Organisation](jsonOrganisation(orgId, orgName, userId))(Organisation(orgId, orgName, Set(Member(userId))))
     }
   }
 }
