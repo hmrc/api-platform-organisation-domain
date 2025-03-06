@@ -21,7 +21,6 @@ import org.scalatest.Inside
 import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services.ValidateAnswers
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AsIdsHelpers, QuestionBuilder}
 
 class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with AsIdsHelpers with FixedClock {
@@ -100,6 +99,41 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
         ("valid answer", question, validRawAnswers, validAnswer),
         ("too many answers", question, validRawAnswers + ("day" -> Seq("1", "2")), aFailure),
         ("invalid date", question, validRawAnswers + ("day"     -> Seq("120")), aFailure),
+        ("invalid answer", question, answerOf("Bob"), aFailure)
+      )
+
+      forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+        expects match {
+          case Right(answer) =>
+            ValidateAnswers.validate(question, answers) shouldBe Right(answer)
+          case Left(())      =>
+            ValidateAnswers.validate(question, answers).left.value
+        }
+      }
+    }
+
+    "for address questions" in {
+      val question = addressQuestion(1)
+      type AnswerMatching = Either[Unit, ActualAnswer]
+      val aFailure: AnswerMatching    = Left(())
+      val addLineOne                  = "1 main st"
+      val addLineTwo                  = "line two"
+      val locality                    = "city"
+      val region                      = "region"
+      val postcode                    = "A12 3BC"
+      val validAnswer: AnswerMatching = Right(ActualAnswer.AddressAnswer(RegisteredOfficeAddress(Some(addLineOne), Some(addLineTwo), Some(locality), Some(region), Some(postcode))))
+      val validRawAnswers             = Map(
+        "addressLineOne" -> Seq(addLineOne),
+        "addressLineTwo" -> Seq(addLineTwo),
+        "locality"       -> Seq(locality),
+        "region"         -> Seq(region),
+        "postcode"       -> Seq(postcode)
+      )
+
+      val passes = Table(
+        ("description", "question", Question.answerKey, "expects"),
+        ("valid answer", question, validRawAnswers, validAnswer),
+        ("too many answers", question, validRawAnswers + ("addressLineOne" -> Seq("1", "2")), aFailure),
         ("invalid answer", question, answerOf("Bob"), aFailure)
       )
 

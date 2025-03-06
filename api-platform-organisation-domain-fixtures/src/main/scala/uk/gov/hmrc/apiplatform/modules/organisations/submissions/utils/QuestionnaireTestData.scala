@@ -116,6 +116,13 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Invalid Date", "Enter your organisation name").some
     )
 
+    val questionAddress = Question.AddressQuestion(
+      Question.Id("2c66be40-8eb4-4163-9899-a480928cfb6a"),
+      Wording("What is your organisation's address?"),
+      statement = None,
+      errorInfo = ErrorInfo("Invalid Address",None).some
+    )
+
     val questionMultiple = Question.MultiChoiceQuestion(
       Question.Id("99e32823-f075-47c6-a9d5-112cb9eaef30"),
       Wording("What is your favourite Colour?"),
@@ -224,6 +231,7 @@ trait QuestionnaireTestData {
         QuestionItem(questionLtdOrgAddress, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionLtdOrgUtr, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionDate, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
+        QuestionItem(questionAddress, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionMultiple, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionAcknowledgement, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionSoleName, AskWhen.AskWhenAnswer(questionOrgType, "Sole trader")),
