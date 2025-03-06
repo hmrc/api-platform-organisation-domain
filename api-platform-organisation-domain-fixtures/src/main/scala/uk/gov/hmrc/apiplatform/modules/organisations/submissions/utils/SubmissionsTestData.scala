@@ -162,7 +162,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val questionName7      = textQuestion(9)
     val questionName8      = textQuestion(10)
     val questionName9      = dateQuestion(11)
-    val questionName10     = textQuestion(12)
+    val questionName10     = addressQuestion(12)
     val questionName11     = textQuestion(13)
     val questionPrivacyUrl = textQuestion(14)
     val questionTermsUrl   = textQuestion(15)
@@ -231,6 +231,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   }
 
   private def buildAnsweredSubmission(fullyAnswered: Boolean)(submission: Submission): Submission = {
+    val address = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
@@ -243,6 +244,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
           }.head._1.value))
         case Question.AcknowledgementOnly(id, wording, statement)                                       => ActualAnswer.AcknowledgedAnswer
         case Question.DateQuestion(_, _, _, _, _, _, _, _)                                              => ActualAnswer.DateAnswer(now.toLocalDate)
+        case Question.AddressQuestion(_, _, _, _, _, _, _, _)                                           => ActualAnswer.AddressAnswer(address)
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _) =>
           if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
       }
@@ -277,6 +279,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 }
 
 trait AnsweringQuestionsHelper extends FixedClock {
+  val address = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
@@ -304,8 +307,9 @@ trait AnsweringQuestionsHelper extends FixedClock {
         else
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
-      case Question.AcknowledgementOnly(id, _, _)        => List(Some(ActualAnswer.AcknowledgedAnswer))
-      case Question.DateQuestion(_, _, _, _, _, _, _, _) => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
+      case Question.AcknowledgementOnly(id, _, _)           => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.DateQuestion(_, _, _, _, _, _, _, _)    => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
+      case Question.AddressQuestion(_, _, _, _, _, _, _, _) => List(Some(ActualAnswer.AddressAnswer(address)))
 
       case Question.MultiChoiceQuestion(id, _, _, _, _, _, marking, absence, _) =>
         marking.map {

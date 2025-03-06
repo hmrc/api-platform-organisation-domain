@@ -129,6 +129,17 @@ object Question extends MapJsonFormatters {
       errorInfo: Option[ErrorInfo] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
+  case class AddressQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
   case class AcknowledgementOnly(
       id: Question.Id,
       wording: Wording,
@@ -221,10 +232,11 @@ object Question extends MapJsonFormatters {
 
   import Statement._
 
-  implicit val jsonFormatPossibleAnswer: Format[PossibleAnswer] = Json.valueFormat[PossibleAnswer]
-  implicit val jsonFormatTextQuestion: OFormat[TextQuestion]    = Json.format[TextQuestion]
-  implicit val jsonFormatYesNoQuestion: OFormat[YesNoQuestion]  = Json.format[YesNoQuestion]
-  implicit val jsonFormatDateQuestion: OFormat[DateQuestion]    = Json.format[DateQuestion]
+  implicit val jsonFormatPossibleAnswer: Format[PossibleAnswer]    = Json.valueFormat[PossibleAnswer]
+  implicit val jsonFormatTextQuestion: OFormat[TextQuestion]       = Json.format[TextQuestion]
+  implicit val jsonFormatYesNoQuestion: OFormat[YesNoQuestion]     = Json.format[YesNoQuestion]
+  implicit val jsonFormatDateQuestion: OFormat[DateQuestion]       = Json.format[DateQuestion]
+  implicit val jsonFormatAddressQuestion: OFormat[AddressQuestion] = Json.format[AddressQuestion]
 
   implicit val jsonFormatChooseOneOfQuestion: OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   implicit val jsonFormatMultiChoiceQuestion: OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
@@ -235,6 +247,7 @@ object Question extends MapJsonFormatters {
     .and[YesNoQuestion]("yesNo")
     .and[ChooseOneOfQuestion]("choose")
     .and[DateQuestion]("date")
+    .and[AddressQuestion]("address")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
     .format

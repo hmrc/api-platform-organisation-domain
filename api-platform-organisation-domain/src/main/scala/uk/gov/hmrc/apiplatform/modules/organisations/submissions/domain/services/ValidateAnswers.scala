@@ -38,8 +38,8 @@ object ValidateAnswers {
           "Question requires a single answer"
         ))
       case _: Question.DateQuestion                                             => validateDate(rawAnswers)
+      case _: Question.AddressQuestion                                          => validateAddress(rawAnswers)
     }
-
   }
 
   def validateAcknowledgement(hasAnswer: Boolean) = {
@@ -66,6 +66,21 @@ object ValidateAnswers {
         Try(LocalDate.of(year.toInt, month.toInt, day.toInt)).fold(_ => Either.left("Invalid Date"), date => Either.right(ActualAnswer.DateAnswer(date)))
       case _                                                         => Either.left("Invalid Date")
 
+    }
+  }
+
+  def validateAddress(rawAnswers: Map[String, Seq[String]]): Either[String, ActualAnswer] = {
+    (rawAnswers.get("addressLineOne"), rawAnswers.get("postcode")) match {
+      case (Some(addressLineOne :: Nil), Some(postcode :: Nil)) => Either.right(ActualAnswer.AddressAnswer(
+          RegisteredOfficeAddress(
+            Some(addressLineOne),
+            rawAnswers.get("addressLineTwo").flatMap(_.headOption),
+            rawAnswers.get("locality").flatMap(_.headOption),
+            rawAnswers.get("region").flatMap(_.headOption),
+            Some(postcode)
+          )
+        ))
+      case _                                                    => Either.left("Invalid Address")
     }
   }
 

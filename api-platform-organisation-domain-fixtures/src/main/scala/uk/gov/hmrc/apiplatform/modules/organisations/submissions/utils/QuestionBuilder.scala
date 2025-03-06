@@ -62,6 +62,16 @@ trait QuestionBuilder {
     None
   )
 
+  def addressQuestion(counter: Int): Question.AddressQuestion = Question.AddressQuestion(
+    Question.Id.random,
+    Wording(s"Wording$counter"),
+    None,
+    None,
+    None,
+    None,
+    None
+  )
+
   def yesNoQuestion(counter: Int): Question.YesNoQuestion = {
     Question.YesNoQuestion(
       Question.Id.random,

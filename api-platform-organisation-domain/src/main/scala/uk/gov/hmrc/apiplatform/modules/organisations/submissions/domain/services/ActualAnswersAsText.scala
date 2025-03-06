@@ -28,6 +28,7 @@ object ActualAnswersAsText {
     case ActualAnswer.TextAnswer(value)            => value
     case ActualAnswer.MultipleChoiceAnswer(values) => values.mkString
     case ActualAnswer.DateAnswer(date)             => date.format(dateTimeFormatter)
+    case ActualAnswer.AddressAnswer(add)           => Seq(add.addressLineOne, add.addressLineTwo, add.locality, add.region, add.postalCode).filter(_.isDefined).map(_.get).mkString(", ")
     case ActualAnswer.NoAnswer                     => "n/a"
     case ActualAnswer.AcknowledgedAnswer           => ""
   }
