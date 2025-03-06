@@ -180,11 +180,10 @@
           }
         }, {
           "question" : {
-            "id" : "0622cacd-e670-4a6c-879a-8fe2d54e4d3d",
+            "id" : "2c66be40-8eb4-4163-9899-a480928cfb6a",
             "wording" : "What is your organisation's address?",
             "errorInfo" : {
-              "summary" : "Invalid Address",
-              "message" : "Enter your address"
+              "summary" : "Invalid Address"
             },
             "questionType" : "address"
           },

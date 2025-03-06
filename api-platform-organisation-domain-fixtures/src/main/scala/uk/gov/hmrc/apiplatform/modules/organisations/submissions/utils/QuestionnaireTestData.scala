@@ -120,7 +120,7 @@ trait QuestionnaireTestData {
       Question.Id("2c66be40-8eb4-4163-9899-a480928cfb6a"),
       Wording("What is your organisation's address?"),
       statement = None,
-      errorInfo = ErrorInfo("Invalid Address",None).some
+      errorInfo = ErrorInfo("Invalid Address", None).some
     )
 
     val questionMultiple = Question.MultiChoiceQuestion(
