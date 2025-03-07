@@ -70,7 +70,9 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
         ("valid answer on optional", optionalQuestion, answerOf("Yes"), validAnswer),
         ("invalid answer on optional", optionalQuestion, answerOf("Bob"), aFailure),
         ("empty answer is invalid on non optional", question, noAnswer, aFailure),
-        ("empty answer is valid on optional", optionalQuestion, noAnswer, validEmptyAnswer)
+        ("empty answer list is invalid on non optional", question, answerOf(), aFailure),
+        ("empty answer is valid on optional", optionalQuestion, noAnswer, validEmptyAnswer),
+        ("empty answer list is valid on optional", optionalQuestion, answerOf(), validEmptyAnswer)
       )
 
       forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>

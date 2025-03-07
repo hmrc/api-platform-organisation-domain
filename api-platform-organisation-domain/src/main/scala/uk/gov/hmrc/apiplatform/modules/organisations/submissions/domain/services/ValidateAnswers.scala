@@ -27,18 +27,18 @@ object ValidateAnswers {
 
   def validate(question: Question, rawAnswers: Map[String, Seq[String]]): Either[String, ActualAnswer] = {
     question match {
-      case _: Question.AcknowledgementOnly                                      => validateAcknowledgement(rawAnswers.get(Question.answerKey).exists(_.nonEmpty))
-      case _ if question.isOptional && !rawAnswers.contains(Question.answerKey) => Either.right(ActualAnswer.NoAnswer)
-      case q: Question.MultiChoiceQuestion                                      => rawAnswers.get(Question.answerKey).map(a => validateAgainstPossibleAnswers(q, a.toSet))
+      case _: Question.AcknowledgementOnly                                                      => validateAcknowledgement(rawAnswers.get(Question.answerKey).exists(_.nonEmpty))
+      case _ if question.isOptional && rawAnswers.get(Question.answerKey).fold(true)(_.isEmpty) => Either.right(ActualAnswer.NoAnswer)
+      case q: Question.MultiChoiceQuestion                                                      => rawAnswers.get(Question.answerKey).map(a => validateAgainstPossibleAnswers(q, a.toSet))
           .getOrElse(Either.left("Question requires an answer"))
-      case q: Question.SingleChoiceQuestion                                     =>
+      case q: Question.SingleChoiceQuestion                                                     =>
         rawAnswers.get(Question.answerKey).filter(_.length == 1).map(a => validateAgainstPossibleAnswers(q, a.head)).getOrElse(Either.left("Question requires a single answer"))
-      case q: Question.TextQuestion                                             =>
+      case q: Question.TextQuestion                                                             =>
         rawAnswers.get(Question.answerKey).filter(_.length == 1).map(a => validateAgainstPossibleTextValidationRule(q, a.head)).getOrElse(Either.left(
           "Question requires a single answer"
         ))
-      case _: Question.DateQuestion                                             => validateDate(rawAnswers)
-      case _: Question.AddressQuestion                                          => validateAddress(rawAnswers)
+      case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
+      case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
     }
   }
 
