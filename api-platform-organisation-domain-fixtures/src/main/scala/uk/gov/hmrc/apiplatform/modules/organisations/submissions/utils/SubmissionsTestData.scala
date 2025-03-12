@@ -151,24 +151,25 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val orgId = OrganisationId.random
     val usrId = UserId.random
 
-    val question1          = chooseOneOfQuestion(1, "a", "b", "c", "d", "e", "f", "g")
-    val question2          = chooseOneOfQuestion(2, "ga", "gb", "gc", "gd", "ge")
-    val questionName1      = textQuestion(3)
-    val questionName2      = textQuestion(4)
-    val questionName3      = textQuestion(5)
-    val questionName4      = textQuestion(6)
-    val questionName5      = textQuestion(7)
-    val questionName6      = textQuestion(8)
-    val questionName7      = textQuestion(9)
-    val questionName8      = textQuestion(10)
-    val questionName9      = dateQuestion(11)
-    val questionName10     = textQuestion(12)
-    val questionName11     = textQuestion(13)
-    val questionPrivacyUrl = textQuestion(14)
-    val questionTermsUrl   = textQuestion(15)
-    val questionWeb        = textQuestion(16)
-    val questionAck        = acknowledgementOnly(17)
-    val questionMulti      = multichoiceQuestion(18, "a1", "b", "c")
+    val question1             = chooseOneOfQuestion(1, "a", "b", "c", "d", "e", "f", "g")
+    val question2             = chooseOneOfQuestion(2, "ga", "gb", "gc", "gd", "ge")
+    val questionName1         = textQuestion(3)
+    val questionName2         = textQuestion(4)
+    val questionName3         = textQuestion(5)
+    val questionName4         = textQuestion(6)
+    val questionName5         = textQuestion(7)
+    val questionName6         = textQuestion(8)
+    val questionName7         = textQuestion(9)
+    val questionName8         = textQuestion(10)
+    val questionName9         = dateQuestion(11)
+    val questionName10        = textQuestion(12)
+    val questionName11        = textQuestion(13)
+    val questionPrivacyUrl    = textQuestion(14)
+    val questionTermsUrl      = textQuestion(15)
+    val questionWeb           = textQuestion(16)
+    val questionAck           = acknowledgementOnly(17)
+    val questionMulti         = multichoiceQuestion(18, "a1", "b", "c")
+    val questionCompanyNumber = companiesHouseQuestion(19)
 
     val questionnaire1 = Questionnaire(
       id = Questionnaire.Id.random,
@@ -176,6 +177,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
       questions = NonEmptyList.of(
         QuestionItem(question1),
         QuestionItem(question2),
+        QuestionItem(questionCompanyNumber, AskWhen.AskWhenAnswer(question1, "a")),
         QuestionItem(questionName1, AskWhen.AskWhenAnswer(question1, "a")),
         QuestionItem(questionName2, AskWhen.AskWhenAnswer(question1, "b")),
         QuestionItem(questionName3, AskWhen.AskWhenAnswer(question1, "c")),
@@ -235,6 +237,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     def passAnswer(question: Question): ActualAnswer = {
       question match {
         case Question.TextQuestion(id, wording, statement, _, _, _, _, absence, _)                      => ActualAnswer.TextAnswer("some random text")
+        case Question.CompaniesHouseQuestion(id, wording, _, statement, _, _, _, _, absence, _)         => ActualAnswer.CompaniesHouseAnswer("12345678")
         case Question.ChooseOneOfQuestion(id, wording, statement, _, _, _, marking, absence, _)         => ActualAnswer.SingleChoiceAnswer(marking.filter {
             case (pa, Mark.Pass) => true; case _ => false
           }.head._1.value)
@@ -301,6 +304,12 @@ trait AnsweringQuestionsHelper extends FixedClock {
           Some(ActualAnswer.TextAnswer(Random.nextString(Random.nextInt(25) + 1))) ::
             absence.flatMap(a => if (a._2 == desiredMark) Some(ActualAnswer.NoAnswer) else None) ::
             List.empty[Option[ActualAnswer]]
+        else
+          List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
+
+      case Question.CompaniesHouseQuestion(_, _, _, _, _, _, _, _, _, _) =>
+        if (desiredMark == Mark.Pass)
+          List(Some(ActualAnswer.CompaniesHouseAnswer(Random.nextString(Random.nextInt(25) + 1))))
         else
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 

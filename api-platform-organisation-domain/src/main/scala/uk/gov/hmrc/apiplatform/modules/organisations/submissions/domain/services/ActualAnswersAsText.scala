@@ -26,6 +26,7 @@ object ActualAnswersAsText {
   def apply(answer: ActualAnswer): String = answer match {
     case ActualAnswer.SingleChoiceAnswer(value)    => value
     case ActualAnswer.TextAnswer(value)            => value
+    case ActualAnswer.CompaniesHouseAnswer(value)  => value
     case ActualAnswer.MultipleChoiceAnswer(values) => values.mkString
     case ActualAnswer.DateAnswer(date)             => date.format(dateTimeFormatter)
     case ActualAnswer.NoAnswer                     => "n/a"

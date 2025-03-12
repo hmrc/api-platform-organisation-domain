@@ -42,6 +42,48 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
        |}""".stripMargin
   }
 
+  def jsonCompaniesHouseQuestion = {
+    s"""{
+       |  "id": "4e148791-1a07-4f28-8fe4-ba3e18cdc118",
+       |  "wording": "What is the company registration number?",
+       |  "replaceWordingPlaceholder": "companyName",
+       |  "statement": {
+       |    "fragments": [
+       |      {
+       |        "fragments": [
+       |          {
+       |            "text": "You can ",
+       |            "statementType": "text"
+       |          },
+       |          {
+       |            "text": "search Companies House for your company registration number (opens in new tab)",
+       |            "url": "https://find-and-update.company-information.service.gov.uk/",
+       |            "statementType": "link"
+       |          },
+       |          {
+       |            "text": ".",
+       |            "statementType": "text"
+       |          }
+       |        ],
+       |        "statementType": "compound"
+       |      }
+       |    ]
+       |  },
+       |  "hintText": {
+       |    "text": "It is 8 characters. For example, 01234567 or AC012345.",
+       |    "statementType": "text"
+       |  },
+       |  "absence": [
+       |    "My organisation doesn't have a company registration",
+       |    "fail"
+       |  ],
+       |  "errorInfo": {
+       |    "summary": "Your company registration number cannot be blank",
+       |    "message": "Enter your company registration number, like 01234567"
+       |  }
+       |}""".stripMargin
+  }
+
   val jsonYesNoQuestion =
     """{
       |  "id" : "99d9362d-e365-4af1-aa46-88e95f9858f7",
@@ -131,6 +173,12 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "read text question from json" in {
     testFromJson[Question.TextQuestion](jsonTextQuestion())(ResponsibleIndividualDetails.question6)
+  }
+
+  "read companies house question from json" in {
+    println(s"******${Json.toJson(OrganisationDetails.questionCompanyNumber)}")
+
+    testFromJson[Question.CompaniesHouseQuestion](jsonCompaniesHouseQuestion)(OrganisationDetails.questionCompanyNumber)
   }
 
   "read invalid text question from json" in {

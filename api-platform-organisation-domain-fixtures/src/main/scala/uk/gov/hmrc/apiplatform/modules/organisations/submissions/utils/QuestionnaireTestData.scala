@@ -57,9 +57,10 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Select your partnership type").some
     )
 
-    val questionCompanyNumber = Question.TextQuestion(
+    val questionCompanyNumber = Question.CompaniesHouseQuestion(
       Question.Id("4e148791-1a07-4f28-8fe4-ba3e18cdc118"),
       Wording("What is the company registration number?"),
+      ReplaceWordingPlaceholder("companyName"),
       statement = Statement(
         CompoundFragment(
           StatementText("You can "),
@@ -377,7 +378,7 @@ trait QuestionnaireTestData {
 
   val samplePassAnswersToQuestions = Map(
     (OrganisationDetails.questionOrgType.id       -> ActualAnswer.SingleChoiceAnswer("UK limited company")),
-    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.TextAnswer("12345678")),
+    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.CompaniesHouseAnswer("12345678")),
     (OrganisationDetails.questionLtdOrgName.id    -> ActualAnswer.TextAnswer("Bobs Burgers")),
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
@@ -391,7 +392,7 @@ trait QuestionnaireTestData {
 
   val sampleFailAnswersToQuestions = Map(
     (OrganisationDetails.questionOrgType.id       -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
-    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.TextAnswer("12345678")),
+    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.CompaniesHouseAnswer("123456789")),
     (OrganisationDetails.questionLtdOrgName.id    -> ActualAnswer.TextAnswer("Bobs Burgers")),
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
@@ -405,7 +406,7 @@ trait QuestionnaireTestData {
 
   val sampleWarningsAnswersToQuestions = Map(
     (OrganisationDetails.questionOrgType.id       -> ActualAnswer.SingleChoiceAnswer("Non-UK company with a branch or place of business in the UK")),
-    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.TextAnswer("12345678")),
+    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.CompaniesHouseAnswer("12345678")),
     (OrganisationDetails.questionLtdOrgName.id    -> ActualAnswer.TextAnswer("Bobs Burgers")),
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),

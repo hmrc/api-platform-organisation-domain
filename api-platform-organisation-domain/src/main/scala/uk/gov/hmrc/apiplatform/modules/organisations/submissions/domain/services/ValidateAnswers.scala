@@ -37,6 +37,10 @@ object ValidateAnswers {
         rawAnswers.get(Question.answerKey).filter(_.length == 1).map(a => validateAgainstPossibleTextValidationRule(q, a.head)).getOrElse(Either.left(
           "Question requires a single answer"
         ))
+      case q: Question.CompaniesHouseQuestion                                   =>
+        rawAnswers.get(Question.answerKey).filter(_.length == 1).map(a => validateCompaniesHouse(q, a.head)).getOrElse(Either.left(
+          "Question requires a single answer"
+        ))
       case _: Question.DateQuestion                                             => validateDate(rawAnswers)
     }
 
@@ -50,6 +54,12 @@ object ValidateAnswers {
     question.validation
       .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
       .map(ActualAnswer.TextAnswer(_))
+  }
+
+  def validateCompaniesHouse(question: Question.CompaniesHouseQuestion, rawAnswer: String): Either[String, ActualAnswer] = {
+    question.validation
+      .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
+      .map(ActualAnswer.CompaniesHouseAnswer(_))
   }
 
   def validateAgainstPossibleAnswers(question: Question.MultiChoiceQuestion, rawAnswers: Set[String]): Either[String, ActualAnswer] = {

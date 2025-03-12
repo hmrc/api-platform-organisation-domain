@@ -39,12 +39,13 @@ object MarkAnswer {
 
   protected def markQuestion(question: Question, answer: ActualAnswer): Mark = {
     (question, answer) match {
-      case (_, ActualAnswer.NoAnswer)                                              => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
-      case (q: Question.TextQuestion, a: ActualAnswer.TextAnswer)                  => Mark.Pass
-      case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer) => markMultiChoiceAnswer(q, a)
-      case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)  => markSingleChoiceAnswer(q, a)
-      case (q: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)      => Mark.Pass
-      case _                                                                       => throw new IllegalArgumentException(s"Unexpectely the answer is not valid - ${question.wording.value}")
+      case (_, ActualAnswer.NoAnswer)                                                 => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
+      case (q: Question.TextQuestion, a: ActualAnswer.TextAnswer)                     => Mark.Pass
+      case (q: Question.CompaniesHouseQuestion, a: ActualAnswer.CompaniesHouseAnswer) => Mark.Pass
+      case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer)    => markMultiChoiceAnswer(q, a)
+      case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)     => markSingleChoiceAnswer(q, a)
+      case (q: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)         => Mark.Pass
+      case _                                                                          => throw new IllegalArgumentException(s"Unexpectely the answer is not valid - ${question.wording.value}")
     }
   }
 

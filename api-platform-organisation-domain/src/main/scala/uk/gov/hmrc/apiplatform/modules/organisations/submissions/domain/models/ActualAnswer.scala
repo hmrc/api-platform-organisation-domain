@@ -24,6 +24,7 @@ object ActualAnswer {
   case class MultipleChoiceAnswer(values: Set[String]) extends ActualAnswer
   case class SingleChoiceAnswer(value: String)         extends ActualAnswer
   case class TextAnswer(value: String)                 extends ActualAnswer
+  case class CompaniesHouseAnswer(value: String)       extends ActualAnswer
   case class DateAnswer(value: LocalDate)              extends ActualAnswer
   case object AcknowledgedAnswer                       extends ActualAnswer
   case object NoAnswer                                 extends ActualAnswer
@@ -32,6 +33,7 @@ object ActualAnswer {
   import uk.gov.hmrc.play.json.Union
 
   implicit val jfTextAnswer: OFormat[TextAnswer]                     = Json.format[TextAnswer]
+  implicit val ifCompaniesHouseAnswer: OFormat[CompaniesHouseAnswer] = Json.format[CompaniesHouseAnswer]
   implicit val jfDateAnswer: OFormat[DateAnswer]                     = Json.format[DateAnswer]
   implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]     = Json.format[SingleChoiceAnswer]
   implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]
@@ -41,6 +43,7 @@ object ActualAnswer {
     .and[SingleChoiceAnswer]("singleChoice")
     .and[DateAnswer]("date")
     .and[TextAnswer]("text")
+    .and[CompaniesHouseAnswer]("companiesHouse")
     .andType("acknowledged", () => AcknowledgedAnswer)
     .andType("noAnswer", () => NoAnswer)
     .format

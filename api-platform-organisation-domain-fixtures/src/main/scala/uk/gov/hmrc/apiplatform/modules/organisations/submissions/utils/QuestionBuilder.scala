@@ -107,4 +107,13 @@ trait QuestionBuilder {
       None
     )
   }
+
+  def companiesHouseQuestion(counter: Int): Question.CompaniesHouseQuestion = {
+    Question.CompaniesHouseQuestion(
+      Question.Id.random,
+      Wording(s"Wording$counter"),
+      ReplaceWordingPlaceholder("companyName"),
+      None
+    )
+  }
 }
