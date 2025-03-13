@@ -21,10 +21,11 @@ import cats.data.NonEmptyList
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
 
 sealed trait StatementFragment
-sealed trait NonBulletStatementFragment             extends StatementFragment
-sealed trait SimpleStatementFragment                extends NonBulletStatementFragment
-case class StatementText(text: String)              extends SimpleStatementFragment
-case class StatementLink(text: String, url: String) extends SimpleStatementFragment
+sealed trait NonBulletStatementFragment                              extends StatementFragment
+sealed trait SimpleStatementFragment                                 extends NonBulletStatementFragment
+case class StatementText(text: String)                               extends SimpleStatementFragment
+case class ReplacementText(questionId: Question.Id, default: String) extends SimpleStatementFragment
+case class StatementLink(text: String, url: String)                  extends SimpleStatementFragment
 
 case class StatementBullets(bullets: NonEmptyList[NonBulletStatementFragment]) extends StatementFragment
 
@@ -47,8 +48,9 @@ object Statement extends NonEmptyListFormatters {
   import play.api.libs.functional.syntax._
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jsonFormatStatementText: OFormat[StatementText] = Json.format[StatementText]
-  implicit val jsonFormatStatementLink: OFormat[StatementLink] = Json.format[StatementLink]
+  implicit val jsonFormatStatementText: OFormat[StatementText]     = Json.format[StatementText]
+  implicit val jsonFormatReplacementText: OFormat[ReplacementText] = Json.format[ReplacementText]
+  implicit val jsonFormatStatementLink: OFormat[StatementLink]     = Json.format[StatementLink]
 
   implicit lazy val readsStatementBullets: Reads[StatementBullets] = (
     (__ \ "bullets").read(nelReads[NonBulletStatementFragment])
@@ -80,17 +82,20 @@ object Statement extends NonEmptyListFormatters {
 
   implicit lazy val jsonFormatSimpleStatementFragment: Format[SimpleStatementFragment] = Union.from[SimpleStatementFragment]("statementType")
     .and[StatementText]("text")
+    .and[ReplacementText]("replace")
     .and[StatementLink]("link")
     .format
 
   implicit lazy val jsonFormatNonBulletStatementFragment: Format[NonBulletStatementFragment] = Union.from[NonBulletStatementFragment]("statementType")
     .and[StatementText]("text")
+    .and[ReplacementText]("replace")
     .and[StatementLink]("link")
     .andLazy[CompoundFragment]("compound", jsonFormatCompoundFragment)
     .format
 
   implicit lazy val jsonFormatStatementFragment: Format[StatementFragment] = Union.from[StatementFragment]("statementType")
     .and[StatementText]("text")
+    .and[ReplacementText]("replace")
     .and[StatementLink]("link")
     .andLazy[StatementBullets]("bullets", jsonFormatStatementBullets)
     .andLazy[CompoundFragment]("compound", jsonFormatCompoundFragment)
