@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
+package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.apiplatformorganisation.models.SubmissionReview
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationName
 
 class SubmissionReviewSpec extends BaseJsonFormattersSpec with FixedClock {
 
@@ -41,9 +40,9 @@ class SubmissionReviewSpec extends BaseJsonFormattersSpec with FixedClock {
        |}""".stripMargin
   }
 
-  val submissionId     = SubmissionId.random
-  val instanceIndex    = 0
-  val orgName          = OrganisationName("My org")
+  val submissionId  = SubmissionId.random
+  val instanceIndex = 0
+  val orgName       = OrganisationName("My org")
 
   val submissionReview = SubmissionReview(
     submissionId,
