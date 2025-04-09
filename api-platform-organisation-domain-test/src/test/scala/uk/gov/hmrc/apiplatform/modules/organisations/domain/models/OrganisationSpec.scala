@@ -22,10 +22,11 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 class OrganisationSpec extends BaseJsonFormattersSpec {
 
-  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, userId: UserId) = {
+  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, userId: UserId) = {
     s"""{
        |  "id" : "${organisationId.value.toString()}",
        |  "organisationName" : "${organisationName.value}",
+       |  "organisationType" : "${organisationType.toString()}",
        |  "members" : [ {
        |    "userId" : "${userId.value.toString()}"
        |  } ]
@@ -35,14 +36,15 @@ class OrganisationSpec extends BaseJsonFormattersSpec {
   val userId  = UserId.random
   val orgId   = OrganisationId.random
   val orgName = OrganisationName("My org")
+  val orgType = Organisation.OrganisationType.UkLimitedCompany
 
   "Organisation" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, Set(Member(userId))))) shouldBe jsonOrganisation(orgId, orgName, userId)
+      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, orgType, Set(Member(userId))))) shouldBe jsonOrganisation(orgId, orgName, orgType, userId)
     }
 
     "read from json" in {
-      testFromJson[Organisation](jsonOrganisation(orgId, orgName, userId))(Organisation(orgId, orgName, Set(Member(userId))))
+      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, userId))(Organisation(orgId, orgName, orgType, Set(Member(userId))))
     }
   }
 }
