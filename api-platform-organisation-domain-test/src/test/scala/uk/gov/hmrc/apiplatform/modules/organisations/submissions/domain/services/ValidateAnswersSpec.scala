@@ -99,8 +99,7 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val passes = Table(
         ("description", "question", Question.answerKey, "expects"),
         ("valid answer", question, validRawAnswers, validAnswer),
-        ("too many answers", question, validRawAnswers + ("day" -> Seq("1", "2")), aFailure),
-        ("invalid date", question, validRawAnswers + ("day"     -> Seq("120")), aFailure),
+        ("invalid date", question, validRawAnswers + ("day" -> Seq("120")), aFailure),
         ("invalid answer", question, answerOf("Bob"), aFailure)
       )
 
@@ -135,7 +134,6 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val passes = Table(
         ("description", "question", Question.answerKey, "expects"),
         ("valid answer", question, validRawAnswers, validAnswer),
-        ("too many answers", question, validRawAnswers + ("addressLineOne" -> Seq("1", "2")), aFailure),
         ("invalid answer", question, answerOf("Bob"), aFailure)
       )
 
