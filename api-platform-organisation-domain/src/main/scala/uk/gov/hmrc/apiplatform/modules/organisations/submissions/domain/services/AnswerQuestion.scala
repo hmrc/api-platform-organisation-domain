@@ -26,9 +26,10 @@ import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
 object AnswerQuestion {
   import Submission.AnswersToQuestions
 
-  private def fromOption[A](opt: Option[A], msg: String): Either[String, A] = opt.fold[Either[String, A]](Left(msg))(v => Right(v))
+  private def fromOption[A](opt: Option[A], msg: String): Either[ValidationErrors, A] =
+    opt.fold[Either[ValidationErrors, A]](Left(ValidationErrors(ValidationError(message = msg))))(v => Right(v))
 
-  private def cond[A](cond: => Boolean, ok: A, msg: String): Either[String, A] = if (cond) Right(ok) else Left(msg)
+  private def cond[A](cond: => Boolean, ok: A, msg: String): Either[ValidationErrors, A] = if (cond) Right(ok) else Left(ValidationErrors(ValidationError(message = msg)))
 
   def questionsToAsk(questionnaire: Questionnaire, context: AskWhen.Context, answersToQuestions: AnswersToQuestions): List[Question.Id] = {
     questionnaire.questions.collect {
@@ -36,7 +37,7 @@ object AnswerQuestion {
     }
   }
 
-  def recordAnswer(submission: Submission, questionId: Question.Id, rawAnswers: Map[String, Seq[String]]): Either[String, ExtendedSubmission] = {
+  def recordAnswer(submission: Submission, questionId: Question.Id, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ExtendedSubmission] = {
     for {
       question         <- fromOption(submission.findQuestion(questionId), "Not valid for this submission")
       context           = submission.context
