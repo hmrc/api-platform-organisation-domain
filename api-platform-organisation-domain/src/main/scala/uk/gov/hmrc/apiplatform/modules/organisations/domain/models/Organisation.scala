@@ -27,6 +27,13 @@ object Organisation {
     val isSoleTrader: Boolean                         = this == OrganisationType.SoleTrader
     val isRegisteredSociety: Boolean                  = this == OrganisationType.RegisteredSociety
     val isCharitableIncorporatedOrganisation: Boolean = this == OrganisationType.CharitableIncorporatedOrganisation
+    val isNonUkWithPlaceOfBusinessInUk: Boolean       = this == OrganisationType.NonUkWithPlaceOfBusinessInUk
+    val isNonUkWithoutPlaceOfBusinessInUk: Boolean    = this == OrganisationType.NonUkWithoutPlaceOfBusinessInUk
+    val isGeneralPartnership: Boolean                 = this == OrganisationType.GeneralPartnership
+    val isLimitedLiabilityPartnership: Boolean        = this == OrganisationType.LimitedLiabilityPartnership
+    val isLimitedPartnership: Boolean                 = this == OrganisationType.LimitedPartnership
+    val isScottishPartnership: Boolean                = this == OrganisationType.ScottishPartnership
+    val isScottishLimitedPartnership: Boolean         = this == OrganisationType.ScottishLimitedPartnership
 
     val isNonUk: Boolean = this == OrganisationType.NonUkWithPlaceOfBusinessInUk ||
       this == OrganisationType.NonUkWithoutPlaceOfBusinessInUk
