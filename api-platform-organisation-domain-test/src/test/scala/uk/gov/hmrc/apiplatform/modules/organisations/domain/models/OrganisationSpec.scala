@@ -18,15 +18,18 @@ package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
-import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
+import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
-class OrganisationSpec extends BaseJsonFormattersSpec {
+import java.time.Instant
 
-  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, userId: UserId) = {
+class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
+
+  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, createdDateTime: Instant, userId: UserId) = {
     s"""{
        |  "id" : "${organisationId.value.toString()}",
        |  "organisationName" : "${organisationName.value}",
        |  "organisationType" : "${organisationType.toString()}",
+       |  "createdDateTime" : "${createdDateTime.toString()}",
        |  "members" : [ {
        |    "userId" : "${userId.value.toString()}"
        |  } ]
@@ -37,14 +40,15 @@ class OrganisationSpec extends BaseJsonFormattersSpec {
   val orgId   = OrganisationId.random
   val orgName = OrganisationName("My org")
   val orgType = Organisation.OrganisationType.UkLimitedCompany
+  val createdDateTime = instant
 
   "Organisation" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, orgType, Set(Member(userId))))) shouldBe jsonOrganisation(orgId, orgName, orgType, userId)
+      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, orgType, createdDateTime, Set(Member(userId))))) shouldBe jsonOrganisation(orgId, orgName, orgType, createdDateTime, userId)
     }
 
     "read from json" in {
-      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, userId))(Organisation(orgId, orgName, orgType, Set(Member(userId))))
+      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, createdDateTime, userId))(Organisation(orgId, orgName, orgType, createdDateTime, Set(Member(userId))))
     }
   }
 }

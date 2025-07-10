@@ -17,8 +17,9 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
 import scala.collection.immutable.ListSet
-
 import play.api.libs.json.{Json, OFormat}
+
+import java.time.Instant
 
 object Organisation {
 
@@ -84,4 +85,4 @@ object Organisation {
   implicit val orgFormat: OFormat[Organisation] = Json.format[Organisation]
 }
 
-case class Organisation(id: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, members: Set[Member])
+case class Organisation(id: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, createdDateTime: Instant, members: Set[Member])
