@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
-import scala.collection.immutable.ListSet
-import play.api.libs.json.{Json, OFormat}
-
 import java.time.Instant
+import scala.collection.immutable.ListSet
+
+import play.api.libs.json.{Json, OFormat}
 
 object Organisation {
 
