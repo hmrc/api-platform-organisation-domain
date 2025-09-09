@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
+import java.time.Instant
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
-
-import java.time.Instant
 
 class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
 
@@ -36,15 +36,21 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
        |}""".stripMargin
   }
 
-  val userId  = UserId.random
-  val orgId   = OrganisationId.random
-  val orgName = OrganisationName("My org")
-  val orgType = Organisation.OrganisationType.UkLimitedCompany
+  val userId          = UserId.random
+  val orgId           = OrganisationId.random
+  val orgName         = OrganisationName("My org")
+  val orgType         = Organisation.OrganisationType.UkLimitedCompany
   val createdDateTime = instant
 
   "Organisation" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, orgType, createdDateTime, Set(Member(userId))))) shouldBe jsonOrganisation(orgId, orgName, orgType, createdDateTime, userId)
+      Json.prettyPrint(Json.toJson[Organisation](Organisation(orgId, orgName, orgType, createdDateTime, Set(Member(userId))))) shouldBe jsonOrganisation(
+        orgId,
+        orgName,
+        orgType,
+        createdDateTime,
+        userId
+      )
     }
 
     "read from json" in {

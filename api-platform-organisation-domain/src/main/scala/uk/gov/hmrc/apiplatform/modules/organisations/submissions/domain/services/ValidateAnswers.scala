@@ -28,7 +28,7 @@ import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
 case class ValidationErrors(errors: ValidationError*)
 case class ValidationError(key: String = Question.answerKey, message: String)
 
-object ValidationError  {
+object ValidationError {
   implicit val validationFormat: OFormat[ValidationError] = Json.format[ValidationError]
 }
 
@@ -36,7 +36,7 @@ object ValidationErrors {
   implicit val validationErrorsFormat: OFormat[ValidationErrors] = Json.format[ValidationErrors]
 }
 
-object ValidateAnswers  {
+object ValidateAnswers {
 
   def validate(question: Question, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
     question match {
