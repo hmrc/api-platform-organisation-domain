@@ -20,7 +20,6 @@ import java.time.Instant
 import scala.collection.immutable.ListSet
 
 import play.api.libs.json.{Json, OFormat}
-
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.OrganisationId
 
 object Organisation {
