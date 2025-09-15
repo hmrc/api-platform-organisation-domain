@@ -19,7 +19,7 @@ package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 import java.time.Instant
 
 import play.api.libs.json.Json
-import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
