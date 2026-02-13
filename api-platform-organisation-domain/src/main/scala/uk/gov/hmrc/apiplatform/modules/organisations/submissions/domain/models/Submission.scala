@@ -51,19 +51,7 @@ object QuestionnaireState {
 case class QuestionnaireProgress(state: QuestionnaireState, questionsToAsk: List[Question.Id])
 
 case class QuestionIdsOfInterest(
-    organisationTypeId: Question.Id,
-    partnershipTypeId: Question.Id,
-    organisationNameLtdId: Question.Id,
-    organisationNameSoleId: Question.Id,
-    organisationNameRsId: Question.Id,
-    organisationNameCioId: Question.Id,
-    organisationNameNonUkWithId: Question.Id,
-    organisationNameNonUkWithoutId: Question.Id,
-    organisationNameGpId: Question.Id,
-    organisationNameLlpId: Question.Id,
-    organisationNameLpId: Question.Id,
-    organisationNameSpId: Question.Id,
-    organisationNameSlpId: Question.Id
+    questionIds: Map[String, Question.Id]
   )
 
 object Submission extends EnvReads with NonEmptyListFormatters {
@@ -417,22 +405,31 @@ case class Submission(
       )
     )
 
+  def getQuestionOfInterest(key: String): Option[Question.Id] = {
+    questionIdsOfInterest.questionIds.get(key)
+  }
+
+  def getAnswerToQuestionOfInterest(key: String): ActualAnswer = {
+    getQuestionOfInterest(key) match {
+      case Some(questionId) => latestInstance.answersToQuestions.getOrElse(questionId, ActualAnswer.NoAnswer)
+      case _                => ActualAnswer.NoAnswer
+    }
+  }
+
   lazy val latestInstance: Submission.Instance = instances.head
   lazy val status: Submission.Status           = latestInstance.statusHistory.head
 
-  lazy val name: String = latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameGpId)
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameLlpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameLpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameCioId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameLtdId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameSlpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameRsId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameSoleId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameGpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameNonUkWithId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameNonUkWithoutId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameSpId))
-    .map(answer => ActualAnswersAsText(answer)).getOrElse("N/A")
+  lazy val organisationType: String = ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationTypeId"))
+
+  lazy val name: String = {
+    organisationType match {
+      case "UK limited company"            => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLtdId"))
+      case "Limited liability partnership" => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLlpId"))
+      case "Limited partnership"           => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLpId"))
+      case "Scottish limited partnership"  => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameSlpId"))
+      case _                               => "n/a"
+    }
+  }
 }
 
 case class ExtendedSubmission(

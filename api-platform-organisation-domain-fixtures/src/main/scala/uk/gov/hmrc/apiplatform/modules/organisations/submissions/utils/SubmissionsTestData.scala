@@ -211,19 +211,13 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
       usrId,
       questionnaireGroups,
       QuestionIdsOfInterest(
-        question1.id,
-        question2.id,
-        questionName1.id,
-        questionName2.id,
-        questionName3.id,
-        questionName4.id,
-        questionName5.id,
-        questionName6.id,
-        questionName7.id,
-        questionName8.id,
-        questionName9.id,
-        questionName10.id,
-        questionName11.id
+        Map(
+          "organisationTypeId"    -> question1.id,
+          "organisationNameLtdId" -> questionName1.id,
+          "organisationNameLlpId" -> questionName2.id,
+          "organisationNameLpId"  -> questionName3.id,
+          "organisationNameSlpId" -> questionName4.id
+        )
       ),
       standardContext
     )
