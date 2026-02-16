@@ -24,6 +24,7 @@ import play.api.libs.json.EnvReads
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.{InstantJsonFormatter, NonEmptyListFormatters}
 
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services.{ActualAnswersAsText, MarkAnswer}
 
@@ -419,15 +420,25 @@ case class Submission(
   lazy val latestInstance: Submission.Instance = instances.head
   lazy val status: Submission.Status           = latestInstance.statusHistory.head
 
-  lazy val organisationType: String = ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationTypeId"))
+  lazy val organisationTypeAsText: String = ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationTypeId"))
 
-  lazy val name: String = {
+  lazy val organisationType: Option[Organisation.OrganisationType] = {
+    organisationTypeAsText match {
+      case "UK limited company"            => Some(Organisation.OrganisationType.UkLimitedCompany)
+      case "Limited liability partnership" => Some(Organisation.OrganisationType.LimitedLiabilityPartnership)
+      case "Limited partnership"           => Some(Organisation.OrganisationType.LimitedPartnership)
+      case "Scottish limited partnership"  => Some(Organisation.OrganisationType.ScottishLimitedPartnership)
+      case _                               => None
+    }
+  }
+
+  lazy val organisationName: String = {
     organisationType match {
-      case "UK limited company"            => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLtdId"))
-      case "Limited liability partnership" => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLlpId"))
-      case "Limited partnership"           => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLpId"))
-      case "Scottish limited partnership"  => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameSlpId"))
-      case _                               => "n/a"
+      case Some(Organisation.OrganisationType.UkLimitedCompany)            => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLtdId"))
+      case Some(Organisation.OrganisationType.LimitedLiabilityPartnership) => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLlpId"))
+      case Some(Organisation.OrganisationType.LimitedPartnership)          => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLpId"))
+      case Some(Organisation.OrganisationType.ScottishLimitedPartnership)  => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameSlpId"))
+      case _                                                               => "n/a"
     }
   }
 }

@@ -22,6 +22,7 @@ import play.api.libs.json._
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData
 
@@ -205,6 +206,16 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
       Submission.Status.Answering(instant, false),
       Submission.Status.Granted(instant, "bob@example.com", None, None)
     ) shouldBe false
+  }
+
+  "organisationType" in {
+    answeringSubmission.organisationType shouldBe Some(OrganisationType.UkLimitedCompany)
+    Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).organisationType shouldBe Some(OrganisationType.UkLimitedCompany)
+  }
+
+  "organisationName" in {
+    answeringSubmission.organisationName shouldBe "n/a"
+    Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).organisationName shouldBe "Bobs Burgers"
   }
 
   "toJson for extended submission" in {
