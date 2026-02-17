@@ -24,6 +24,7 @@ import play.api.libs.json.EnvReads
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.{InstantJsonFormatter, NonEmptyListFormatters}
 
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services.{ActualAnswersAsText, MarkAnswer}
 
@@ -51,19 +52,7 @@ object QuestionnaireState {
 case class QuestionnaireProgress(state: QuestionnaireState, questionsToAsk: List[Question.Id])
 
 case class QuestionIdsOfInterest(
-    organisationTypeId: Question.Id,
-    partnershipTypeId: Question.Id,
-    organisationNameLtdId: Question.Id,
-    organisationNameSoleId: Question.Id,
-    organisationNameRsId: Question.Id,
-    organisationNameCioId: Question.Id,
-    organisationNameNonUkWithId: Question.Id,
-    organisationNameNonUkWithoutId: Question.Id,
-    organisationNameGpId: Question.Id,
-    organisationNameLlpId: Question.Id,
-    organisationNameLpId: Question.Id,
-    organisationNameSpId: Question.Id,
-    organisationNameSlpId: Question.Id
+    questionIds: Map[String, Question.Id]
   )
 
 object Submission extends EnvReads with NonEmptyListFormatters {
@@ -417,22 +406,41 @@ case class Submission(
       )
     )
 
+  def getQuestionOfInterest(key: String): Option[Question.Id] = {
+    questionIdsOfInterest.questionIds.get(key)
+  }
+
+  def getAnswerToQuestionOfInterest(key: String): ActualAnswer = {
+    getQuestionOfInterest(key) match {
+      case Some(questionId) => latestInstance.answersToQuestions.getOrElse(questionId, ActualAnswer.NoAnswer)
+      case _                => ActualAnswer.NoAnswer
+    }
+  }
+
   lazy val latestInstance: Submission.Instance = instances.head
   lazy val status: Submission.Status           = latestInstance.statusHistory.head
 
-  lazy val name: String = latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameGpId)
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameLlpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameLpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameCioId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameLtdId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameSlpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameRsId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameSoleId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameGpId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameNonUkWithId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameNonUkWithoutId))
-    .orElse(latestInstance.answersToQuestions.get(questionIdsOfInterest.organisationNameSpId))
-    .map(answer => ActualAnswersAsText(answer)).getOrElse("N/A")
+  lazy val organisationTypeAsText: String = ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationTypeId"))
+
+  lazy val organisationType: Option[Organisation.OrganisationType] = {
+    organisationTypeAsText match {
+      case "UK limited company"            => Some(Organisation.OrganisationType.UkLimitedCompany)
+      case "Limited liability partnership" => Some(Organisation.OrganisationType.LimitedLiabilityPartnership)
+      case "Limited partnership"           => Some(Organisation.OrganisationType.LimitedPartnership)
+      case "Scottish limited partnership"  => Some(Organisation.OrganisationType.ScottishLimitedPartnership)
+      case _                               => None
+    }
+  }
+
+  lazy val organisationName: String = {
+    organisationType match {
+      case Some(Organisation.OrganisationType.UkLimitedCompany)            => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLtdId"))
+      case Some(Organisation.OrganisationType.LimitedLiabilityPartnership) => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLlpId"))
+      case Some(Organisation.OrganisationType.LimitedPartnership)          => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLpId"))
+      case Some(Organisation.OrganisationType.ScottishLimitedPartnership)  => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameSlpId"))
+      case _                                                               => "n/a"
+    }
+  }
 }
 
 case class ExtendedSubmission(

@@ -537,19 +537,13 @@
       } ]
     } ],
     "questionIdsOfInterest" : {
-      "organisationTypeId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
-      "partnershipTypeId" : "adba162f-be58-2818-92ff-2ecd1799c513",
-      "organisationNameLtdId" : "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc",
-      "organisationNameSoleId" : "d1abf9a7-e31b-4c89-a755-21f0652ca23a",
-      "organisationNameRsId" : "a2dbf9a7-e31b-4c89-a755-21f0652de91c",
-      "organisationNameCioId" : "d8aaf3a2-e31b-4c89-a755-21f0652ab52a",
-      "organisationNameNonUkWithId" : "b2fef9a2-e31b-4c89-a755-21f0652af99e",
-      "organisationNameNonUkWithoutId" : "a8eaf9a2-e31b-4c89-a755-21f0652ae45a",
-      "organisationNameGpId" : "b6dbf9a2-e31b-4c89-a755-23f0652ab29d",
-      "organisationNameLlpId" : "a1dbf9a2-e31b-4c89-a755-23f0652ab17a",
-      "organisationNameLpId" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e",
-      "organisationNameSpId" : "c7dbf9a2-e31b-4c89-a755-23f0651ab48a",
-      "organisationNameSlpId" : "e3dbf6a2-e31b-4c89-a755-23f0652ab17c"
+      "questionIds" : {
+        "organisationNameLlpId" : "a1dbf9a2-e31b-4c89-a755-23f0652ab17a",
+        "organisationNameLtdId" : "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc",
+        "organisationNameSlpId" : "e3dbf6a2-e31b-4c89-a755-23f0652ab17c",
+        "organisationTypeId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
+        "organisationNameLpId" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e"
+      }
     },
     "instances" : [ {
       "index" : 0,

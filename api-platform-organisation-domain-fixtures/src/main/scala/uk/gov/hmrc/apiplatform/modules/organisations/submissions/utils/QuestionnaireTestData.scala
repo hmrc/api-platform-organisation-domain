@@ -348,19 +348,13 @@ trait QuestionnaireTestData {
     )
 
   val testQuestionIdsOfInterest = QuestionIdsOfInterest(
-    organisationTypeId = OrganisationDetails.questionOrgType.id,
-    partnershipTypeId = OrganisationDetails.questionPartnershipType.id,
-    organisationNameLtdId = OrganisationDetails.questionLtdOrgName.id,
-    organisationNameSoleId = OrganisationDetails.questionSoleName.id,
-    organisationNameRsId = OrganisationDetails.questionRsOrgName.id,
-    organisationNameCioId = OrganisationDetails.questionCioOrgName.id,
-    organisationNameNonUkWithId = OrganisationDetails.questionNonUkWithOrgName.id,
-    organisationNameNonUkWithoutId = OrganisationDetails.questionNonUkWithoutOrgName.id,
-    organisationNameGpId = OrganisationDetails.questionGpOrgName.id,
-    organisationNameLlpId = OrganisationDetails.questionLlpOrgName.id,
-    organisationNameLpId = OrganisationDetails.questionLpOrgName.id,
-    organisationNameSpId = OrganisationDetails.questionSpOrgName.id,
-    organisationNameSlpId = OrganisationDetails.questionSlpOrgName.id
+    Map(
+      "organisationTypeId"    -> OrganisationDetails.questionOrgType.id,
+      "organisationNameLtdId" -> OrganisationDetails.questionLtdOrgName.id,
+      "organisationNameLlpId" -> OrganisationDetails.questionLlpOrgName.id,
+      "organisationNameLpId"  -> OrganisationDetails.questionLpOrgName.id,
+      "organisationNameSlpId" -> OrganisationDetails.questionSlpOrgName.id
+    )
   )
 
   val questionnaire      = ResponsibleIndividualDetails.questionnaire
@@ -380,7 +374,7 @@ trait QuestionnaireTestData {
 
   val answersToQuestions: Submission.AnswersToQuestions =
     Map(
-      testQuestionIdsOfInterest.organisationTypeId -> ActualAnswer.SingleChoiceAnswer("UK limited company")
+      OrganisationDetails.questionOrgType.id -> ActualAnswer.SingleChoiceAnswer("UK limited company")
     )
 
   val samplePassAnswersToQuestions = Map(
