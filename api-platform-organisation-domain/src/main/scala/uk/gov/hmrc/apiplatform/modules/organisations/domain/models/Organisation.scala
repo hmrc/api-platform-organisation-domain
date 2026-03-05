@@ -86,4 +86,10 @@ object Organisation {
   implicit val orgFormat: OFormat[Organisation] = Json.format[Organisation]
 }
 
-case class Organisation(id: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, createdDateTime: Instant, members: Set[Member])
+case class Organisation(
+    id: OrganisationId,
+    organisationName: OrganisationName,
+    organisationType: Organisation.OrganisationType,
+    createdDateTime: Instant,
+    collaborators: Set[Collaborator]
+  )
