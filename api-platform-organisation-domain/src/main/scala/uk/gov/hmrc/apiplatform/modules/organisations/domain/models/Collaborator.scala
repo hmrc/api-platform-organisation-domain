@@ -112,7 +112,7 @@ object Collaborator {
   implicit val formatResponsibleIndividual: OFormat[Collaborators.ResponsibleIndividual] = Json.format[Collaborators.ResponsibleIndividual]
   implicit val formatMember: OFormat[Collaborators.Member]                               = Json.format[Collaborators.Member]
 
-  implicit val memberJf: OFormat[Collaborator] = Union.from[Collaborator]("role")
+  implicit val collaboratorJf: OFormat[Collaborator] = Union.from[Collaborator]("role")
     .and[Collaborators.Administrator](Roles.ADMINISTRATOR.toString)
     .and[Collaborators.ResponsibleIndividual](Roles.RESPONSIBLE_INDIVIDUAL.toString)
     .and[Collaborators.Member](Roles.MEMBER.toString)
