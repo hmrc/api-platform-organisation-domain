@@ -44,16 +44,16 @@ object Collaborator {
   object Role {
 
     val displayText: Role => String = {
-      case Collaborator.Roles.ADMINISTRATOR          => "Administrator"
-      case Collaborator.Roles.RESPONSIBLE_INDIVIDUAL => "Responsible individual"
-      case Collaborator.Roles.MEMBER                 => "Member"
+      case Collaborator.Roles.Administrator         => "Administrator"
+      case Collaborator.Roles.ResponsibleIndividual => "Responsible individual"
+      case Collaborator.Roles.Member                => "Member"
     }
 
     def apply(text: String): Option[Collaborator.Role] = text.toUpperCase() match {
-      case "ADMINISTRATOR"          => Some(Collaborator.Roles.ADMINISTRATOR)
-      case "RESPONSIBLE_INDIVIDUAL" => Some(Collaborator.Roles.RESPONSIBLE_INDIVIDUAL)
-      case "MEMBER"                 => Some(Collaborator.Roles.MEMBER)
-      case _                        => None
+      case "Administrator"         => Some(Collaborator.Roles.Administrator)
+      case "ResponsibleIndividual" => Some(Collaborator.Roles.ResponsibleIndividual)
+      case "Member"                => Some(Collaborator.Roles.Member)
+      case _                       => None
     }
 
     private val convert: String => JsResult[Role] = (s) => Role(s).fold[JsResult[Role]](JsError(s"$s is not a role"))(role => JsSuccess(role))
@@ -67,17 +67,17 @@ object Collaborator {
 
   object Roles {
 
-    case object ADMINISTRATOR extends Role {
+    case object Administrator extends Role {
       val isAdministrator         = true
       val isResponsibleIndividual = false
     }
 
-    case object RESPONSIBLE_INDIVIDUAL extends Role {
+    case object ResponsibleIndividual extends Role {
       val isAdministrator         = true
       val isResponsibleIndividual = true
     }
 
-    case object MEMBER extends Role {
+    case object Member extends Role {
       val isAdministrator         = false
       val isResponsibleIndividual = false
     }
@@ -86,22 +86,22 @@ object Collaborator {
 
   def apply(role: Role, userId: UserId): Collaborator = {
     role match {
-      case ADMINISTRATOR          => Collaborators.Administrator(userId)
-      case RESPONSIBLE_INDIVIDUAL => Collaborators.ResponsibleIndividual(userId)
-      case MEMBER                 => Collaborators.Member(userId)
+      case Administrator         => Collaborators.Administrator(userId)
+      case ResponsibleIndividual => Collaborators.ResponsibleIndividual(userId)
+      case Member                => Collaborators.Member(userId)
     }
   }
 
   def role(me: Collaborator): Collaborator.Role = me match {
-    case a: Collaborators.Administrator         => Collaborator.Roles.ADMINISTRATOR
-    case r: Collaborators.ResponsibleIndividual => Collaborator.Roles.RESPONSIBLE_INDIVIDUAL
-    case m: Collaborators.Member                => Collaborator.Roles.MEMBER
+    case a: Collaborators.Administrator         => Collaborator.Roles.Administrator
+    case r: Collaborators.ResponsibleIndividual => Collaborator.Roles.ResponsibleIndividual
+    case m: Collaborators.Member                => Collaborator.Roles.Member
   }
 
   def describeRole(me: Collaborator): String = me match {
-    case a: Collaborators.Administrator         => Roles.ADMINISTRATOR.toString
-    case r: Collaborators.ResponsibleIndividual => Roles.RESPONSIBLE_INDIVIDUAL.toString
-    case m: Collaborators.Member                => Roles.MEMBER.toString
+    case a: Collaborators.Administrator         => Roles.Administrator.toString
+    case r: Collaborators.ResponsibleIndividual => Roles.ResponsibleIndividual.toString
+    case m: Collaborators.Member                => Roles.Member.toString
   }
 
   import play.api.libs.json.Json
@@ -113,9 +113,9 @@ object Collaborator {
   implicit val formatMember: OFormat[Collaborators.Member]                               = Json.format[Collaborators.Member]
 
   implicit val collaboratorJf: OFormat[Collaborator] = Union.from[Collaborator]("role")
-    .and[Collaborators.Administrator](Roles.ADMINISTRATOR.toString)
-    .and[Collaborators.ResponsibleIndividual](Roles.RESPONSIBLE_INDIVIDUAL.toString)
-    .and[Collaborators.Member](Roles.MEMBER.toString)
+    .and[Collaborators.Administrator](Roles.Administrator.toString)
+    .and[Collaborators.ResponsibleIndividual](Roles.ResponsibleIndividual.toString)
+    .and[Collaborators.Member](Roles.Member.toString)
     .format
 }
 

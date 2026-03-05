@@ -36,15 +36,15 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
 
   "Collaborator" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[Collaborator](Member(userId))) shouldBe jsonCollaborator(Roles.MEMBER, userId)
-      Json.prettyPrint(Json.toJson[Collaborator](Administrator(userId))) shouldBe jsonCollaborator(Roles.ADMINISTRATOR, userId)
-      Json.prettyPrint(Json.toJson[Collaborator](ResponsibleIndividual(userId))) shouldBe jsonCollaborator(Roles.RESPONSIBLE_INDIVIDUAL, userId)
+      Json.prettyPrint(Json.toJson[Collaborator](Member(userId))) shouldBe jsonCollaborator(Roles.Member, userId)
+      Json.prettyPrint(Json.toJson[Collaborator](Administrator(userId))) shouldBe jsonCollaborator(Roles.Administrator, userId)
+      Json.prettyPrint(Json.toJson[Collaborator](ResponsibleIndividual(userId))) shouldBe jsonCollaborator(Roles.ResponsibleIndividual, userId)
     }
 
     "read from json" in {
-      testFromJson[Collaborator](jsonCollaborator(Roles.MEMBER, userId))(Member(userId))
-      testFromJson[Collaborator](jsonCollaborator(Roles.ADMINISTRATOR, userId))(Administrator(userId))
-      testFromJson[Collaborator](jsonCollaborator(Roles.RESPONSIBLE_INDIVIDUAL, userId))(ResponsibleIndividual(userId))
+      testFromJson[Collaborator](jsonCollaborator(Roles.Member, userId))(Member(userId))
+      testFromJson[Collaborator](jsonCollaborator(Roles.Administrator, userId))(Administrator(userId))
+      testFromJson[Collaborator](jsonCollaborator(Roles.ResponsibleIndividual, userId))(ResponsibleIndividual(userId))
     }
   }
 }

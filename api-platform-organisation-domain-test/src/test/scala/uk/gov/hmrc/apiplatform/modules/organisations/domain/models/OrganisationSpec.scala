@@ -60,13 +60,13 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
         orgName,
         orgType,
         createdDateTime,
-        Roles.MEMBER,
+        Roles.Member,
         userId
       )
     }
 
     "read from json" in {
-      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, createdDateTime, Roles.MEMBER, userId))(Organisation(
+      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, createdDateTime, Roles.Member, userId))(Organisation(
         orgId,
         orgName,
         orgType,
