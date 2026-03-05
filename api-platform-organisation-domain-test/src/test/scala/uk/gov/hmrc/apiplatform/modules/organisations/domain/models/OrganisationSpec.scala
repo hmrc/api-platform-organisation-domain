@@ -22,16 +22,27 @@ import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.{Role, Roles}
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborators.Member
+
 class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
 
-  def jsonOrganisation(organisationId: OrganisationId, organisationName: OrganisationName, organisationType: Organisation.OrganisationType, createdDateTime: Instant, userId: UserId) = {
+  def jsonOrganisation(
+      organisationId: OrganisationId,
+      organisationName: OrganisationName,
+      organisationType: Organisation.OrganisationType,
+      createdDateTime: Instant,
+      role: Role,
+      userId: UserId
+    ) = {
     s"""{
        |  "id" : "${organisationId.value.toString()}",
        |  "organisationName" : "${organisationName.value}",
        |  "organisationType" : "${organisationType.toString()}",
        |  "createdDateTime" : "${createdDateTime.toString()}",
-       |  "members" : [ {
-       |    "userId" : "${userId.value.toString()}"
+       |  "collaborators" : [ {
+       |    "userId" : "${userId.value.toString()}",
+       |    "role" : "${role.toString()}"
        |  } ]
        |}""".stripMargin
   }
@@ -49,12 +60,19 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
         orgName,
         orgType,
         createdDateTime,
+        Roles.MEMBER,
         userId
       )
     }
 
     "read from json" in {
-      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, createdDateTime, userId))(Organisation(orgId, orgName, orgType, createdDateTime, Set(Member(userId))))
+      testFromJson[Organisation](jsonOrganisation(orgId, orgName, orgType, createdDateTime, Roles.MEMBER, userId))(Organisation(
+        orgId,
+        orgName,
+        orgType,
+        createdDateTime,
+        Set(Member(userId))
+      ))
     }
   }
 }
