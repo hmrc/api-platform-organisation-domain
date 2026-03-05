@@ -50,9 +50,9 @@ object Collaborator {
     }
 
     def apply(text: String): Option[Collaborator.Role] = text.toUpperCase() match {
-      case "Administrator"         => Some(Collaborator.Roles.Administrator)
-      case "ResponsibleIndividual" => Some(Collaborator.Roles.ResponsibleIndividual)
-      case "Member"                => Some(Collaborator.Roles.Member)
+      case "ADMINISTRATOR"         => Some(Collaborator.Roles.Administrator)
+      case "RESPONSIBLEINDIVIDUAL" => Some(Collaborator.Roles.ResponsibleIndividual)
+      case "MEMBER"                => Some(Collaborator.Roles.Member)
       case _                       => None
     }
 

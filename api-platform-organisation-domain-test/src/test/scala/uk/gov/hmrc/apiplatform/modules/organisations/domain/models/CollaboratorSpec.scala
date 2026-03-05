@@ -46,5 +46,13 @@ class CollaboratorSpec extends BaseJsonFormattersSpec {
       testFromJson[Collaborator](jsonCollaborator(Roles.Administrator, userId))(Administrator(userId))
       testFromJson[Collaborator](jsonCollaborator(Roles.ResponsibleIndividual, userId))(ResponsibleIndividual(userId))
     }
+
+    "apply" in {
+      Role.apply("Administrator") shouldBe Some(Roles.Administrator)
+      Role.apply("ResponsibleIndividual") shouldBe Some(Roles.ResponsibleIndividual)
+      Role.apply("Member") shouldBe Some(Roles.Member)
+      Role.apply("MEMBER") shouldBe Some(Roles.Member)
+      Role.apply("random") shouldBe None
+    }
   }
 }
