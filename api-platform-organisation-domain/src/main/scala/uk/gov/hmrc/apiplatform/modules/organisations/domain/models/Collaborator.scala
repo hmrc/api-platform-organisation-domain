@@ -44,7 +44,7 @@ object Collaborator {
   object Role {
 
     val displayText: Role => String = {
-      case Collaborator.Roles.Administrator         => "Administrator"
+      case Collaborator.Roles.Administrator         => "Admin"
       case Collaborator.Roles.ResponsibleIndividual => "Responsible individual"
       case Collaborator.Roles.Member                => "Member"
     }
