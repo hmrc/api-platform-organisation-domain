@@ -37,9 +37,9 @@ object QuestionnaireState {
   case object Completed     extends QuestionnaireState
 
   def describe(state: QuestionnaireState): String = state match {
-    case NotStarted    => "Not Started"
-    case InProgress    => "In Progress"
-    case NotApplicable => "Not Applicable"
+    case NotStarted    => "Incomplete"
+    case InProgress    => "Incomplete"
+    case NotApplicable => "Not applicable"
     case Completed     => "Completed"
   }
 

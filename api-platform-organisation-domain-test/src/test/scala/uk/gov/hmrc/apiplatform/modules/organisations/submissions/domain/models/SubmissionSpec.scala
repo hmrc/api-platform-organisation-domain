@@ -113,9 +113,9 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "questionnaire state description" in {
-    QuestionnaireState.describe(QuestionnaireState.NotStarted) shouldBe "Not Started"
-    QuestionnaireState.describe(QuestionnaireState.InProgress) shouldBe "In Progress"
-    QuestionnaireState.describe(QuestionnaireState.NotApplicable) shouldBe "Not Applicable"
+    QuestionnaireState.describe(QuestionnaireState.NotStarted) shouldBe "Incomplete"
+    QuestionnaireState.describe(QuestionnaireState.InProgress) shouldBe "Incomplete"
+    QuestionnaireState.describe(QuestionnaireState.NotApplicable) shouldBe "Not applicable"
     QuestionnaireState.describe(QuestionnaireState.Completed) shouldBe "Completed"
   }
 
