@@ -30,16 +30,16 @@ object SubmissionReview {
     val isSubmitted: Boolean  = this == State.Submitted
     val isInProgress: Boolean = this == State.InProgress
     val isApproved: Boolean   = this == State.Approved
-    val isFailed: Boolean     = this == State.Failed
+    val isDeclined: Boolean   = this == State.Declined
   }
 
   object State {
     case object Submitted  extends State
     case object InProgress extends State
     case object Approved   extends State
-    case object Failed     extends State
+    case object Declined   extends State
 
-    val values = ListSet(Submitted, InProgress, Approved, Failed)
+    val values = ListSet(Submitted, InProgress, Approved, Declined)
 
     def apply(text: String): Option[State] = State.values.find(_.toString.toUpperCase == text.toUpperCase())
 
