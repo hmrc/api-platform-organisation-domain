@@ -23,10 +23,9 @@ import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationN
 
 class SubmissionReviewSpec extends BaseJsonFormattersSpec with FixedClock {
 
-  def jsonSubmissionReview(submissionId: SubmissionId, instanceIndex: Int, organisationName: OrganisationName) = {
+  def jsonSubmissionReview(submissionId: SubmissionId, organisationName: OrganisationName) = {
     s"""{
        |  "submissionId" : "${submissionId.value.toString()}",
-       |  "instanceIndex" : $instanceIndex,
        |  "organisationName" : "${organisationName.value}",
        |  "lastUpdate" : "2020-01-02T03:04:05.006Z",
        |  "requestedBy" : "bob@example.com",
@@ -40,13 +39,11 @@ class SubmissionReviewSpec extends BaseJsonFormattersSpec with FixedClock {
        |}""".stripMargin
   }
 
-  val submissionId  = SubmissionId.random
-  val instanceIndex = 0
-  val orgName       = OrganisationName("My org")
+  val submissionId = SubmissionId.random
+  val orgName      = OrganisationName("My org")
 
   val submissionReview = SubmissionReview(
     submissionId,
-    instanceIndex,
     orgName,
     instant,
     "bob@example.com",
@@ -57,11 +54,11 @@ class SubmissionReviewSpec extends BaseJsonFormattersSpec with FixedClock {
 
   "SubmissionReview" should {
     "convert to json" in {
-      Json.prettyPrint(Json.toJson[SubmissionReview](submissionReview)) shouldBe jsonSubmissionReview(submissionId, instanceIndex, orgName)
+      Json.prettyPrint(Json.toJson[SubmissionReview](submissionReview)) shouldBe jsonSubmissionReview(submissionId, orgName)
     }
 
     "read from json" in {
-      testFromJson[SubmissionReview](jsonSubmissionReview(submissionId, instanceIndex, orgName))(submissionReview)
+      testFromJson[SubmissionReview](jsonSubmissionReview(submissionId, orgName))(submissionReview)
     }
   }
 }
