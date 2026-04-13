@@ -66,7 +66,6 @@ object SubmissionReview {
 
 case class SubmissionReview(
     submissionId: SubmissionId,
-    instanceIndex: Int,
     organisationName: OrganisationName,
     lastUpdate: Instant,
     requestedBy: String,
