@@ -116,25 +116,43 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
     "for address questions" in {
       val question = addressQuestion(1)
       type AnswerMatching = Either[Unit, ActualAnswer]
-      val aFailure: AnswerMatching    = Left(())
-      val addLineOne                  = "1 main st"
-      val addLineTwo                  = "line two"
-      val locality                    = "city"
-      val region                      = "region"
-      val postcode                    = "A12 3BC"
-      val validAnswer: AnswerMatching = Right(ActualAnswer.AddressAnswer(RegisteredOfficeAddress(Some(addLineOne), Some(addLineTwo), Some(locality), Some(region), Some(postcode))))
-      val validRawAnswers             = Map(
+      val failure1: AnswerMatching     = Left(())
+      val failure2: AnswerMatching     = Left(ValidationErrors(ValidationError("locality", "Town or City required")))
+      val addLineOne                   = "1 main st"
+      val addLineTwo                   = "line two"
+      val locality                     = "city"
+      val region                       = "region"
+      val postcode                     = "A12 3BC"
+      val validAnswer1: AnswerMatching = Right(ActualAnswer.AddressAnswer(RegisteredOfficeAddress(Some(addLineOne), Some(addLineTwo), Some(locality), Some(region), Some(postcode))))
+      val validRawAnswers1             = Map(
         "addressLineOne" -> Seq(addLineOne),
         "addressLineTwo" -> Seq(addLineTwo),
         "locality"       -> Seq(locality),
         "region"         -> Seq(region),
         "postcode"       -> Seq(postcode)
       )
+      val validAnswer2: AnswerMatching = Right(ActualAnswer.AddressAnswer(RegisteredOfficeAddress(Some(addLineOne), None, Some(locality), None, Some(postcode))))
+      val validRawAnswers2             = Map(
+        "addressLineOne" -> Seq(addLineOne),
+        "addressLineTwo" -> Seq.empty,
+        "locality"       -> Seq(locality),
+        "region"         -> Seq.empty,
+        "postcode"       -> Seq(postcode)
+      )
+      val invalidRawAnswers            = Map(
+        "addressLineOne" -> Seq(addLineOne),
+        "addressLineTwo" -> Seq.empty,
+        "locality"       -> Seq.empty,
+        "region"         -> Seq.empty,
+        "postcode"       -> Seq(postcode)
+      )
 
       val passes = Table(
         ("description", "question", Question.answerKey, "expects"),
-        ("valid answer", question, validRawAnswers, validAnswer),
-        ("invalid answer", question, answerOf("Bob"), aFailure)
+        ("valid answer 1", question, validRawAnswers1, validAnswer1),
+        ("valid answer 2", question, validRawAnswers2, validAnswer2),
+        ("invalid answer 1", question, answerOf("Bob"), failure1),
+        ("invalid answer 2", question, invalidRawAnswers, failure2)
       )
 
       forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>

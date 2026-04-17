@@ -111,13 +111,14 @@ object ValidateAnswers {
 
   def validateAddress(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
     (
-      validateStringField("addressLineOne", rawAnswers = rawAnswers, error = ValidationError("addressLineOne", "Address Line One Required")),
+      validateStringField("addressLineOne", rawAnswers = rawAnswers, error = ValidationError("addressLineOne", "Address Line One required")),
+      validateStringField("locality", rawAnswers = rawAnswers, error = ValidationError("locality", "Town or City required")),
       validateStringField("postcode", rawAnswers = rawAnswers, error = ValidationError("postcode", "Postcode required"))
-    ).parMapN((addressLineOne, postcode) =>
+    ).parMapN((addressLineOne, locality, postcode) =>
       ActualAnswer.AddressAnswer(RegisteredOfficeAddress(
         Some(addressLineOne),
         rawAnswers.get("addressLineTwo").flatMap(_.headOption),
-        rawAnswers.get("locality").flatMap(_.headOption),
+        Some(locality),
         rawAnswers.get("region").flatMap(_.headOption),
         Some(postcode)
       ))
