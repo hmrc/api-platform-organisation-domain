@@ -27,19 +27,21 @@ import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.S
 object SubmissionReview {
 
   sealed trait State {
-    val isSubmitted: Boolean  = this == State.Submitted
-    val isInProgress: Boolean = this == State.InProgress
-    val isApproved: Boolean   = this == State.Approved
-    val isDeclined: Boolean   = this == State.Declined
+    val isSubmitted: Boolean   = this == State.Submitted
+    val isInProgress: Boolean  = this == State.InProgress
+    val isApproved: Boolean    = this == State.Approved
+    val isDeclined: Boolean    = this == State.Declined
+    val isReSubmitted: Boolean = this == State.ReSubmitted
   }
 
   object State {
-    case object Submitted  extends State
-    case object InProgress extends State
-    case object Approved   extends State
-    case object Declined   extends State
+    case object Submitted   extends State
+    case object InProgress  extends State
+    case object Approved    extends State
+    case object Declined    extends State
+    case object ReSubmitted extends State
 
-    val values = ListSet(Submitted, InProgress, Approved, Declined)
+    val values = ListSet(Submitted, InProgress, Approved, Declined, ReSubmitted)
 
     def apply(text: String): Option[State] = State.values.find(_.toString.toUpperCase == text.toUpperCase())
 
