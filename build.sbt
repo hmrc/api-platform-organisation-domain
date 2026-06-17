@@ -11,11 +11,12 @@ Global / bloopExportJarClassifiers := Some(Set("sources"))
 
 val appName = "api-platform-organisation-domain"
 
-lazy val scala2_13 = "2.13.18"
+//lazy val scala2_13 = "2.13.18"
+val scala3 = "3.3.7"
 
 ThisBuild / majorVersion     := 0
 ThisBuild / isPublicArtefact := true
-ThisBuild / scalaVersion     := scala2_13
+ThisBuild / scalaVersion     := scala3
 
 ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
 
