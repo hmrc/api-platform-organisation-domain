@@ -19,11 +19,11 @@ package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.service
 import java.time.LocalDate
 import scala.util.Try
 
-import cats.implicits._
+import cats.implicits.*
 
 import play.api.libs.json.{Json, OFormat}
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 
 case class ValidationErrors(errors: ValidationError*)
 case class ValidationError(key: String = Question.answerKey, message: String)

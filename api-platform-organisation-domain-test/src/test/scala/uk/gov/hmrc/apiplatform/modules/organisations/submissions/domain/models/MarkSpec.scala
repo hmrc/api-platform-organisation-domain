@@ -16,11 +16,15 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
+import cats.kernel.Monoid
+
 import uk.gov.hmrc.apiplatform.modules.common.utils
 
 class MarkSpec extends utils.HmrcSpec {
 
-  import Mark._
+  import Mark.{*, given}
+
+  val markMonoid = summon[Monoid[Mark]]
 
   "Monoid of mark" should {
     "on empty collection should be a pass" in {

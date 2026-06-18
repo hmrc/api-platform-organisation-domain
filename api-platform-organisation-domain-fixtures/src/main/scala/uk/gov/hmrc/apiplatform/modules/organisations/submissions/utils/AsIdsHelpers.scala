@@ -18,7 +18,7 @@ package uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils
 
 import cats.data.NonEmptyList
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 
 trait AsIdsHelpers {
 

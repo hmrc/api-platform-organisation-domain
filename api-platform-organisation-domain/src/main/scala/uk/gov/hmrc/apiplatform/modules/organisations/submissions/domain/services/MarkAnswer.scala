@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 
 object MarkAnswer {
   //

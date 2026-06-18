@@ -17,7 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import java.util.UUID
-import scala.util.control.Exception._
+import scala.util.control.Exception.*
 
 case class SubmissionId(value: UUID) extends AnyVal {
   override def toString(): String = value.toString()

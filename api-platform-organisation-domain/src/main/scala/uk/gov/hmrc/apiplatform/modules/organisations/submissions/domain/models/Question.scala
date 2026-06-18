@@ -94,7 +94,9 @@ object Question {
   object Id {
     def random = Id(java.util.UUID.randomUUID.toString)
 
-    given Format[Id] = Json.valueFormat[Id]
+    given KeyReads[Question.Id]  = KeyReads(key => JsSuccess(Question.Id(key)))
+    given KeyWrites[Question.Id] = KeyWrites(_.value)
+    given Format[Id]             = Json.valueFormat[Id]
   }
 
   case class Label(value: String) extends AnyVal
@@ -201,7 +203,7 @@ object Question {
     lazy val choices                                = ListSet(YES, NO)
   }
 
-  import play.api.libs.json._
+  import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
   given Format[Wording] = Json.valueFormat[Wording]
@@ -219,21 +221,21 @@ object Question {
     case _                => JsError("Failed to parse Mark value")
   }
 
-  given KeyReads[Question.Id]   = KeyReads(key => JsSuccess(Question.Id(key)))
+//  given KeyReads[Question.Id]   = KeyReads(key => JsSuccess(Question.Id(key)))
 
-  given KeyWrites[Question.Id] = KeyWrites(_.value)
+//  given KeyWrites[Question.Id] = KeyWrites(_.value)
 
-  given KeyReads[PossibleAnswer]   = KeyReads(key => JsSuccess(PossibleAnswer(key)))
+  given KeyReads[PossibleAnswer]  = KeyReads(key => JsSuccess(PossibleAnswer(key)))
   given KeyWrites[PossibleAnswer] = KeyWrites(_.value)
 
   given Reads[ListMap[PossibleAnswer, Mark]] = listMapReads[PossibleAnswer, Mark]
 
-  import Statement._
+  import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Statement.given
 
-  given Format[PossibleAnswer]    = Json.valueFormat[PossibleAnswer]
-  given OFormat[TextQuestion]       = Json.format[TextQuestion]
-  given OFormat[YesNoQuestion]     = Json.format[YesNoQuestion]
-  given OFormat[DateQuestion]       = Json.format[DateQuestion]
+  given Format[PossibleAnswer]   = Json.valueFormat[PossibleAnswer]
+  given OFormat[TextQuestion]    = Json.format[TextQuestion]
+  given OFormat[YesNoQuestion]   = Json.format[YesNoQuestion]
+  given OFormat[DateQuestion]    = Json.format[DateQuestion]
   given OFormat[AddressQuestion] = Json.format[AddressQuestion]
 
   given OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]

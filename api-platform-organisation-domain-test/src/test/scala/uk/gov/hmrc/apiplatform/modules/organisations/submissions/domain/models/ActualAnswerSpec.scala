@@ -18,10 +18,10 @@ package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import org.scalatest.prop.TableDrivenPropertyChecks
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 
 class ActualAnswerSpec extends HmrcSpec with TableDrivenPropertyChecks {
 

@@ -16,12 +16,13 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
-import play.api.libs.json.{Json, OFormat}
-import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationName
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
-
 import java.time.Instant
 import scala.collection.immutable.ListSet
+
+import play.api.libs.json.{Json, OFormat}
+
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationName
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 
 object SubmissionReview {
 
@@ -29,14 +30,15 @@ object SubmissionReview {
     case Submitted, InProgress, Approved, Declined, ReSubmitted
 
   object State {
-    extension (state: State){
-      def isSubmitted: Boolean = state == State.Submitted
-      def isInProgress: Boolean = state == State.InProgress
-      def isApproved: Boolean = state == State.Approved
-      def isDeclined: Boolean = state == State.Declined
+
+    extension (state: State) {
+      def isSubmitted: Boolean   = state == State.Submitted
+      def isInProgress: Boolean  = state == State.InProgress
+      def isApproved: Boolean    = state == State.Approved
+      def isDeclined: Boolean    = state == State.Declined
       def isReSubmitted: Boolean = state == State.ReSubmitted
     }
-    
+
     def apply(text: String): Option[State] = State.values.find(_.toString.toUpperCase == text.toUpperCase())
 
     def unsafeApply(text: String): State = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid State"))

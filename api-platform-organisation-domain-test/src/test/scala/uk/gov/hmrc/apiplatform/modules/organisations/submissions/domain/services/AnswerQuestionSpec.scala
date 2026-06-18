@@ -20,7 +20,7 @@ import org.scalatest.Inside
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AsIdsHelpers, QuestionBuilder, SubmissionsTestData}
 
 class AnswerQuestionSpec extends HmrcSpec with Inside with QuestionBuilder with AsIdsHelpers {

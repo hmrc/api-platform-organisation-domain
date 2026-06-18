@@ -19,9 +19,9 @@ package uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils
 import scala.collection.immutable.ListMap
 
 import cats.data.NonEmptyList
-import cats.implicits._
+import cats.implicits.*
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 
 trait QuestionnaireTestData {
 
@@ -120,7 +120,7 @@ trait QuestionnaireTestData {
       Question.Id("2c66be40-8eb4-4163-9899-a480928cfb6a"),
       Wording("What is your organisation's address?"),
       statement = None,
-      errorInfo = ErrorInfo("Invalid Address", None).some
+      errorInfo = ErrorInfo("Invalid Address").some
     )
 
     val questionMultiple = Question.MultiChoiceQuestion(

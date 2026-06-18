@@ -16,9 +16,9 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
-import cats.data.Validated._
-import cats.data._
-import cats.syntax.all._
+import cats.data.*
+import cats.data.Validated.*
+import cats.syntax.all.*
 
 import play.api.libs.json.{Format, Json}
 

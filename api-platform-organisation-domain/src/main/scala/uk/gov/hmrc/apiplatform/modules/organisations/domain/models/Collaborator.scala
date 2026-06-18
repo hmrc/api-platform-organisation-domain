@@ -16,10 +16,10 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.UserId
 
-import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.Roles._
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.Roles.*
 
 sealed trait Collaborator {
   def userId: UserId

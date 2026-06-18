@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
-import play.api.libs.json._
+import play.api.libs.json.*
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData

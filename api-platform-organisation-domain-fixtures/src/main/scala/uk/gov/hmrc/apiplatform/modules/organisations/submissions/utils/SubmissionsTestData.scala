@@ -23,8 +23,8 @@ import cats.data.NonEmptyList
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.FixedClock
 
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.AskWhen.Context.Keys
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
 
 trait StatusTestDataHelper {
   self: FixedClock =>

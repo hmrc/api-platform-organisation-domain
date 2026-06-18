@@ -17,6 +17,7 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import cats.data.NonEmptyList
+
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
 
 sealed trait StatementFragment

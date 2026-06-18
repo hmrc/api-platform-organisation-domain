@@ -55,13 +55,13 @@ object AskWhen {
     }
   }
 
-  import play.api.libs.json._
+  import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jsonFormatAskWhenContext: OFormat[AskWhenContext] = Json.format[AskWhenContext]
-  implicit val jsonFormatAskWhenAnswer: OFormat[AskWhenAnswer]   = Json.format[AskWhenAnswer]
+  given OFormat[AskWhenContext] = Json.format[AskWhenContext]
+  given OFormat[AskWhenAnswer]  = Json.format[AskWhenAnswer]
 
-  implicit val jsonFormatCondition: Format[AskWhen] = Union.from[AskWhen]("askWhen")
+  given Format[AskWhen] = Union.from[AskWhen]("askWhen")
     .and[AskWhenContext]("askWhenContext")
     .and[AskWhenAnswer]("askWhenAnswer")
     .andType("alwaysAsk", () => AlwaysAsk)
@@ -74,31 +74,31 @@ object QuestionItem {
   def apply(question: Question): QuestionItem                   = QuestionItem(question, AskWhen.AlwaysAsk)
   def apply(question: Question, askWhen: AskWhen): QuestionItem = new QuestionItem(question, askWhen)
 
-  import NonEmptyListFormatters.given
-  import play.api.libs.json._
-  import AskWhen._
+  import play.api.libs.json.*
 
-  implicit val jsonFormatQuestionItem: OFormat[QuestionItem] = Json.format[QuestionItem]
+  given OFormat[QuestionItem] = Json.format[QuestionItem]
 }
 
 object Questionnaire {
+  import NonEmptyListFormatters.given
+
   case class Label(value: String) extends AnyVal
   case class Id(value: String)    extends AnyVal
 
   object Label {
-    implicit val format: Format[Label] = Json.valueFormat[Label]
+    given Format[Label] = Json.valueFormat[Label]
   }
 
   object Id {
     def random = Questionnaire.Id(java.util.UUID.randomUUID.toString)
 
-    implicit val format: Format[Id] = Json.valueFormat[Id]
+    given Format[Id] = Json.valueFormat[Id]
   }
 
-  import play.api.libs.json._
-  import QuestionItem._
+  import play.api.libs.json.*
+  import QuestionItem.given
 
-  implicit val jsonFormatquestionnaire: OFormat[Questionnaire] = Json.format[Questionnaire]
+  given OFormat[Questionnaire] = Json.format[Questionnaire]
 }
 
 case class Questionnaire(

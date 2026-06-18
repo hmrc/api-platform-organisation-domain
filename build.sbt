@@ -22,9 +22,40 @@ ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" 
 
 ThisBuild / semanticdbEnabled := true
 ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+lazy val commonSettings = Seq(
+
+  scalafixConfig := {
+    val base = (ThisBuild / baseDirectory).value
+    val file =
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => base / ".scalafix-scala3.conf"
+        case _            => base / ".scalafix-scala2.conf"
+      }
+    Some(file)
+  },
+
+  scalafmtConfig := {
+    val base = (ThisBuild / baseDirectory).value
+    val file =
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => base / ".scalafmt-scala3.conf"
+        case _            => base / ".scalafmt-scala2.conf"
+      }
+    file
+  }
+
+//  scalacOptions ++=
+//    (CrossVersion.partialVersion(scalaVersion.value) match {
+//      case Some((3, _)) => scala3Options
+//      case _            => scala2Options
+//    }),
+
+//  crossScalaVersions := Seq(scala3, scala2_13),
+)
 
 lazy val library = (project in file("."))
   .settings(
+    commonSettings,
     publish / skip := true
   )
   .aggregate(
@@ -34,6 +65,7 @@ lazy val library = (project in file("."))
 
 lazy val apiPlatformApplicationDomain = Project("api-platform-organisation-domain", file("api-platform-organisation-domain"))
   .settings(
+    commonSettings,
     libraryDependencies ++= LibraryDependencies.applicationDomain,
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
@@ -46,6 +78,7 @@ lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-organisati
     apiPlatformApplicationDomain % "compile"
   )
   .settings(
+    commonSettings,
     libraryDependencies ++= LibraryDependencies.root,
     ScoverageKeys.coverageEnabled := false,
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
@@ -59,6 +92,7 @@ lazy val apiPlatformApplicationDomainTest = Project("api-platform-organisation-d
     apiPlatformApplicationDomainFixtures
   )
   .settings(
+    commonSettings,
     publish / skip := true,
     libraryDependencies ++= LibraryDependencies.root,
     ScoverageSettings(),

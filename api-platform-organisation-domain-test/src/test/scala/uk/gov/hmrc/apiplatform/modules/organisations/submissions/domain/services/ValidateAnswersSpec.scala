@@ -20,7 +20,7 @@ import org.scalatest.Inside
 
 import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models._
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AsIdsHelpers, QuestionBuilder}
 
 class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with AsIdsHelpers with FixedClock {

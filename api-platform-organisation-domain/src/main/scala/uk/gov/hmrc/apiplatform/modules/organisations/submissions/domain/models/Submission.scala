@@ -57,7 +57,7 @@ case class QuestionIdsOfInterest(
 
 object Submission extends EnvReads {
   import NonEmptyListFormatters.given
-  
+
   type AnswersToQuestions = Map[Question.Id, ActualAnswer]
 
   val create: (
@@ -324,20 +324,20 @@ object Submission extends EnvReads {
     lazy val isSubmitted                    = status.isSubmitted
   }
 
-  import play.api.libs.json._
+  import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
-  implicit val keyReadsQuestionnaireId: KeyReads[Questionnaire.Id]   = KeyReads(key => JsSuccess(Questionnaire.Id(key)))
-  implicit val keyWritesQuestionnaireId: KeyWrites[Questionnaire.Id] = KeyWrites(_.value)
+  given KeyReads[Questionnaire.Id]  = KeyReads(key => JsSuccess(Questionnaire.Id(key)))
+  given KeyWrites[Questionnaire.Id] = KeyWrites(_.value)
 
-  implicit val stateWrites: Writes[QuestionnaireState] = Writes {
+  given Writes[QuestionnaireState] = Writes {
     case QuestionnaireState.NotStarted    => JsString("NotStarted")
     case QuestionnaireState.InProgress    => JsString("InProgress")
     case QuestionnaireState.NotApplicable => JsString("NotApplicable")
     case QuestionnaireState.Completed     => JsString("Completed")
   }
 
-  implicit val stateReads: Reads[QuestionnaireState] = Reads {
+  given Reads[QuestionnaireState] = Reads {
     case JsString("NotStarted")    => JsSuccess(QuestionnaireState.NotStarted)
     case JsString("InProgress")    => JsSuccess(QuestionnaireState.InProgress)
     case JsString("NotApplicable") => JsSuccess(QuestionnaireState.NotApplicable)
@@ -345,25 +345,25 @@ object Submission extends EnvReads {
     case _                         => JsError("Failed to parse QuestionnaireState value")
   }
 
-  implicit val questionnaireProgressFormat: OFormat[QuestionnaireProgress] = Json.format[QuestionnaireProgress]
+  given OFormat[QuestionnaireProgress] = Json.format[QuestionnaireProgress]
 
-  implicit val questionIdsOfInterestFormat: OFormat[QuestionIdsOfInterest] = Json.format[QuestionIdsOfInterest]
+  given OFormat[QuestionIdsOfInterest] = Json.format[QuestionIdsOfInterest]
 
-  implicit val utcReads: Reads[Instant] = InstantJsonFormatter.lenientInstantReads
+  given Reads[Instant] = InstantJsonFormatter.lenientInstantReads
 
-  import Submission.Status._
+  import Submission.Status.*
 
-  implicit val rejectedStatusFormat: OFormat[Declined]                                         = Json.format[Declined]
-  implicit val acceptedStatusFormat: OFormat[Granted]                                          = Json.format[Granted]
-  implicit val acceptedWithWarningsStatusFormat: OFormat[GrantedWithWarnings]                  = Json.format[GrantedWithWarnings]
-  implicit val failedStatusFormat: OFormat[Failed]                                             = Json.format[Failed]
-  implicit val warningsStatusFormat: OFormat[Warnings]                                         = Json.format[Warnings]
-  implicit val pendingResponsibleIndividualStatusFormat: OFormat[PendingResponsibleIndividual] = Json.format[PendingResponsibleIndividual]
-  implicit val submittedStatusFormat: OFormat[Submitted]                                       = Json.format[Submitted]
-  implicit val answeringStatusFormat: OFormat[Answering]                                       = Json.format[Answering]
-  implicit val createdStatusFormat: OFormat[Created]                                           = Json.format[Created]
+  given OFormat[Declined]                     = Json.format[Declined]
+  given OFormat[Granted]                      = Json.format[Granted]
+  given OFormat[GrantedWithWarnings]          = Json.format[GrantedWithWarnings]
+  given OFormat[Failed]                       = Json.format[Failed]
+  given OFormat[Warnings]                     = Json.format[Warnings]
+  given OFormat[PendingResponsibleIndividual] = Json.format[PendingResponsibleIndividual]
+  given OFormat[Submitted]                    = Json.format[Submitted]
+  given OFormat[Answering]                    = Json.format[Answering]
+  given OFormat[Created]                      = Json.format[Created]
 
-  implicit val submissionStatus: OFormat[Submission.Status] = Union.from[Submission.Status]("Submission.StatusType")
+  given OFormat[Submission.Status] = Union.from[Submission.Status]("Submission.StatusType")
     .and[Declined]("declined")
     .and[Granted]("granted")
     .and[GrantedWithWarnings]("grantedWithWarnings")
@@ -375,13 +375,13 @@ object Submission extends EnvReads {
     .and[Created]("created")
     .format
 
-  import GroupOfQuestionnaires._
-  import Question._
+  import GroupOfQuestionnaires.given
+  import Question.given
 
-  implicit val submissionInstanceFormat: OFormat[Submission.Instance] = Json.format[Submission.Instance]
-  implicit val submissionFormat: OFormat[Submission]                  = Json.format[Submission]
-  implicit val extendedSubmissionFormat: OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]
-  implicit val markedSubmissionFormat: OFormat[MarkedSubmission]      = Json.format[MarkedSubmission]
+  given OFormat[Submission.Instance] = Json.format[Submission.Instance]
+  given OFormat[Submission]          = Json.format[Submission]
+  given OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]
+  given OFormat[MarkedSubmission]    = Json.format[MarkedSubmission]
 
 }
 
