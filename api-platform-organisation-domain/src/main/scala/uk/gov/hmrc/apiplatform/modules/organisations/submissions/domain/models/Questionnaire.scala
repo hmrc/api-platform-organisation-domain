@@ -70,10 +70,11 @@ object AskWhen {
 
 case class QuestionItem(question: Question, askWhen: AskWhen)
 
-object QuestionItem extends NonEmptyListFormatters {
+object QuestionItem {
   def apply(question: Question): QuestionItem                   = QuestionItem(question, AskWhen.AlwaysAsk)
   def apply(question: Question, askWhen: AskWhen): QuestionItem = new QuestionItem(question, askWhen)
 
+  import NonEmptyListFormatters.given
   import play.api.libs.json._
   import AskWhen._
 

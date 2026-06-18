@@ -17,7 +17,6 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import cats.data.NonEmptyList
-
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters
 
 sealed trait StatementFragment
@@ -40,61 +39,62 @@ object CompoundFragment {
 
 case class Statement(fragments: NonEmptyList[StatementFragment])
 
-object Statement extends NonEmptyListFormatters {
+object Statement {
   def apply(fragment: StatementFragment, fragments: StatementFragment*) = new Statement(NonEmptyList.of(fragment, fragments: _*))
 
+  import NonEmptyListFormatters.given
   import play.api.libs.json._
   import play.api.libs.functional.syntax._
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jsonFormatStatementText: OFormat[StatementText] = Json.format[StatementText]
-  implicit val jsonFormatStatementLink: OFormat[StatementLink] = Json.format[StatementLink]
+  given OFormat[StatementText] = Json.format[StatementText]
+  given OFormat[StatementLink] = Json.format[StatementLink]
 
-  implicit lazy val readsStatementBullets: Reads[StatementBullets] = (
+  given readsStatementBullets: Reads[StatementBullets] = (
     (__ \ "bullets").read(nelReads[NonBulletStatementFragment])
   )
     .map(StatementBullets(_))
 
-  implicit lazy val writesStatementBullets: OWrites[StatementBullets] = (
+  given writesStatementBullets: OWrites[StatementBullets] = (
     (
       (__ \ "bullets").write(nelWrites[NonBulletStatementFragment])
     )
-      .contramap(unlift(StatementBullets.unapply))
+      .contramap(sb => sb.bullets)
   )
 
-  implicit lazy val jsonFormatStatementBullets: OFormat[StatementBullets] = OFormat(readsStatementBullets, writesStatementBullets)
+  given jsonFormatStatementBullets: OFormat[StatementBullets] = OFormat(readsStatementBullets, writesStatementBullets)
 
-  implicit lazy val readsCompoundFragment: Reads[CompoundFragment] = (
+  given readsCompoundFragment: Reads[CompoundFragment] = (
     (__ \ "fragments").read(nelReads[SimpleStatementFragment])
   )
     .map(CompoundFragment(_))
 
-  implicit lazy val writesCompoundFragment: OWrites[CompoundFragment] = (
+  given writesCompoundFragment: OWrites[CompoundFragment] = (
     (
       (__ \ "fragments").write(nelWrites[SimpleStatementFragment])
     )
-      .contramap(unlift(CompoundFragment.unapply))
+      .contramap(cf => cf.fragments)
   )
 
-  implicit lazy val jsonFormatCompoundFragment: OFormat[CompoundFragment] = OFormat(readsCompoundFragment, writesCompoundFragment)
+  given jsonFormatCompoundFragment: OFormat[CompoundFragment] = OFormat(readsCompoundFragment, writesCompoundFragment)
 
-  implicit lazy val jsonFormatSimpleStatementFragment: Format[SimpleStatementFragment] = Union.from[SimpleStatementFragment]("statementType")
+  given jsonFormatSimpleStatementFragment: Format[SimpleStatementFragment] = Union.from[SimpleStatementFragment]("statementType")
     .and[StatementText]("text")
     .and[StatementLink]("link")
     .format
 
-  implicit lazy val jsonFormatNonBulletStatementFragment: Format[NonBulletStatementFragment] = Union.from[NonBulletStatementFragment]("statementType")
+  given jsonFormatNonBulletStatementFragment: Format[NonBulletStatementFragment] = Union.from[NonBulletStatementFragment]("statementType")
     .and[StatementText]("text")
     .and[StatementLink]("link")
     .andLazy[CompoundFragment]("compound", jsonFormatCompoundFragment)
     .format
 
-  implicit lazy val jsonFormatStatementFragment: Format[StatementFragment] = Union.from[StatementFragment]("statementType")
+  given jsonFormatStatementFragment: Format[StatementFragment] = Union.from[StatementFragment]("statementType")
     .and[StatementText]("text")
     .and[StatementLink]("link")
     .andLazy[StatementBullets]("bullets", jsonFormatStatementBullets)
     .andLazy[CompoundFragment]("compound", jsonFormatCompoundFragment)
     .format
 
-  implicit val jsonFormatStatement: OFormat[Statement] = Json.format[Statement]
+  given OFormat[Statement] = Json.format[Statement]
 }

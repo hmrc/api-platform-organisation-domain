@@ -32,7 +32,7 @@ object MarkAnswer {
 
     Monoid.combineAll(
       answer.values
-        .map(PossibleAnswer)
+        .map(PossibleAnswer.apply)
         .map(question.marking.get(_).get)
     )
   }

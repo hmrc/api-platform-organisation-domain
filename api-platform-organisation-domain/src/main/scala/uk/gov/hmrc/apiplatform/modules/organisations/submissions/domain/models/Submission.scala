@@ -55,7 +55,9 @@ case class QuestionIdsOfInterest(
     questionIds: Map[String, Question.Id]
   )
 
-object Submission extends EnvReads with NonEmptyListFormatters {
+object Submission extends EnvReads {
+  import NonEmptyListFormatters.given
+  
   type AnswersToQuestions = Map[Question.Id, ActualAnswer]
 
   val create: (

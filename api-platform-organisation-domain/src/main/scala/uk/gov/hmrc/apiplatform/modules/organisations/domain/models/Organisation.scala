@@ -39,26 +39,26 @@ object Organisation {
     object OrganisationType {
 
     extension (ot: OrganisationType) {
-      def isUkLimitedCompany: Boolean = this == OrganisationType.UkLimitedCompany
-      def isSoleTrader: Boolean = this == OrganisationType.SoleTrader
-      def isRegisteredSociety: Boolean = this == OrganisationType.RegisteredSociety
-      def isCharitableIncorporatedOrganisation: Boolean = this == OrganisationType.CharitableIncorporatedOrganisation
-      def isNonUkWithPlaceOfBusinessInUk: Boolean = this == OrganisationType.NonUkWithPlaceOfBusinessInUk
-      def isNonUkWithoutPlaceOfBusinessInUk: Boolean = this == OrganisationType.NonUkWithoutPlaceOfBusinessInUk
-      def isGeneralPartnership: Boolean = this == OrganisationType.GeneralPartnership
-      def isLimitedLiabilityPartnership: Boolean = this == OrganisationType.LimitedLiabilityPartnership
-      def isLimitedPartnership: Boolean = this == OrganisationType.LimitedPartnership
-      def isScottishPartnership: Boolean = this == OrganisationType.ScottishPartnership
-      def isScottishLimitedPartnership: Boolean = this == OrganisationType.ScottishLimitedPartnership
+      def isUkLimitedCompany: Boolean = ot == OrganisationType.UkLimitedCompany
+      def isSoleTrader: Boolean = ot == OrganisationType.SoleTrader
+      def isRegisteredSociety: Boolean = ot == OrganisationType.RegisteredSociety
+      def isCharitableIncorporatedOrganisation: Boolean = ot == OrganisationType.CharitableIncorporatedOrganisation
+      def isNonUkWithPlaceOfBusinessInUk: Boolean = ot == OrganisationType.NonUkWithPlaceOfBusinessInUk
+      def isNonUkWithoutPlaceOfBusinessInUk: Boolean = ot == OrganisationType.NonUkWithoutPlaceOfBusinessInUk
+      def isGeneralPartnership: Boolean = ot == OrganisationType.GeneralPartnership
+      def isLimitedLiabilityPartnership: Boolean = ot == OrganisationType.LimitedLiabilityPartnership
+      def isLimitedPartnership: Boolean = ot == OrganisationType.LimitedPartnership
+      def isScottishPartnership: Boolean = ot == OrganisationType.ScottishPartnership
+      def isScottishLimitedPartnership: Boolean = ot == OrganisationType.ScottishLimitedPartnership
 
-      def isNonUk: Boolean = this == OrganisationType.NonUkWithPlaceOfBusinessInUk ||
-      this == OrganisationType.NonUkWithoutPlaceOfBusinessInUk
+      def isNonUk: Boolean = ot == OrganisationType.NonUkWithPlaceOfBusinessInUk ||
+      ot == OrganisationType.NonUkWithoutPlaceOfBusinessInUk
 
-      def isPartnership: Boolean = this == OrganisationType.GeneralPartnership ||
-      this == OrganisationType.LimitedLiabilityPartnership ||
-      this == OrganisationType.LimitedPartnership ||
-      this == OrganisationType.ScottishPartnership ||
-      this == OrganisationType.ScottishLimitedPartnership
+      def isPartnership: Boolean = ot == OrganisationType.GeneralPartnership ||
+      ot == OrganisationType.LimitedLiabilityPartnership ||
+      ot == OrganisationType.LimitedPartnership ||
+      ot == OrganisationType.ScottishPartnership ||
+      ot == OrganisationType.ScottishLimitedPartnership
     }
     
     def apply(text: String): Option[OrganisationType] = OrganisationType.values.find(_.toString.toUpperCase == text.toUpperCase())

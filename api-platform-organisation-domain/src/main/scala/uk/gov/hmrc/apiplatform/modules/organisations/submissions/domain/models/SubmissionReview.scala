@@ -16,40 +16,34 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
-import java.time.Instant
-import scala.collection.immutable.ListSet
-
 import play.api.libs.json.{Json, OFormat}
-
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationName
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 
+import java.time.Instant
+import scala.collection.immutable.ListSet
+
 object SubmissionReview {
 
-  sealed trait State {
-    val isSubmitted: Boolean   = this == State.Submitted
-    val isInProgress: Boolean  = this == State.InProgress
-    val isApproved: Boolean    = this == State.Approved
-    val isDeclined: Boolean    = this == State.Declined
-    val isReSubmitted: Boolean = this == State.ReSubmitted
-  }
+  enum State:
+    case Submitted, InProgress, Approved, Declined, ReSubmitted
 
   object State {
-    case object Submitted   extends State
-    case object InProgress  extends State
-    case object Approved    extends State
-    case object Declined    extends State
-    case object ReSubmitted extends State
-
-    val values = ListSet(Submitted, InProgress, Approved, Declined, ReSubmitted)
-
+    extension (state: State){
+      def isSubmitted: Boolean = state == State.Submitted
+      def isInProgress: Boolean = state == State.InProgress
+      def isApproved: Boolean = state == State.Approved
+      def isDeclined: Boolean = state == State.Declined
+      def isReSubmitted: Boolean = state == State.ReSubmitted
+    }
+    
     def apply(text: String): Option[State] = State.values.find(_.toString.toUpperCase == text.toUpperCase())
 
     def unsafeApply(text: String): State = apply(text).getOrElse(throw new RuntimeException(s"$text is not a valid State"))
 
     import play.api.libs.json.Format
-    import uk.gov.hmrc.apiplatform.modules.common.domain.services.SealedTraitJsonFormatting
-    implicit val format: Format[State] = SealedTraitJsonFormatting.createFormatFor[State]("State", apply)
+    import uk.gov.hmrc.apiplatform.modules.common.domain.services.SimpleEnumJsonFormatting
+    given Format[State] = SimpleEnumJsonFormatting.createEnumFormatFor[State]("State", apply)
   }
 
   case class Event(
@@ -60,10 +54,10 @@ object SubmissionReview {
     )
 
   object Event {
-    implicit val eventFormat: OFormat[Event] = Json.format[Event]
+    given OFormat[Event] = Json.format[Event]
   }
 
-  implicit val submissionReviewFormat: OFormat[SubmissionReview] = Json.format[SubmissionReview]
+  given OFormat[SubmissionReview] = Json.format[SubmissionReview]
 }
 
 case class SubmissionReview(
