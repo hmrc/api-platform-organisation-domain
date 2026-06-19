@@ -24,6 +24,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, Fix
 
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.{Role, Roles}
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborators.Member
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.*
 
 class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
 
@@ -38,7 +39,7 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
     s"""{
        |  "id" : "${organisationId.value.toString()}",
        |  "organisationName" : "${organisationName.value}",
-       |  "organisationType" : "${organisationType.toString()}",
+       |  "organisationType" : "${toScreamingSnakeCase(organisationType)}",
        |  "createdDateTime" : "${createdDateTime.toString()}",
        |  "collaborators" : [ {
        |    "userId" : "${userId.value.toString()}",
