@@ -20,11 +20,11 @@ import java.time.Instant
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.*
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.{Role, Roles}
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborators.Member
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.*
 
 class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
 
@@ -39,7 +39,7 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
     s"""{
        |  "id" : "${organisationId.value.toString()}",
        |  "organisationName" : "${organisationName.value}",
-       |  "organisationType" : "${toScreamingSnakeCase(organisationType)}",
+       |  "organisationType" : "${organisationType.toString}",
        |  "createdDateTime" : "${createdDateTime.toString()}",
        |  "collaborators" : [ {
        |    "userId" : "${userId.value.toString()}",

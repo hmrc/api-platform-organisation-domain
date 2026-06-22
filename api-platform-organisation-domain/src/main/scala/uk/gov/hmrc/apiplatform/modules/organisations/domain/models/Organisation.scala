@@ -68,7 +68,7 @@ object Organisation {
 
     import play.api.libs.json.Format
     import uk.gov.hmrc.apiplatform.modules.common.domain.services.SimpleEnumJsonFormatting
-    given Format[OrganisationType] = SimpleEnumJsonFormatting.createEnumFormatFor[OrganisationType]("OrganisationType", apply)
+    given Format[OrganisationType] = SimpleEnumJsonFormatting.createStringFormatFor[OrganisationType]("OrganisationType", apply)
   }
 
   given OFormat[Organisation] = Json.format[Organisation]
