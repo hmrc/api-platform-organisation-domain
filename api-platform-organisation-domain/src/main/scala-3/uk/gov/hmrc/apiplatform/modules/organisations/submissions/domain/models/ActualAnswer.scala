@@ -40,14 +40,14 @@ object ActualAnswer {
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jfTextAnswer: OFormat[TextAnswer]                     = Json.format[TextAnswer]
-  implicit val jfDateAnswer: OFormat[DateAnswer]                     = Json.format[DateAnswer]
-  implicit val jfAddress: OFormat[RegisteredOfficeAddress]           = Json.format[RegisteredOfficeAddress]
-  implicit val jfAddAnswer: OFormat[AddressAnswer]                   = Json.format[AddressAnswer]
-  implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]     = Json.format[SingleChoiceAnswer]
-  implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]
+  given OFormat[TextAnswer]              = Json.format[TextAnswer]
+  given OFormat[DateAnswer]              = Json.format[DateAnswer]
+  given OFormat[RegisteredOfficeAddress] = Json.format[RegisteredOfficeAddress]
+  given OFormat[AddressAnswer]           = Json.format[AddressAnswer]
+  given OFormat[SingleChoiceAnswer]      = Json.format[SingleChoiceAnswer]
+  given OFormat[MultipleChoiceAnswer]    = Json.format[MultipleChoiceAnswer]
 
-  implicit val jfActualAnswer: OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
+  given OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
     .and[MultipleChoiceAnswer]("multipleChoice")
     .and[SingleChoiceAnswer]("singleChoice")
     .and[DateAnswer]("date")

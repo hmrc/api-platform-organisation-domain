@@ -30,7 +30,7 @@ object SubmissionId {
 
   def unsafeApply(raw: String): SubmissionId = SubmissionId(UUID.fromString(raw))
 
-  implicit val format: Format[SubmissionId] = Json.valueFormat[SubmissionId]
+  given Format[SubmissionId] = Json.valueFormat[SubmissionId]
 
 // $COVERAGE-OFF$
   def random: SubmissionId = SubmissionId(UUID.randomUUID)

@@ -29,7 +29,7 @@ import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.A
 trait StatusTestDataHelper {
   self: FixedClock =>
 
-  implicit class StatusHistorySyntax(submission: Submission) {
+  extension (submission: Submission) {
 
     def hasCompletelyAnsweredWith(answers: Submission.AnswersToQuestions): Submission = {
       (
@@ -61,31 +61,31 @@ trait StatusTestDataHelper {
 
 trait ProgressTestDataHelper extends FixedClock {
 
-  implicit class ProgressSyntax(submission: Submission) {
-    private val allQuestionnaireIds: NonEmptyList[Questionnaire.Id] = submission.allQuestionnaires.map(_.id)
-    private val allQuestionIds                                      = submission.allQuestions.map(_.id)
+  extension (submission: Submission) {
+    private def allQuestionnaireIds: NonEmptyList[Questionnaire.Id] = submission.allQuestionnaires.map(_.id)
+    private def allQuestionIds                                      = submission.allQuestions.map(_.id)
     private def questionnaire(qId: Questionnaire.Id): Questionnaire = submission.allQuestionnaires.find(q => q.id == qId).get
     private def allQuestionIds(qId: Questionnaire.Id)               = questionnaire(qId).questions.map(_.question).map(_.id).toList
 
-    private def incompleteQuestionnaireProgress(qId: Questionnaire.Id): QuestionnaireProgress    = QuestionnaireProgress(QuestionnaireState.InProgress, allQuestionIds(qId))
-    private def completedQuestionnaireProgress(qId: Questionnaire.Id): QuestionnaireProgress     = QuestionnaireProgress(QuestionnaireState.Completed, allQuestionIds.toList)
-    private def notStartedQuestionnaireProgress(qId: Questionnaire.Id): QuestionnaireProgress    = QuestionnaireProgress(QuestionnaireState.NotStarted, allQuestionIds.toList)
-    private def notApplicableQuestionnaireProgress(qId: Questionnaire.Id): QuestionnaireProgress = QuestionnaireProgress(QuestionnaireState.NotApplicable, allQuestionIds.toList)
+    private def incompleteQuestionnaireProgress(qId: Questionnaire.Id): QuestionnaireProgress = QuestionnaireProgress(QuestionnaireState.InProgress, allQuestionIds(qId))
+    private def completedQuestionnaireProgress: QuestionnaireProgress                         = QuestionnaireProgress(QuestionnaireState.Completed, allQuestionIds.toList)
+    private def notStartedQuestionnaireProgress: QuestionnaireProgress                        = QuestionnaireProgress(QuestionnaireState.NotStarted, allQuestionIds.toList)
+    private def notApplicableQuestionnaireProgress: QuestionnaireProgress                     = QuestionnaireProgress(QuestionnaireState.NotApplicable, allQuestionIds.toList)
 
     def withIncompleteProgress(): ExtendedSubmission =
-      ExtendedSubmission(submission, allQuestionnaireIds.map(i => (i -> incompleteQuestionnaireProgress(i))).toList.toMap)
+      ExtendedSubmission(submission, allQuestionnaireIds.map(i => i -> incompleteQuestionnaireProgress(i)).toList.toMap)
 
     def withCompletedProgress(): ExtendedSubmission =
-      ExtendedSubmission(submission, allQuestionnaireIds.map(i => (i -> completedQuestionnaireProgress(i))).toList.toMap)
+      ExtendedSubmission(submission, allQuestionnaireIds.map(_ -> completedQuestionnaireProgress).toList.toMap)
 
     def withNotStartedProgress(): ExtendedSubmission =
-      ExtendedSubmission(submission, allQuestionnaireIds.map(i => (i -> notStartedQuestionnaireProgress(i))).toList.toMap)
+      ExtendedSubmission(submission, allQuestionnaireIds.map(_ -> notStartedQuestionnaireProgress).toList.toMap)
 
     def withNotApplicableProgress(): ExtendedSubmission =
-      ExtendedSubmission(submission, allQuestionnaireIds.map(i => (i -> notApplicableQuestionnaireProgress(i))).toList.toMap)
+      ExtendedSubmission(submission, allQuestionnaireIds.map(_ -> notApplicableQuestionnaireProgress).toList.toMap)
 
     def withSubmittedProgress(): ExtendedSubmission =
-      ExtendedSubmission(Submission.submit(instant, "bob@example.com")(submission), allQuestionnaireIds.map(i => (i -> completedQuestionnaireProgress(i))).toList.toMap)
+      ExtendedSubmission(Submission.submit(instant, "bob@example.com")(submission), allQuestionnaireIds.map(_ -> completedQuestionnaireProgress).toList.toMap)
 
   }
 }
@@ -230,10 +230,10 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
       question match {
         case Question.TextQuestion(id, wording, statement, _, _, _, _, absence, _)                      => ActualAnswer.TextAnswer("some random text")
         case Question.ChooseOneOfQuestion(id, wording, statement, _, _, _, marking, absence, _)         => ActualAnswer.SingleChoiceAnswer(marking.filter {
-            case (pa, Mark.Pass) => true; case _ => false
+            case (_, Mark.Pass) => true; case _ => false
           }.head._1.value)
         case Question.MultiChoiceQuestion(id, wording, statement, _, _, _, marking, absence, _)         => ActualAnswer.MultipleChoiceAnswer(Set(marking.filter {
-            case (pa, Mark.Pass) => true; case _ => false
+            case (_, Mark.Pass) => true; case _ => false
           }.head._1.value))
         case Question.AcknowledgementOnly(id, wording, statement)                                       => ActualAnswer.AcknowledgedAnswer
         case Question.DateQuestion(_, _, _, _, _, _, _, _)                                              => ActualAnswer.DateAnswer(now.toLocalDate)
@@ -285,8 +285,8 @@ trait AnsweringQuestionsHelper extends FixedClock {
 
       case Question.ChooseOneOfQuestion(id, _, _, _, _, _, marking, absence, _) => {
         marking.map {
-          case (pa, mark) => Some(ActualAnswer.SingleChoiceAnswer(pa.value))
-          case _          => None
+          case (pa, _) => Some(ActualAnswer.SingleChoiceAnswer(pa.value))
+          case _       => None
         }
           .toList ++
           List(absence.flatMap(a => if (a._2 == desiredMark) Some(ActualAnswer.NoAnswer) else None))
@@ -355,9 +355,9 @@ trait MarkedSubmissionsTestData extends SubmissionsTestData with AnsweringQuesti
 
   val markedSubmission = MarkedSubmission(submittedSubmission, markedAnswers)
 
-  def markAsPass(requestedBy: String = "bob@example.com")(submission: Submission): MarkedSubmission = {
+  def markAsPass(submission: Submission): MarkedSubmission = {
     val answers = answersForGroups(Mark.Pass)(submission.groups)
-    val marks   = answers.map { case (q, a) => q -> Mark.Pass }
+    val marks   = answers.map { case (q, _) => q -> Mark.Pass }
 
     MarkedSubmission(submission.hasCompletelyAnsweredWith(answers), marks)
   }

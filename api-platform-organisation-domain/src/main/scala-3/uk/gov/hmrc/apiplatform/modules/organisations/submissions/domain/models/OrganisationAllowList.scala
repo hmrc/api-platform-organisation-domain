@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationN
 
 object OrganisationAllowList {
 
-  implicit val organisationAllowListFormat: OFormat[OrganisationAllowList] = Json.format[OrganisationAllowList]
+  given OFormat[OrganisationAllowList] = Json.format[OrganisationAllowList]
 }
 
 case class OrganisationAllowList(

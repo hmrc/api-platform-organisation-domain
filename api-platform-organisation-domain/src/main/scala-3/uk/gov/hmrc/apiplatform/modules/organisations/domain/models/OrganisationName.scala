@@ -59,7 +59,7 @@ object ValidatedOrganisationName {
     (validateCharacters(organisationName), validateLength(organisationName)).mapN((_, _) => new ValidatedOrganisationName(organisationName))
   }
 
-  implicit val format: Format[ValidatedOrganisationName] = Json.valueFormat[ValidatedOrganisationName]
+  given Format[ValidatedOrganisationName] = Json.valueFormat[ValidatedOrganisationName]
 }
 
 final case class OrganisationName(value: String) extends AnyVal {
@@ -69,7 +69,7 @@ final case class OrganisationName(value: String) extends AnyVal {
 object OrganisationName {
   def apply(value: String): OrganisationName = new OrganisationName(value.trim())
 
-  implicit val orgNameFormat: Format[OrganisationName] = Json.valueFormat[OrganisationName]
+  given Format[OrganisationName] = Json.valueFormat[OrganisationName]
 }
 
 trait OrganisationNameValidationFailed

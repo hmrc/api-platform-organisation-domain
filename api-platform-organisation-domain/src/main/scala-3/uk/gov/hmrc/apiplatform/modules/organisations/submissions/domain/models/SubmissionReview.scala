@@ -17,7 +17,6 @@
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import java.time.Instant
-import scala.collection.immutable.ListSet
 
 import play.api.libs.json.{Json, OFormat}
 

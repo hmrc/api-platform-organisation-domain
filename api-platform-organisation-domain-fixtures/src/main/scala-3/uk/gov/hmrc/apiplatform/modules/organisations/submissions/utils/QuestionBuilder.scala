@@ -21,28 +21,43 @@ import scala.collection.immutable.ListMap
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 
 trait MakeOptional[T <: Question] {
-  def makeOptional(text: String, mark: Mark): T
-  def makeOptionalFail: T = makeOptional("Some text", Mark.Fail)
-  def makeOptionalWarn: T = makeOptional("Some text", Mark.Warn)
-  def makeOptionalPass: T = makeOptional("Some text", Mark.Pass)
+
+  extension (question: T) {
+    def makeOptional(text: String, mark: Mark): T
+    def makeOptionalFail: T = makeOptional("Some text", Mark.Fail)
+    def makeOptionalWarn: T = makeOptional("Some text", Mark.Warn)
+    def makeOptionalPass: T = makeOptional("Some text", Mark.Pass)
+  }
 }
 
 trait QuestionBuilder {
 
-  implicit class TextQuestionSyntax(question: Question.TextQuestion) extends MakeOptional[Question.TextQuestion] {
-    def makeOptional(text: String, mark: Mark): Question.TextQuestion = question.copy(absence = Some((text, mark)))
+  given MakeOptional[Question.TextQuestion] with {
+
+    extension (question: Question.TextQuestion) {
+      def makeOptional(text: String, mark: Mark): Question.TextQuestion = question.copy(absence = Some((text, mark)))
+    }
   }
 
-  implicit class MultiChoiceQuestionSyntax(question: Question.MultiChoiceQuestion) extends MakeOptional[Question.MultiChoiceQuestion] {
-    def makeOptional(text: String, mark: Mark): Question.MultiChoiceQuestion = question.copy(absence = Some((text, mark)))
+  given MakeOptional[Question.MultiChoiceQuestion] with {
+
+    extension (question: Question.MultiChoiceQuestion) {
+      def makeOptional(text: String, mark: Mark): Question.MultiChoiceQuestion = question.copy(absence = Some((text, mark)))
+    }
   }
 
-  implicit class YesNoQuestionSyntax(question: Question.YesNoQuestion) extends MakeOptional[Question.YesNoQuestion] {
-    def makeOptional(text: String, mark: Mark): Question.YesNoQuestion = question.copy(absence = Some((text, mark)))
+  given MakeOptional[Question.YesNoQuestion] with {
+
+    extension (question: Question.YesNoQuestion) {
+      def makeOptional(text: String, mark: Mark): Question.YesNoQuestion = question.copy(absence = Some((text, mark)))
+    }
   }
 
-  implicit class ChooseOneOfQuestionSyntax(question: Question.ChooseOneOfQuestion) extends MakeOptional[Question.ChooseOneOfQuestion] {
-    def makeOptional(text: String, mark: Mark): Question.ChooseOneOfQuestion = question.copy(absence = Some((text, mark)))
+  given MakeOptional[Question.ChooseOneOfQuestion] with {
+
+    extension (question: Question.ChooseOneOfQuestion) {
+      def makeOptional(text: String, mark: Mark): Question.ChooseOneOfQuestion = question.copy(absence = Some((text, mark)))
+    }
   }
 
   def acknowledgementOnly(counter: Int): Question.AcknowledgementOnly =

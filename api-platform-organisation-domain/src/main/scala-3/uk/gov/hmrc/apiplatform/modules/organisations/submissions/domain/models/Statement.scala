@@ -45,7 +45,6 @@ object Statement {
 
   import NonEmptyListFormatters.given
   import play.api.libs.json._
-  import play.api.libs.functional.syntax._
   import uk.gov.hmrc.play.json.Union
 
   given OFormat[StatementText] = Json.format[StatementText]

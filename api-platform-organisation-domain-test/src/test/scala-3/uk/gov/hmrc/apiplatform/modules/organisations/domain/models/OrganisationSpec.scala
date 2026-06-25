@@ -20,7 +20,6 @@ import java.time.Instant
 
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
-import uk.gov.hmrc.apiplatform.modules.common.domain.services.EnumJsonHelper.*
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.{Role, Roles}

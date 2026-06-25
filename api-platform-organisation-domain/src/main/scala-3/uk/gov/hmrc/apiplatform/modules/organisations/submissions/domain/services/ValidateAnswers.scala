@@ -29,11 +29,11 @@ case class ValidationErrors(errors: ValidationError*)
 case class ValidationError(key: String = Question.answerKey, message: String)
 
 object ValidationError {
-  implicit val validationFormat: OFormat[ValidationError] = Json.format[ValidationError]
+  given OFormat[ValidationError] = Json.format[ValidationError]
 }
 
 object ValidationErrors {
-  implicit val validationErrorsFormat: OFormat[ValidationErrors] = Json.format[ValidationErrors]
+  given OFormat[ValidationErrors] = Json.format[ValidationErrors]
 }
 
 object ValidateAnswers {
