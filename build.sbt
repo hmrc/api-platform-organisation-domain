@@ -11,19 +11,64 @@ Global / bloopExportJarClassifiers := Some(Set("sources"))
 
 val appName = "api-platform-organisation-domain"
 
-lazy val scala2_13 = "2.13.18"
+val scala2_13 = "2.13.18"
+val scala3 = "3.3.7"
 
-ThisBuild / majorVersion     := 0
-ThisBuild / isPublicArtefact := true
-ThisBuild / scalaVersion     := scala2_13
+inThisBuild(
+  List(
+    majorVersion := 1,
+    scalaVersion := scala3,
+    isPublicArtefact := true,
+    semanticdbEnabled := true,
+    semanticdbVersion := scalafixSemanticdb.revision,
+    libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+  )
+)
 
-ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" % VersionScheme.Always
+lazy val sharedScalacOptions =
+  Seq("-encoding", "UTF-8", "-Wunused:imports,privates,locals")
 
-ThisBuild / semanticdbEnabled := true
-ThisBuild / semanticdbVersion := scalafixSemanticdb.revision
+lazy val scala2Options = sharedScalacOptions ++
+  Seq("-explaintypes")
+
+lazy val scala3Options = sharedScalacOptions ++
+  Seq("-explain")
+
+lazy val commonSettings = Seq(
+
+  scalafixConfig := {
+    val base = (ThisBuild / baseDirectory).value
+    val file =
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => base / ".scalafix-scala3.conf"
+        case _            => base / ".scalafix-scala2.conf"
+      }
+    Some(file)
+  },
+
+  scalafmtConfig := {
+    val base = (ThisBuild / baseDirectory).value
+    val file =
+      CrossVersion.partialVersion(scalaVersion.value) match {
+        case Some((3, _)) => base / ".scalafmt-scala3.conf"
+        case _            => base / ".scalafmt-scala2.conf"
+      }
+    file
+  },
+
+  scalacOptions ++=
+    (CrossVersion.partialVersion(scalaVersion.value) match {
+      case Some((3, _)) => scala3Options
+      case _            => scala2Options
+    }),
+
+  crossScalaVersions := Seq(scala3, scala2_13),
+)
 
 lazy val library = (project in file("."))
   .settings(
+    commonSettings,
+    crossScalaVersions := Nil,
     publish / skip := true
   )
   .aggregate(
@@ -33,7 +78,8 @@ lazy val library = (project in file("."))
 
 lazy val apiPlatformApplicationDomain = Project("api-platform-organisation-domain", file("api-platform-organisation-domain"))
   .settings(
-    libraryDependencies ++= LibraryDependencies.applicationDomain,
+    commonSettings,
+    libraryDependencies ++= LibraryDependencies.applicationDomain(scalaVersion.value),
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
@@ -45,7 +91,8 @@ lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-organisati
     apiPlatformApplicationDomain % "compile"
   )
   .settings(
-    libraryDependencies ++= LibraryDependencies.root,
+    commonSettings,
+    libraryDependencies ++= LibraryDependencies.root(scalaVersion.value),
     ScoverageKeys.coverageEnabled := false,
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
@@ -58,8 +105,9 @@ lazy val apiPlatformApplicationDomainTest = Project("api-platform-organisation-d
     apiPlatformApplicationDomainFixtures
   )
   .settings(
+    commonSettings,
     publish / skip := true,
-    libraryDependencies ++= LibraryDependencies.root,
+    libraryDependencies ++= LibraryDependencies.root(scalaVersion.value),
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
@@ -68,6 +116,12 @@ lazy val apiPlatformApplicationDomainTest = Project("api-platform-organisation-d
 
   commands ++= Seq(
     Command.command("run-all-tests") { state => "test" :: state },
+    Command.command("coverage-test") { state => "coverage" :: "run-all-tests" :: "coverageOff" :: "coverageAggregate" :: state },
+    Command.command("check") { state => "clean" :: "coverage-test" :: state },
+    Command.command("all") { state => "clean" :: "scalafmtAll" :: "scalafixAll" :: "coverage-test" :: state },
+
     Command.command("clean-and-test") { state => "clean" :: "run-all-tests" :: state },
-    Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" ::"coverage" :: "run-all-tests" :: "coverageOff" :: "coverageAggregate" :: state }
+
+    // Coverage does not need compile !
+    Command.command("pre-commit") { state => "clean" :: "scalafmtAll" :: "scalafixAll" :: "coverage-test" :: state }
   )
