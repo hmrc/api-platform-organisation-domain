@@ -27,6 +27,11 @@ case class RegisteredOfficeAddress(
     postalCode: Option[String]
   )
 
+case class FullName(
+    firstName: String,
+    lastName: String
+  )
+
 object ActualAnswer {
 
   case class MultipleChoiceAnswer(values: Set[String])     extends ActualAnswer
@@ -34,6 +39,7 @@ object ActualAnswer {
   case class TextAnswer(value: String)                     extends ActualAnswer
   case class DateAnswer(value: LocalDate)                  extends ActualAnswer
   case class AddressAnswer(value: RegisteredOfficeAddress) extends ActualAnswer
+  case class NameAnswer(value: FullName)                   extends ActualAnswer
   case object AcknowledgedAnswer                           extends ActualAnswer
   case object NoAnswer                                     extends ActualAnswer
 
@@ -44,6 +50,8 @@ object ActualAnswer {
   given OFormat[DateAnswer]              = Json.format[DateAnswer]
   given OFormat[RegisteredOfficeAddress] = Json.format[RegisteredOfficeAddress]
   given OFormat[AddressAnswer]           = Json.format[AddressAnswer]
+  given OFormat[FullName]                = Json.format[FullName]
+  given OFormat[NameAnswer]              = Json.format[NameAnswer]
   given OFormat[SingleChoiceAnswer]      = Json.format[SingleChoiceAnswer]
   given OFormat[MultipleChoiceAnswer]    = Json.format[MultipleChoiceAnswer]
 
@@ -52,6 +60,7 @@ object ActualAnswer {
     .and[SingleChoiceAnswer]("singleChoice")
     .and[DateAnswer]("date")
     .and[AddressAnswer]("address")
+    .and[NameAnswer]("name")
     .and[TextAnswer]("text")
     .andType("acknowledged", () => AcknowledgedAnswer)
     .andType("noAnswer", () => NoAnswer)

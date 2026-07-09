@@ -139,6 +139,17 @@ object Question {
       errorInfo: Option[ErrorInfo] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
+  case class NameQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
   case class AcknowledgementOnly(
       id: Question.Id,
       wording: Wording,
@@ -237,6 +248,7 @@ object Question {
   given OFormat[YesNoQuestion]   = Json.format[YesNoQuestion]
   given OFormat[DateQuestion]    = Json.format[DateQuestion]
   given OFormat[AddressQuestion] = Json.format[AddressQuestion]
+  given OFormat[NameQuestion]    = Json.format[NameQuestion]
 
   given OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   given OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
@@ -248,6 +260,7 @@ object Question {
     .and[ChooseOneOfQuestion]("choose")
     .and[DateQuestion]("date")
     .and[AddressQuestion]("address")
+    .and[NameQuestion]("name")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
     .format

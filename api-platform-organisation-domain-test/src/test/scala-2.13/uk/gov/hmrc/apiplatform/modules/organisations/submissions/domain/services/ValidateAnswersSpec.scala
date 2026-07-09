@@ -165,6 +165,38 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       }
     }
 
+    "for name questions" in {
+      val question = nameQuestion(1)
+      type AnswerMatching = Either[Unit, ActualAnswer]
+      val failure: AnswerMatching     = Left(ValidationErrors(ValidationError("firstName", "First name required"), ValidationError("lastName", "Last name required")))
+      val firstName                   = "Bob"
+      val lastName                    = "Roberts"
+      val validAnswer: AnswerMatching = Right(ActualAnswer.NameAnswer(FullName(firstName, lastName)))
+      val validRawAnswers             = Map(
+        "firstName" -> Seq(firstName),
+        "lastName"  -> Seq(lastName)
+      )
+      val invalidRawAnswers           = Map(
+        "firstName" -> Seq.empty,
+        "lastName"  -> Seq.empty
+      )
+
+      val passes = Table(
+        ("description", "question", Question.answerKey, "expects"),
+        ("valid answer 1", question, validRawAnswers, validAnswer),
+        ("invalid answer", question, invalidRawAnswers, failure)
+      )
+
+      forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+        expects match {
+          case Right(answer) =>
+            ValidateAnswers.validate(question, answers) shouldBe Right(answer)
+          case Left(())      =>
+            ValidateAnswers.validate(question, answers).left.value
+        }
+      }
+    }
+
     "for multi choice questions" in {
       val question         = multichoiceQuestion(1, "One", "Two", "Three")
       val optionalQuestion = question.makeOptionalPass
