@@ -171,7 +171,7 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val failure: AnswerMatching     = Left(ValidationErrors(ValidationError("firstName", "First name required"), ValidationError("lastName", "Last name required")))
       val firstName                   = "Bob"
       val lastName                    = "Roberts"
-      val validAnswer: AnswerMatching = Right(ActualAnswer.NameAnswer(FullName(firstName, lastName)))
+      val validAnswer: AnswerMatching = Right(ActualAnswer.NameAnswer(FullName(Some(firstName), Some(lastName))))
       val validRawAnswers             = Map(
         "firstName" -> Seq(firstName),
         "lastName"  -> Seq(lastName)

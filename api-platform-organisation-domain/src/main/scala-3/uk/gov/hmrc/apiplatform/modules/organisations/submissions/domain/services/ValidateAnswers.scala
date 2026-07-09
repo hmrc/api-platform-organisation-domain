@@ -132,8 +132,8 @@ object ValidateAnswers {
       validateStringField("lastName", rawAnswers = rawAnswers, error = ValidationError("lastName", "Last name required"))
     ).parMapN((firstName, lastName) =>
       ActualAnswer.NameAnswer(FullName(
-        firstName,
-        lastName
+        Some(firstName),
+        Some(lastName)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
   }

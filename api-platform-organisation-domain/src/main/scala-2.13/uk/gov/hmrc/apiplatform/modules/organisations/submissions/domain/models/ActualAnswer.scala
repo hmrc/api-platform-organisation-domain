@@ -28,8 +28,8 @@ case class RegisteredOfficeAddress(
   )
 
 case class FullName(
-    firstName: String,
-    lastName: String
+    firstName: Option[String],
+    lastName: Option[String]
   )
 
 object ActualAnswer {
