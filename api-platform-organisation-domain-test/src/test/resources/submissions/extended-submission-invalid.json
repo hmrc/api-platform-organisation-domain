@@ -542,7 +542,8 @@
         "organisationNameLtdId" : "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc",
         "organisationNameSlpId" : "e3dbf6a2-e31b-4c89-a755-23f0652ab17c",
         "organisationTypeId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
-        "organisationNameLpId" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e"
+        "organisationNameLpId" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e",
+        "responsibleIndividualNameId" : "36b7e670-83fc-4b31-8f85-4d3394908495"
       }
     },
     "instances" : [ {

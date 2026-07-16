@@ -349,11 +349,12 @@ trait QuestionnaireTestData {
 
   val testQuestionIdsOfInterest = QuestionIdsOfInterest(
     Map(
-      "organisationTypeId"    -> OrganisationDetails.questionOrgType.id,
-      "organisationNameLtdId" -> OrganisationDetails.questionLtdOrgName.id,
-      "organisationNameLlpId" -> OrganisationDetails.questionLlpOrgName.id,
-      "organisationNameLpId"  -> OrganisationDetails.questionLpOrgName.id,
-      "organisationNameSlpId" -> OrganisationDetails.questionSlpOrgName.id
+      "organisationTypeId"          -> OrganisationDetails.questionOrgType.id,
+      "organisationNameLtdId"       -> OrganisationDetails.questionLtdOrgName.id,
+      "organisationNameLlpId"       -> OrganisationDetails.questionLlpOrgName.id,
+      "organisationNameLpId"        -> OrganisationDetails.questionLpOrgName.id,
+      "organisationNameSlpId"       -> OrganisationDetails.questionSlpOrgName.id,
+      "responsibleIndividualNameId" -> ResponsibleIndividualDetails.question2.id
     )
   )
 
