@@ -421,6 +421,18 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
   )
 
+  val sampleAnswersToQuestions1 = Map(
+    (OrganisationDetails.questionOrgType.id       -> ActualAnswer.SingleChoiceAnswer("UK limited company")),
+    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.TextAnswer("12345678")),
+    (OrganisationDetails.questionLtdOrgName.id    -> ActualAnswer.TextAnswer("Bobs Burgers")),
+    (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
+    (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
+    (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("Yes")),
+    (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
+    (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
+    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+  )
+
   def firstQuestion(questionnaire: Questionnaire) = questionnaire.questions.head.question.id
 
 }
