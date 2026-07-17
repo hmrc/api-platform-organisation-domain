@@ -272,7 +272,7 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Select Yes if you are the individual responsible for the software in your organisation").some
     )
 
-    val question2 = Question.TextQuestion(
+    val question2 = Question.NameQuestion(
       Question.Id("36b7e670-83fc-4b31-8f85-4d3394908495"),
       Wording("Who is responsible for the software in your organisation?"),
       statement = None,
@@ -349,11 +349,12 @@ trait QuestionnaireTestData {
 
   val testQuestionIdsOfInterest = QuestionIdsOfInterest(
     Map(
-      "organisationTypeId"    -> OrganisationDetails.questionOrgType.id,
-      "organisationNameLtdId" -> OrganisationDetails.questionLtdOrgName.id,
-      "organisationNameLlpId" -> OrganisationDetails.questionLlpOrgName.id,
-      "organisationNameLpId"  -> OrganisationDetails.questionLpOrgName.id,
-      "organisationNameSlpId" -> OrganisationDetails.questionSlpOrgName.id
+      "organisationTypeId"          -> OrganisationDetails.questionOrgType.id,
+      "organisationNameLtdId"       -> OrganisationDetails.questionLtdOrgName.id,
+      "organisationNameLlpId"       -> OrganisationDetails.questionLlpOrgName.id,
+      "organisationNameLpId"        -> OrganisationDetails.questionLpOrgName.id,
+      "organisationNameSlpId"       -> OrganisationDetails.questionSlpOrgName.id,
+      "responsibleIndividualNameId" -> ResponsibleIndividualDetails.question2.id
     )
   )
 
@@ -362,6 +363,7 @@ trait QuestionnaireTestData {
   val question           = questionnaire.questions.head.question
   val questionId         = question.id
   val question2Id        = questionnaire.questions.tail.head.question.id
+  val question3Id        = questionnaire.questions.tail.tail.head.question.id
   val questionnaireAlt   = OrganisationDetails.questionnaire
   val questionnaireAltId = questionnaireAlt.id
   val questionAltId      = questionnaireAlt.questions.head.question.id
@@ -384,7 +386,7 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("No")),
-    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.TextAnswer("Bob Fleming")),
+    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.NameAnswer(FullName(Some("Bob"), Some("Fleming")))),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
@@ -398,7 +400,7 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("No")),
-    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.TextAnswer("Bob Fleming")),
+    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.NameAnswer(FullName(Some("Bob"), Some("Fleming")))),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
@@ -412,9 +414,21 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("No")),
-    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.TextAnswer("Bob Fleming")),
+    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.NameAnswer(FullName(Some("Bob"), Some("Fleming")))),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
+    (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
+    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+  )
+
+  val sampleAnswersToQuestions1 = Map(
+    (OrganisationDetails.questionOrgType.id       -> ActualAnswer.SingleChoiceAnswer("UK limited company")),
+    (OrganisationDetails.questionCompanyNumber.id -> ActualAnswer.TextAnswer("12345678")),
+    (OrganisationDetails.questionLtdOrgName.id    -> ActualAnswer.TextAnswer("Bobs Burgers")),
+    (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.TextAnswer("1 High Street, London")),
+    (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
+    (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("Yes")),
+    (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
     (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
   )

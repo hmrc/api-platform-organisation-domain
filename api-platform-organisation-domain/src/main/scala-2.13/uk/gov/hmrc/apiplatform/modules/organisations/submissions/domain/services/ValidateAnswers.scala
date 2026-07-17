@@ -54,6 +54,7 @@ object ValidateAnswers {
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
+      case _: Question.NameQuestion                                                             => validateName(rawAnswers)
     }
   }
 
@@ -121,6 +122,18 @@ object ValidateAnswers {
         Some(locality),
         rawAnswers.get("region").flatMap(_.headOption),
         Some(postcode)
+      ))
+    ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  def validateName(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    (
+      validateStringField("firstName", rawAnswers = rawAnswers, error = ValidationError("firstName", "First name required")),
+      validateStringField("lastName", rawAnswers = rawAnswers, error = ValidationError("lastName", "Last name required"))
+    ).parMapN((firstName, lastName) =>
+      ActualAnswer.NameAnswer(FullName(
+        Some(firstName),
+        Some(lastName)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
   }
