@@ -30,6 +30,19 @@ object ActualAnswersAsText {
     case ActualAnswer.DateAnswer(date)             => date.format(dateTimeFormatter)
     case ActualAnswer.AddressAnswer(add)           => Seq(add.addressLineOne, add.addressLineTwo, add.locality, add.region, add.postalCode).filter(_.isDefined).map(_.get).mkString(", ")
     case ActualAnswer.NameAnswer(name)             => s"${name.firstName} ${name.lastName}"
+    case ActualAnswer.CompanyNumberAnswer(company) => Seq(
+        company.companyNumber,
+        company.companyName,
+        company.careOf,
+        company.premises,
+        company.poBox,
+        company.addressLineOne,
+        company.addressLineTwo,
+        company.locality,
+        company.region,
+        company.postalCode,
+        company.country
+      ).filter(_.isDefined).map(_.get).mkString(", ")
     case ActualAnswer.NoAnswer                     => "n/a"
     case ActualAnswer.AcknowledgedAnswer           => ""
   }

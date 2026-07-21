@@ -55,6 +55,7 @@ object ValidateAnswers {
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
+      case _: Question.CompanyNumberQuestion                                                    => validateCompanyNumber(rawAnswers)
     }
   }
 
@@ -134,6 +135,26 @@ object ValidateAnswers {
       ActualAnswer.NameAnswer(FullName(
         Some(firstName),
         Some(lastName)
+      ))
+    ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  def validateCompanyNumber(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    (
+      validateStringField("companyNumber", rawAnswers = rawAnswers, error = ValidationError("companyNumber", "Company number name required"))
+    ).map(companyNumber =>
+      ActualAnswer.CompanyNumberAnswer(CompanyDetails(
+        Some(companyNumber),
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None
       ))
     ).leftMap(err => ValidationErrors(err: _*))
   }
