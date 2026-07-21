@@ -55,7 +55,10 @@ object ValidateAnswers {
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
-      case _: Question.CompanyNumberQuestion                                                    => validateCompanyNumber(rawAnswers)
+      case q: Question.CompanyNumberQuestion                                                    =>
+        rawAnswers.get(Question.answerKey).filter(_.length == 1)
+          .map(a => validateCompanyNumber(q, a.head))
+          .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
     }
   }
 
@@ -139,24 +142,25 @@ object ValidateAnswers {
     ).leftMap(err => ValidationErrors(err: _*))
   }
 
-  def validateCompanyNumber(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
-    (
-      validateStringField("companyNumber", rawAnswers = rawAnswers, error = ValidationError("companyNumber", "Company number name required"))
-    ).map(companyNumber =>
-      ActualAnswer.CompanyNumberAnswer(CompanyDetails(
-        Some(companyNumber),
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None,
-        None
-      ))
-    ).leftMap(err => ValidationErrors(err: _*))
+  def validateCompanyNumber(question: Question.CompanyNumberQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
+    question.validation
+      .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
+      .map(companyNumber =>
+        ActualAnswer.CompanyNumberAnswer(CompanyDetails(
+          Some(companyNumber),
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None,
+          None
+        ))
+      )
+      .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
   }
 
   def validateAgainstPossibleAnswers(question: Question.SingleChoiceQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
