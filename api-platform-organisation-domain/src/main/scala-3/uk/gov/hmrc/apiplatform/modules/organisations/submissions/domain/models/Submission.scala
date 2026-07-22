@@ -303,10 +303,29 @@ object Submission extends EnvReads {
     }
   }
 
+  case class CompanyDetails(
+      companyNumber: String,
+      companyName: String,
+      addressLineOne: Option[String],
+      addressLineTwo: Option[String],
+      careOf: Option[String],
+      country: Option[String],
+      locality: Option[String],
+      poBox: Option[String],
+      postalCode: Option[String],
+      premises: Option[String],
+      region: Option[String]
+    )
+
+  case class AdditionalData(
+      companyDetails: Option[CompanyDetails]
+    )
+
   case class Instance(
       index: Int,
       answersToQuestions: Submission.AnswersToQuestions,
-      statusHistory: NonEmptyList[Submission.Status]
+      statusHistory: NonEmptyList[Submission.Status],
+      additionalData: Option[AdditionalData] = None
     ) {
     lazy val status: Status = statusHistory.head
 
@@ -378,6 +397,8 @@ object Submission extends EnvReads {
   import GroupOfQuestionnaires.given
   import Question.given
 
+  given OFormat[CompanyDetails]      = Json.format[CompanyDetails]
+  given OFormat[AdditionalData]      = Json.format[AdditionalData]
   given OFormat[Submission.Instance] = Json.format[Submission.Instance]
   given OFormat[Submission]          = Json.format[Submission]
   given OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]

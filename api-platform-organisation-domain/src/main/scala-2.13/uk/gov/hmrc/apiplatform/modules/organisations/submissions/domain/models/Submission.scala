@@ -301,10 +301,29 @@ object Submission extends EnvReads with NonEmptyListFormatters {
     }
   }
 
+  case class CompanyDetails(
+      companyNumber: String,
+      companyName: String,
+      addressLineOne: Option[String],
+      addressLineTwo: Option[String],
+      careOf: Option[String],
+      country: Option[String],
+      locality: Option[String],
+      poBox: Option[String],
+      postalCode: Option[String],
+      premises: Option[String],
+      region: Option[String]
+    )
+
+  case class AdditionalData(
+      companyDetails: Option[CompanyDetails]
+    )
+
   case class Instance(
       index: Int,
       answersToQuestions: Submission.AnswersToQuestions,
-      statusHistory: NonEmptyList[Submission.Status]
+      statusHistory: NonEmptyList[Submission.Status],
+      additionalData: Option[AdditionalData] = None
     ) {
     lazy val status: Status = statusHistory.head
 
@@ -376,6 +395,8 @@ object Submission extends EnvReads with NonEmptyListFormatters {
   import GroupOfQuestionnaires._
   import Question._
 
+  implicit val companyDetailsFormat: OFormat[CompanyDetails]          = Json.format[CompanyDetails]
+  implicit val additionalDataFormat: OFormat[AdditionalData]          = Json.format[AdditionalData]
   implicit val submissionInstanceFormat: OFormat[Submission.Instance] = Json.format[Submission.Instance]
   implicit val submissionFormat: OFormat[Submission]                  = Json.format[Submission]
   implicit val extendedSubmissionFormat: OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]
