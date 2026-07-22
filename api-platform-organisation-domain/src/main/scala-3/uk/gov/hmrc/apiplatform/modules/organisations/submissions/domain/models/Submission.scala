@@ -116,6 +116,9 @@ object Submission extends EnvReads {
 
   val updateLatestAnswersTo: (Submission.AnswersToQuestions) => Submission => Submission = (newAnswers) => changeLatestInstance(_.copy(answersToQuestions = newAnswers))
 
+  val updateLatestAdditionalDataTo: (Option[Submission.AdditionalData]) => Submission => Submission =
+    (newAdditionalData) => changeLatestInstance(_.copy(additionalData = newAdditionalData))
+
   val decline: (Instant, String, String) => Submission => Submission = (timestamp, name, reasons) => {
     val addDeclinedStatus                                   = addStatusHistory(Status.Declined(timestamp, name, reasons))
     val addNewlyAnsweringInstance: Submission => Submission = (s) => addInstance(s.latestInstance.answersToQuestions, Status.Answering(timestamp, true))(s)
