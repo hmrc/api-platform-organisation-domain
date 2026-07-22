@@ -203,7 +203,7 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val failureMissing: AnswerMatching = Left(ValidationErrors(ValidationError("answer", "Question requires an answer")))
       val failureInvalid: AnswerMatching = Left(ValidationErrors(ValidationError("answer", "123456789 is not a valid organisation number")))
       val companyNumber                  = "12345678"
-      val validAnswer: AnswerMatching    = Right(ActualAnswer.CompanyNumberAnswer(CompanyDetails(Some(companyNumber), None, None, None, None, None, None, None, None, None, None)))
+      val validAnswer: AnswerMatching    = Right(ActualAnswer.CompanyNumberAnswer(companyNumber))
       val validRawAnswers                = Map(
         "answer" -> Seq(companyNumber)
       )

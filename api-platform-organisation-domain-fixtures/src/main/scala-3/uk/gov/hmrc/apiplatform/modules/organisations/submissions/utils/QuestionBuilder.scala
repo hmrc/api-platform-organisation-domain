@@ -104,7 +104,7 @@ trait QuestionBuilder {
     None,
     None,
     None,
-    Some(TextValidation.OrganisationNumber)
+    None
   )
 
   def yesNoQuestion(counter: Int): Question.YesNoQuestion = {

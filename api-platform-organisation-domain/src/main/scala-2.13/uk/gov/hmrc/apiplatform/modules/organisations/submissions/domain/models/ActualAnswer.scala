@@ -32,20 +32,6 @@ case class FullName(
     lastName: Option[String]
   )
 
-case class CompanyDetails(
-    companyNumber: Option[String],
-    companyName: Option[String],
-    addressLineOne: Option[String],
-    addressLineTwo: Option[String],
-    careOf: Option[String],
-    country: Option[String],
-    locality: Option[String],
-    poBox: Option[String],
-    postalCode: Option[String],
-    premises: Option[String],
-    region: Option[String]
-  )
-
 object ActualAnswer {
 
   case class MultipleChoiceAnswer(values: Set[String])     extends ActualAnswer
@@ -54,7 +40,7 @@ object ActualAnswer {
   case class DateAnswer(value: LocalDate)                  extends ActualAnswer
   case class AddressAnswer(value: RegisteredOfficeAddress) extends ActualAnswer
   case class NameAnswer(value: FullName)                   extends ActualAnswer
-  case class CompanyNumberAnswer(value: CompanyDetails)    extends ActualAnswer
+  case class CompanyNumberAnswer(value: String)            extends ActualAnswer
   case object AcknowledgedAnswer                           extends ActualAnswer
   case object NoAnswer                                     extends ActualAnswer
 
@@ -67,7 +53,6 @@ object ActualAnswer {
   implicit val jfAddAnswer: OFormat[AddressAnswer]                   = Json.format[AddressAnswer]
   implicit val jfFullName: OFormat[FullName]                         = Json.format[FullName]
   implicit val jfNameAnswer: OFormat[NameAnswer]                     = Json.format[NameAnswer]
-  implicit val jfCompanyDetails: OFormat[CompanyDetails]             = Json.format[CompanyDetails]
   implicit val jfCompanyNumberAnswer: OFormat[CompanyNumberAnswer]   = Json.format[CompanyNumberAnswer]
   implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]     = Json.format[SingleChoiceAnswer]
   implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]

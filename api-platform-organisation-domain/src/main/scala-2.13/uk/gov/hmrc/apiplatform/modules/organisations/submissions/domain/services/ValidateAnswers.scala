@@ -57,7 +57,7 @@ object ValidateAnswers {
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
       case q: Question.CompanyNumberQuestion                                                    =>
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
-          .map(a => validateCompanyNumber(q, a.head))
+          .map(a => validateCompanyNumber(a.head))
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
     }
   }
@@ -142,24 +142,9 @@ object ValidateAnswers {
     ).leftMap(err => ValidationErrors(err: _*))
   }
 
-  def validateCompanyNumber(question: Question.CompanyNumberQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
-    question.validation
-      .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
-      .map(companyNumber =>
-        ActualAnswer.CompanyNumberAnswer(CompanyDetails(
-          Some(companyNumber),
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          None,
-          None
-        ))
-      )
+  def validateCompanyNumber(rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
+    TextValidation.OrganisationNumber.validate(rawAnswer)
+      .map(ActualAnswer.CompanyNumberAnswer(_))
       .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
   }
 

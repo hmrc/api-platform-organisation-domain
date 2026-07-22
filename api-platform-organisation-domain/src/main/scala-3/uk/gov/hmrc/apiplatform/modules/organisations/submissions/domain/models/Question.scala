@@ -163,7 +163,6 @@ object Question {
       afterStatement: Option[Statement] = None,
       label: Option[Question.Label] = None,
       hintText: Option[NonBulletStatementFragment] = None,
-      validation: Option[TextValidation] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
       summary: Option[String] = None
