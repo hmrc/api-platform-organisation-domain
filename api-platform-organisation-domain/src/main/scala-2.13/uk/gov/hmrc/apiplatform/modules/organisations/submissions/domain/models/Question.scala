@@ -154,7 +154,8 @@ object Question extends MapJsonFormatters {
       hintText: Option[NonBulletStatementFragment] = None,
       validation: Option[TextValidation] = None,
       absence: Option[(String, Mark)] = None,
-      errorInfo: Option[ErrorInfo] = None
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class NameQuestion(
