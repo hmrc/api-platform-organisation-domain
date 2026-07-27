@@ -128,10 +128,12 @@ object ValidateAnswers {
 
   def validateName(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
     (
+      validateStringField("isThisYourName", rawAnswers = rawAnswers, error = ValidationError("isThisYourName", "Radio button selection required")),
       validateStringField("firstName", rawAnswers = rawAnswers, error = ValidationError("firstName", "First name required")),
       validateStringField("lastName", rawAnswers = rawAnswers, error = ValidationError("lastName", "Last name required"))
-    ).parMapN((firstName, lastName) =>
+    ).parMapN((isThisYourName, firstName, lastName) =>
       ActualAnswer.NameAnswer(FullName(
+        Some(isThisYourName),
         Some(firstName),
         Some(lastName)
       ))

@@ -225,7 +225,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 
   private def buildAnsweredSubmission(fullyAnswered: Boolean)(submission: Submission): Submission = {
     val address  = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-    val fullName = FullName(Some("Bob"), Some("Roberts"))
+    val fullName = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
@@ -275,7 +275,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 
 trait AnsweringQuestionsHelper extends FixedClock {
   val address  = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-  val fullName = FullName(Some("Bob"), Some("Roberts"))
+  val fullName = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
