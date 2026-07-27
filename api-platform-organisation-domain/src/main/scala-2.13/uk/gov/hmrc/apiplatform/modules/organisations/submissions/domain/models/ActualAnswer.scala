@@ -28,6 +28,7 @@ case class RegisteredOfficeAddress(
   )
 
 case class FullName(
+    isThisYourName: Option[String],
     firstName: Option[String],
     lastName: Option[String]
   )
