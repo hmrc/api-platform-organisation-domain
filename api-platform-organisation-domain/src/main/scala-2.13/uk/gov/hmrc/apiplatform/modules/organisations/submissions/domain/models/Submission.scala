@@ -307,15 +307,15 @@ object Submission extends EnvReads with NonEmptyListFormatters {
   case class CompanyDetails(
       companyNumber: String,
       companyName: String,
-      addressLineOne: Option[String],
-      addressLineTwo: Option[String],
-      careOf: Option[String],
-      country: Option[String],
-      locality: Option[String],
-      poBox: Option[String],
-      postalCode: Option[String],
-      premises: Option[String],
-      region: Option[String]
+      addressLineOne: Option[String] = None,
+      addressLineTwo: Option[String] = None,
+      careOf: Option[String] = None,
+      country: Option[String] = None,
+      locality: Option[String] = None,
+      poBox: Option[String] = None,
+      postalCode: Option[String] = None,
+      premises: Option[String] = None,
+      region: Option[String] = None
     )
 
   case class AdditionalData(
@@ -329,6 +329,11 @@ object Submission extends EnvReads with NonEmptyListFormatters {
       additionalData: Option[AdditionalData] = None
     ) {
     lazy val status: Status = statusHistory.head
+
+    lazy val companyDetails: Option[CompanyDetails] = additionalData match {
+      case Some(add) => add.companyDetails
+      case _         => None
+    }
 
     lazy val isOpenToAnswers      = status.isOpenToAnswers
     lazy val isAnsweredCompletely = status.isAnsweredCompletely

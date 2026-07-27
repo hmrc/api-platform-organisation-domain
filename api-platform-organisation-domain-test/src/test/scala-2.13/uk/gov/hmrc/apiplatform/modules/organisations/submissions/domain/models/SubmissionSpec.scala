@@ -23,6 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, Use
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Submission.{AdditionalData, CompanyDetails}
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData
 
@@ -216,6 +217,12 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   "organisationName" in {
     answeringSubmission.organisationName shouldBe "n/a"
     Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).organisationName shouldBe "Bobs Burgers"
+  }
+
+  "companyDetails" in {
+    answeringSubmission.latestInstance.companyDetails shouldBe None
+    val companyDetails = CompanyDetails("company name", "12345678")
+    Submission.updateLatestAdditionalDataTo(Some(AdditionalData(Some(companyDetails))))(aSubmission).latestInstance.companyDetails shouldBe Some(companyDetails)
   }
 
   "toJson for extended submission" in {
