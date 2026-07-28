@@ -216,7 +216,8 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
           "organisationNameLtdId" -> questionName1.id,
           "organisationNameLlpId" -> questionName2.id,
           "organisationNameLpId"  -> questionName3.id,
-          "organisationNameSlpId" -> questionName4.id
+          "organisationNameSlpId" -> questionName4.id,
+          "organisationNumberId"  -> questionName11.id
         )
       ),
       standardContext
