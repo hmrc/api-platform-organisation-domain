@@ -162,7 +162,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val questionName8      = textQuestion(10)
     val questionName9      = dateQuestion(11)
     val questionName10     = addressQuestion(12)
-    val questionName11     = textQuestion(13)
+    val questionName11     = companyNumberQuestion(13)
     val questionPrivacyUrl = textQuestion(14)
     val questionTermsUrl   = textQuestion(15)
     val questionWeb        = textQuestion(16)
