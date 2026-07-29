@@ -237,6 +237,48 @@ object Question extends MapJsonFormatters {
     lazy val choices                                = ListSet(YES, NO)
   }
 
+  case class ConfirmCompanyNameQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      yesMarking: Mark,
+      noMarking: Mark,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends SingleChoiceQuestion {
+
+    val YES = PossibleAnswer("Yes")
+    val NO  = PossibleAnswer("No")
+
+    lazy val marking: ListMap[PossibleAnswer, Mark] = ListMap(YES -> yesMarking, NO -> noMarking)
+    lazy val choices                                = ListSet(YES, NO)
+  }
+
+  case class ConfirmCompanyAddressQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      yesMarking: Mark,
+      noMarking: Mark,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends SingleChoiceQuestion {
+
+    val YES = PossibleAnswer("Yes")
+    val NO  = PossibleAnswer("No")
+
+    lazy val marking: ListMap[PossibleAnswer, Mark] = ListMap(YES -> yesMarking, NO -> noMarking)
+    lazy val choices                                = ListSet(YES, NO)
+  }
+
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
@@ -265,13 +307,15 @@ object Question extends MapJsonFormatters {
 
   import Statement._
 
-  implicit val jsonFormatPossibleAnswer: Format[PossibleAnswer]                = Json.valueFormat[PossibleAnswer]
-  implicit val jsonFormatTextQuestion: OFormat[TextQuestion]                   = Json.format[TextQuestion]
-  implicit val jsonFormatYesNoQuestion: OFormat[YesNoQuestion]                 = Json.format[YesNoQuestion]
-  implicit val jsonFormatDateQuestion: OFormat[DateQuestion]                   = Json.format[DateQuestion]
-  implicit val jsonFormatAddressQuestion: OFormat[AddressQuestion]             = Json.format[AddressQuestion]
-  implicit val jsonFormatNameQuestion: OFormat[NameQuestion]                   = Json.format[NameQuestion]
-  implicit val jsonFormatCompanyNumberQuestion: OFormat[CompanyNumberQuestion] = Json.format[CompanyNumberQuestion]
+  implicit val jsonFormatPossibleAnswer: Format[PossibleAnswer]                                = Json.valueFormat[PossibleAnswer]
+  implicit val jsonFormatTextQuestion: OFormat[TextQuestion]                                   = Json.format[TextQuestion]
+  implicit val jsonFormatYesNoQuestion: OFormat[YesNoQuestion]                                 = Json.format[YesNoQuestion]
+  implicit val jsonFormatConfirmCompanyNameQuestion: OFormat[ConfirmCompanyNameQuestion]       = Json.format[ConfirmCompanyNameQuestion]
+  implicit val jsonFormatConfirmCompanyAddressQuestion: OFormat[ConfirmCompanyAddressQuestion] = Json.format[ConfirmCompanyAddressQuestion]
+  implicit val jsonFormatDateQuestion: OFormat[DateQuestion]                                   = Json.format[DateQuestion]
+  implicit val jsonFormatAddressQuestion: OFormat[AddressQuestion]                             = Json.format[AddressQuestion]
+  implicit val jsonFormatNameQuestion: OFormat[NameQuestion]                                   = Json.format[NameQuestion]
+  implicit val jsonFormatCompanyNumberQuestion: OFormat[CompanyNumberQuestion]                 = Json.format[CompanyNumberQuestion]
 
   implicit val jsonFormatChooseOneOfQuestion: OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   implicit val jsonFormatMultiChoiceQuestion: OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
@@ -280,6 +324,8 @@ object Question extends MapJsonFormatters {
   implicit val jsonFormatQuestion: Format[Question] = Union.from[Question]("questionType")
     .and[MultiChoiceQuestion]("multi")
     .and[YesNoQuestion]("yesNo")
+    .and[ConfirmCompanyNameQuestion]("confirmCompanyName")
+    .and[ConfirmCompanyAddressQuestion]("confirmCompanyAddress")
     .and[ChooseOneOfQuestion]("choose")
     .and[DateQuestion]("date")
     .and[AddressQuestion]("address")

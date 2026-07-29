@@ -230,19 +230,23 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
-        case Question.TextQuestion(id, wording, statement, _, _, _, _, absence, _, _)                      => ActualAnswer.TextAnswer("some random text")
-        case Question.ChooseOneOfQuestion(id, wording, statement, _, _, _, marking, absence, _, _)         => ActualAnswer.SingleChoiceAnswer(marking.filter {
+        case Question.TextQuestion(id, wording, statement, _, _, _, _, absence, _, _)                                      => ActualAnswer.TextAnswer("some random text")
+        case Question.ChooseOneOfQuestion(id, wording, statement, _, _, _, marking, absence, _, _)                         => ActualAnswer.SingleChoiceAnswer(marking.filter {
             case (pa, Mark.Pass) => true; case _ => false
           }.head._1.value)
-        case Question.MultiChoiceQuestion(id, wording, statement, _, _, _, marking, absence, _, _)         => ActualAnswer.MultipleChoiceAnswer(Set(marking.filter {
+        case Question.MultiChoiceQuestion(id, wording, statement, _, _, _, marking, absence, _, _)                         => ActualAnswer.MultipleChoiceAnswer(Set(marking.filter {
             case (pa, Mark.Pass) => true; case _ => false
           }.head._1.value))
-        case Question.AcknowledgementOnly(id, wording, statement, _)                                       => ActualAnswer.AcknowledgedAnswer
-        case Question.DateQuestion(_, _, _, _, _, _, _, _, _)                                              => ActualAnswer.DateAnswer(now.toLocalDate)
-        case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                           => ActualAnswer.AddressAnswer(address)
-        case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                              => ActualAnswer.NameAnswer(fullName)
-        case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)                                     => ActualAnswer.CompanyNumberAnswer("12345678")
-        case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _) =>
+        case Question.AcknowledgementOnly(id, wording, statement, _)                                                       => ActualAnswer.AcknowledgedAnswer
+        case Question.DateQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.DateAnswer(now.toLocalDate)
+        case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                                           => ActualAnswer.AddressAnswer(address)
+        case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
+        case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)                                                     => ActualAnswer.CompanyNumberAnswer("12345678")
+        case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _)                 =>
+          if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
+        case Question.ConfirmCompanyNameQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _)    =>
+          if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
+        case Question.ConfirmCompanyAddressQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _) =>
           if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
       }
     }
@@ -283,6 +287,18 @@ trait AnsweringQuestionsHelper extends FixedClock {
     val answers: List[Option[ActualAnswer]] = question match {
 
       case Question.YesNoQuestion(id, _, _, _, _, _, yesMarking, noMarking, absence, _, _) =>
+        (if (yesMarking == desiredMark) Some(ActualAnswer.SingleChoiceAnswer("Yes")) else None) ::
+          (if (noMarking == desiredMark) Some(ActualAnswer.SingleChoiceAnswer("No")) else None) ::
+          (absence.flatMap(a => if (a._2 == desiredMark) Some(ActualAnswer.NoAnswer) else None)) ::
+          List.empty[Option[ActualAnswer]]
+
+      case Question.ConfirmCompanyNameQuestion(id, _, _, _, _, _, yesMarking, noMarking, absence, _, _) =>
+        (if (yesMarking == desiredMark) Some(ActualAnswer.SingleChoiceAnswer("Yes")) else None) ::
+          (if (noMarking == desiredMark) Some(ActualAnswer.SingleChoiceAnswer("No")) else None) ::
+          (absence.flatMap(a => if (a._2 == desiredMark) Some(ActualAnswer.NoAnswer) else None)) ::
+          List.empty[Option[ActualAnswer]]
+
+      case Question.ConfirmCompanyAddressQuestion(id, _, _, _, _, _, yesMarking, noMarking, absence, _, _) =>
         (if (yesMarking == desiredMark) Some(ActualAnswer.SingleChoiceAnswer("Yes")) else None) ::
           (if (noMarking == desiredMark) Some(ActualAnswer.SingleChoiceAnswer("No")) else None) ::
           (absence.flatMap(a => if (a._2 == desiredMark) Some(ActualAnswer.NoAnswer) else None)) ::
