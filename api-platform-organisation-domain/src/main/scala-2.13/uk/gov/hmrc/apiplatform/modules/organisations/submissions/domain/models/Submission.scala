@@ -461,10 +461,10 @@ case class Submission(
     }
   }
 
-  lazy val organisationName: String = {
+  lazy val organisationName: Option[String] = {
     latestInstance.companyDetails match {
-      case Some(companyDetails) => companyDetails.companyName
-      case _                    => "n/a"
+      case Some(companyDetails) => Some(companyDetails.companyName)
+      case _                    => None
     }
   }
 }
