@@ -199,6 +199,40 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       }
     }
 
+    "for company number questions" in {
+      val question = companyNumberQuestion(1)
+      type AnswerMatching = Either[Unit, ActualAnswer]
+      val failureMissing: AnswerMatching = Left(ValidationErrors(ValidationError("answer", "Question requires an answer")))
+      val failureInvalid: AnswerMatching = Left(ValidationErrors(ValidationError("answer", "123456789 is not a valid organisation number")))
+      val companyNumber                  = "12345678"
+      val validAnswer: AnswerMatching    = Right(ActualAnswer.CompanyNumberAnswer(companyNumber))
+      val validRawAnswers                = Map(
+        "answer" -> Seq(companyNumber)
+      )
+      val invalidRawAnswersMissing       = Map(
+        "answer" -> Seq.empty
+      )
+      val invalidRawAnswersInvalid       = Map(
+        "answer" -> Seq("123456789").empty
+      )
+
+      val passes = Table(
+        ("description", "question", Question.answerKey, "expects"),
+        ("valid answer", question, validRawAnswers, validAnswer),
+        ("invalid answer missing", question, invalidRawAnswersMissing, failureMissing),
+        ("invalid answer invalid", question, invalidRawAnswersInvalid, failureInvalid)
+      )
+
+      forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+        expects match {
+          case Right(answer) =>
+            ValidateAnswers.validate(question, answers) shouldBe Right(answer)
+          case Left(())      =>
+            ValidateAnswers.validate(question, answers).left.value
+        }
+      }
+    }
+
     "for multi choice questions" in {
       val question         = multichoiceQuestion(1, "One", "Two", "Three")
       val optionalQuestion = question.makeOptionalPass

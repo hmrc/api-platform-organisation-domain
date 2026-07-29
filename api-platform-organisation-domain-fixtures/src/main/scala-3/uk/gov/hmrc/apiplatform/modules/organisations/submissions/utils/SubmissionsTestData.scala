@@ -162,7 +162,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val questionName8      = textQuestion(10)
     val questionName9      = dateQuestion(11)
     val questionName10     = addressQuestion(12)
-    val questionName11     = textQuestion(13)
+    val questionName11     = companyNumberQuestion(13)
     val questionPrivacyUrl = textQuestion(14)
     val questionTermsUrl   = textQuestion(15)
     val questionWeb        = textQuestion(16)
@@ -216,7 +216,8 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
           "organisationNameLtdId" -> questionName1.id,
           "organisationNameLlpId" -> questionName2.id,
           "organisationNameLpId"  -> questionName3.id,
-          "organisationNameSlpId" -> questionName4.id
+          "organisationNameSlpId" -> questionName4.id,
+          "organisationNumberId"  -> questionName11.id
         )
       ),
       standardContext
@@ -240,6 +241,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         case Question.DateQuestion(_, _, _, _, _, _, _, _, _)                                              => ActualAnswer.DateAnswer(now.toLocalDate)
         case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                           => ActualAnswer.AddressAnswer(address)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                              => ActualAnswer.NameAnswer(fullName)
+        case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)                                     => ActualAnswer.CompanyNumberAnswer("12345678")
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _) =>
           if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
       }
@@ -303,10 +305,11 @@ trait AnsweringQuestionsHelper extends FixedClock {
         else
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
-      case Question.AcknowledgementOnly(id, _, _, _)           => List(Some(ActualAnswer.AcknowledgedAnswer))
-      case Question.DateQuestion(_, _, _, _, _, _, _, _, _)    => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
-      case Question.AddressQuestion(_, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.AddressAnswer(address)))
-      case Question.NameQuestion(_, _, _, _, _, _, _, _, _)    => List(Some(ActualAnswer.NameAnswer(fullName)))
+      case Question.AcknowledgementOnly(id, _, _, _)                 => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.DateQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
+      case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)       => List(Some(ActualAnswer.AddressAnswer(address)))
+      case Question.NameQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.NameAnswer(fullName)))
+      case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
 
       case Question.MultiChoiceQuestion(id, _, _, _, _, _, marking, absence, _, _) =>
         marking.map {

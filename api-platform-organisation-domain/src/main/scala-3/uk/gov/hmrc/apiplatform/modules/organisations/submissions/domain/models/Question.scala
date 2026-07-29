@@ -156,6 +156,18 @@ object Question {
       summary: Option[String] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
+  case class CompanyNumberQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
   case class AcknowledgementOnly(
       id: Question.Id,
       wording: Wording,
@@ -253,12 +265,13 @@ object Question {
 
   import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Statement.given
 
-  given Format[PossibleAnswer]   = Json.valueFormat[PossibleAnswer]
-  given OFormat[TextQuestion]    = Json.format[TextQuestion]
-  given OFormat[YesNoQuestion]   = Json.format[YesNoQuestion]
-  given OFormat[DateQuestion]    = Json.format[DateQuestion]
-  given OFormat[AddressQuestion] = Json.format[AddressQuestion]
-  given OFormat[NameQuestion]    = Json.format[NameQuestion]
+  given Format[PossibleAnswer]         = Json.valueFormat[PossibleAnswer]
+  given OFormat[TextQuestion]          = Json.format[TextQuestion]
+  given OFormat[YesNoQuestion]         = Json.format[YesNoQuestion]
+  given OFormat[DateQuestion]          = Json.format[DateQuestion]
+  given OFormat[AddressQuestion]       = Json.format[AddressQuestion]
+  given OFormat[NameQuestion]          = Json.format[NameQuestion]
+  given OFormat[CompanyNumberQuestion] = Json.format[CompanyNumberQuestion]
 
   given OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   given OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
@@ -271,6 +284,7 @@ object Question {
     .and[DateQuestion]("date")
     .and[AddressQuestion]("address")
     .and[NameQuestion]("name")
+    .and[CompanyNumberQuestion]("companyNumber")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
     .format

@@ -82,6 +82,16 @@ trait QuestionBuilder {
     None
   )
 
+  def companyNumberQuestion(counter: Int): Question.CompanyNumberQuestion = Question.CompanyNumberQuestion(
+    Question.Id.random,
+    Wording(s"Wording$counter"),
+    None,
+    None,
+    None,
+    None,
+    None
+  )
+
   def yesNoQuestion(counter: Int): Question.YesNoQuestion = {
     Question.YesNoQuestion(
       Question.Id.random,

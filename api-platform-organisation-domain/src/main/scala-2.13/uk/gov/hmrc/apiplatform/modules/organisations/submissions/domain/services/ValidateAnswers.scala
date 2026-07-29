@@ -55,6 +55,10 @@ object ValidateAnswers {
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
+      case q: Question.CompanyNumberQuestion                                                    =>
+        rawAnswers.get(Question.answerKey).filter(_.length == 1)
+          .map(a => validateCompanyNumber(a.head))
+          .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
     }
   }
 
@@ -138,6 +142,12 @@ object ValidateAnswers {
         Some(lastName)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  def validateCompanyNumber(rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
+    TextValidation.OrganisationNumber.validate(rawAnswer)
+      .map(ActualAnswer.CompanyNumberAnswer(_))
+      .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
   }
 
   def validateAgainstPossibleAnswers(question: Question.SingleChoiceQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {

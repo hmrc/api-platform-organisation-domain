@@ -116,6 +116,9 @@ object Submission extends EnvReads {
 
   val updateLatestAnswersTo: (Submission.AnswersToQuestions) => Submission => Submission = (newAnswers) => changeLatestInstance(_.copy(answersToQuestions = newAnswers))
 
+  val updateLatestAdditionalDataTo: (Option[Submission.AdditionalData]) => Submission => Submission =
+    (newAdditionalData) => changeLatestInstance(_.copy(additionalData = newAdditionalData))
+
   val decline: (Instant, String, String) => Submission => Submission = (timestamp, name, reasons) => {
     val addDeclinedStatus                                   = addStatusHistory(Status.Declined(timestamp, name, reasons))
     val addNewlyAnsweringInstance: Submission => Submission = (s) => addInstance(s.latestInstance.answersToQuestions, Status.Answering(timestamp, true))(s)
@@ -303,12 +306,36 @@ object Submission extends EnvReads {
     }
   }
 
+  case class CompanyDetails(
+      companyNumber: String,
+      companyName: String,
+      addressLineOne: Option[String] = None,
+      addressLineTwo: Option[String] = None,
+      careOf: Option[String] = None,
+      country: Option[String] = None,
+      locality: Option[String] = None,
+      poBox: Option[String] = None,
+      postalCode: Option[String] = None,
+      premises: Option[String] = None,
+      region: Option[String] = None
+    )
+
+  case class AdditionalData(
+      companyDetails: Option[CompanyDetails]
+    )
+
   case class Instance(
       index: Int,
       answersToQuestions: Submission.AnswersToQuestions,
-      statusHistory: NonEmptyList[Submission.Status]
+      statusHistory: NonEmptyList[Submission.Status],
+      additionalData: Option[AdditionalData] = None
     ) {
     lazy val status: Status = statusHistory.head
+
+    lazy val companyDetails: Option[CompanyDetails] = additionalData match {
+      case Some(add) => add.companyDetails
+      case _         => None
+    }
 
     lazy val isOpenToAnswers      = status.isOpenToAnswers
     lazy val isAnsweredCompletely = status.isAnsweredCompletely
@@ -378,6 +405,8 @@ object Submission extends EnvReads {
   import GroupOfQuestionnaires.given
   import Question.given
 
+  given OFormat[CompanyDetails]      = Json.format[CompanyDetails]
+  given OFormat[AdditionalData]      = Json.format[AdditionalData]
   given OFormat[Submission.Instance] = Json.format[Submission.Instance]
   given OFormat[Submission]          = Json.format[Submission]
   given OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]
