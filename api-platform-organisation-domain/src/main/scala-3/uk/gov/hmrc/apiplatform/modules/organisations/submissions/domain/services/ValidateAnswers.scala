@@ -29,6 +29,8 @@ case class ValidationErrors(errors: ValidationError*)
 case class ValidationError(key: String = Question.answerKey, message: String)
 
 object ValidationError {
+  val companyNumberNotFoundKey = "companyNumberNotFound"
+
   given OFormat[ValidationError] = Json.format[ValidationError]
 }
 
