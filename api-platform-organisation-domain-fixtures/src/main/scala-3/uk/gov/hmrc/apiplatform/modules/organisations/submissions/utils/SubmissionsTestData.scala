@@ -238,6 +238,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
             case (_, Mark.Pass) => true; case _ => false
           }.head._1.value))
         case Question.AcknowledgementOnly(id, wording, statement, _)                                                       => ActualAnswer.AcknowledgedAnswer
+        case Question.ForwardToQuestion(id, forwardToQuestionId, wording, statement, _)                                    => ActualAnswer.AcknowledgedAnswer
         case Question.DateQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.DateAnswer(now.toLocalDate)
         case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                                           => ActualAnswer.AddressAnswer(address)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
@@ -322,6 +323,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
       case Question.AcknowledgementOnly(id, _, _, _)                 => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.ForwardToQuestion(id, _, _, _, _)                => List(Some(ActualAnswer.AcknowledgedAnswer))
       case Question.DateQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
       case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)       => List(Some(ActualAnswer.AddressAnswer(address)))
       case Question.NameQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.NameAnswer(fullName)))

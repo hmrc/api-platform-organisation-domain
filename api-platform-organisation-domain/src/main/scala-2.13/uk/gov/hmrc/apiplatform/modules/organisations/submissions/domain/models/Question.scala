@@ -179,6 +179,17 @@ object Question extends MapJsonFormatters {
     val afterStatement = None
   }
 
+  case class ForwardToQuestion(
+      id: Question.Id,
+      forwardToQuestionId: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      summary: Option[String] = None
+    ) extends Question {
+    val absence        = None
+    val afterStatement = None
+  }
+
   sealed trait ChoiceQuestion extends Question with LabelAndHints with ErrorMessaging {
     def choices: ListSet[PossibleAnswer]
     def marking: ListMap[PossibleAnswer, Mark]
@@ -320,6 +331,7 @@ object Question extends MapJsonFormatters {
   implicit val jsonFormatChooseOneOfQuestion: OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   implicit val jsonFormatMultiChoiceQuestion: OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
   implicit val jsonFormatAcknowledgementOnly: OFormat[AcknowledgementOnly] = Json.format[AcknowledgementOnly]
+  implicit val jsonFormatForwardToQuestion: OFormat[ForwardToQuestion]     = Json.format[ForwardToQuestion]
 
   implicit val jsonFormatQuestion: Format[Question] = Union.from[Question]("questionType")
     .and[MultiChoiceQuestion]("multi")
@@ -333,5 +345,6 @@ object Question extends MapJsonFormatters {
     .and[CompanyNumberQuestion]("companyNumber")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
+    .and[ForwardToQuestion]("forwardTo")
     .format
 }

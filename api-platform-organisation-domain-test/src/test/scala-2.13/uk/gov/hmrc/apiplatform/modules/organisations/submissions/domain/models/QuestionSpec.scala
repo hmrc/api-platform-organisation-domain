@@ -118,7 +118,7 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "question is optional" in {
     OrganisationDetails.questionOrgType.isOptional shouldBe false
-    OrganisationDetails.questionCompanyNumber.isOptional shouldBe true
+    OrganisationDetails.questionSlpOrgName.isOptional shouldBe true
   }
 
   "question html value" in {

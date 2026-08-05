@@ -178,6 +178,17 @@ object Question {
     val afterStatement = None
   }
 
+  case class ForwardToQuestion(
+      id: Question.Id,
+      forwardToQuestionId: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      summary: Option[String] = None
+    ) extends Question {
+    val absence        = None
+    val afterStatement = None
+  }
+
   sealed trait ChoiceQuestion extends Question with LabelAndHints with ErrorMessaging {
     def choices: ListSet[PossibleAnswer]
     def marking: ListMap[PossibleAnswer, Mark]
@@ -320,6 +331,7 @@ object Question {
   given OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   given OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
   given OFormat[AcknowledgementOnly] = Json.format[AcknowledgementOnly]
+  given OFormat[ForwardToQuestion]   = Json.format[ForwardToQuestion]
 
   given Format[Question] = Union.from[Question]("questionType")
     .and[MultiChoiceQuestion]("multi")
@@ -333,5 +345,6 @@ object Question {
     .and[CompanyNumberQuestion]("companyNumber")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
+    .and[ForwardToQuestion]("forwardTo")
     .format
 }
