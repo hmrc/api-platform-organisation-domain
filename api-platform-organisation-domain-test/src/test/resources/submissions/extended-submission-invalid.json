@@ -60,12 +60,11 @@
               "text" : "It is 8 characters. For example, 01234567 or AC012345.",
               "statementType" : "text"
             },
-            "absence" : [ "My organisation doesn't have a company registration", "fail" ],
             "errorInfo" : {
               "summary" : "Your company registration number cannot be blank",
               "message" : "Enter your company registration number, like 01234567"
             },
-            "questionType" : "text"
+            "questionType" : "companyNumber"
           },
           "askWhen" : {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
@@ -77,15 +76,13 @@
         }, {
           "question" : {
             "id" : "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc",
-            "wording" : "What is your organisation’s name?",
-            "validation" : {
-              "validationType" : "organisationName"
-            },
+            "wording" : "Is this your company?",
+            "yesMarking" : "pass",
+            "noMarking" : "fail",
             "errorInfo" : {
-              "summary" : "Your organsation name cannot be blank",
-              "message" : "Enter your organisation name"
+              "summary" : "Select Yes if the company name is correct"
             },
-            "questionType" : "text"
+            "questionType" : "confirmCompanyName"
           },
           "askWhen" : {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
@@ -97,12 +94,13 @@
         }, {
           "question" : {
             "id" : "e1dbf1a3-e28b-1c83-a739-86f1319ca8cc",
-            "wording" : "What is your organisation’s address?",
+            "wording" : "Is this the correct registered address for your company?",
+            "yesMarking" : "pass",
+            "noMarking" : "fail",
             "errorInfo" : {
-              "summary" : "Your organsation address cannot be blank",
-              "message" : "Enter your organisation address"
+              "summary" : "Select Yes if the company address is correct"
             },
-            "questionType" : "text"
+            "questionType" : "confirmCompanyAddress"
           },
           "askWhen" : {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
@@ -362,6 +360,7 @@
             "validation" : {
               "validationType" : "organisationName"
             },
+            "absence" : [ "My organisation doesn't have a company registration", "fail" ],
             "errorInfo" : {
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"

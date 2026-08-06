@@ -41,6 +41,7 @@ object ValidateAnswers {
   def validate(question: Question, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
     question match {
       case _: Question.AcknowledgementOnly                                                      => validateAcknowledgement(rawAnswers.get(Question.answerKey).exists(_.nonEmpty))
+      case _: Question.ForwardToQuestion                                                        => validateAcknowledgement(rawAnswers.get(Question.answerKey).exists(_.nonEmpty))
       case _ if question.isOptional && rawAnswers.get(Question.answerKey).fold(true)(_.isEmpty) => Either.right(ActualAnswer.NoAnswer)
       case q: Question.MultiChoiceQuestion                                                      => rawAnswers.get(Question.answerKey).map(a => validateAgainstPossibleAnswers(q, a.toSet))
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)

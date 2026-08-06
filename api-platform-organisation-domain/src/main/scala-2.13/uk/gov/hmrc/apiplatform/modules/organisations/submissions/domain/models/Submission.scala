@@ -461,13 +461,10 @@ case class Submission(
     }
   }
 
-  lazy val organisationName: String = {
-    organisationType match {
-      case Some(Organisation.OrganisationType.UkLimitedCompany)            => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLtdId"))
-      case Some(Organisation.OrganisationType.LimitedLiabilityPartnership) => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLlpId"))
-      case Some(Organisation.OrganisationType.LimitedPartnership)          => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameLpId"))
-      case Some(Organisation.OrganisationType.ScottishLimitedPartnership)  => ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationNameSlpId"))
-      case _                                                               => "n/a"
+  lazy val organisationName: Option[String] = {
+    latestInstance.companyDetails match {
+      case Some(companyDetails) => Some(companyDetails.companyName)
+      case _                    => None
     }
   }
 }

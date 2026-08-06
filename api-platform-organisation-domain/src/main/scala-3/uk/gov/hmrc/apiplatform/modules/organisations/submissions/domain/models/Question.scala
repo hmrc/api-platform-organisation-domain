@@ -178,6 +178,17 @@ object Question {
     val afterStatement = None
   }
 
+  case class ForwardToQuestion(
+      id: Question.Id,
+      forwardToQuestionId: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      summary: Option[String] = None
+    ) extends Question {
+    val absence        = None
+    val afterStatement = None
+  }
+
   sealed trait ChoiceQuestion extends Question with LabelAndHints with ErrorMessaging {
     def choices: ListSet[PossibleAnswer]
     def marking: ListMap[PossibleAnswer, Mark]
@@ -236,6 +247,48 @@ object Question {
     lazy val choices                                = ListSet(YES, NO)
   }
 
+  case class ConfirmCompanyNameQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      yesMarking: Mark,
+      noMarking: Mark,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends SingleChoiceQuestion {
+
+    val YES = PossibleAnswer("Yes")
+    val NO  = PossibleAnswer("No")
+
+    lazy val marking: ListMap[PossibleAnswer, Mark] = ListMap(YES -> yesMarking, NO -> noMarking)
+    lazy val choices                                = ListSet(YES, NO)
+  }
+
+  case class ConfirmCompanyAddressQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      yesMarking: Mark,
+      noMarking: Mark,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends SingleChoiceQuestion {
+
+    val YES = PossibleAnswer("Yes")
+    val NO  = PossibleAnswer("No")
+
+    lazy val marking: ListMap[PossibleAnswer, Mark] = ListMap(YES -> yesMarking, NO -> noMarking)
+    lazy val choices                                = ListSet(YES, NO)
+  }
+
   import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
 
@@ -265,21 +318,26 @@ object Question {
 
   import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Statement.given
 
-  given Format[PossibleAnswer]         = Json.valueFormat[PossibleAnswer]
-  given OFormat[TextQuestion]          = Json.format[TextQuestion]
-  given OFormat[YesNoQuestion]         = Json.format[YesNoQuestion]
-  given OFormat[DateQuestion]          = Json.format[DateQuestion]
-  given OFormat[AddressQuestion]       = Json.format[AddressQuestion]
-  given OFormat[NameQuestion]          = Json.format[NameQuestion]
-  given OFormat[CompanyNumberQuestion] = Json.format[CompanyNumberQuestion]
+  given Format[PossibleAnswer]                 = Json.valueFormat[PossibleAnswer]
+  given OFormat[TextQuestion]                  = Json.format[TextQuestion]
+  given OFormat[YesNoQuestion]                 = Json.format[YesNoQuestion]
+  given OFormat[ConfirmCompanyNameQuestion]    = Json.format[ConfirmCompanyNameQuestion]
+  given OFormat[ConfirmCompanyAddressQuestion] = Json.format[ConfirmCompanyAddressQuestion]
+  given OFormat[DateQuestion]                  = Json.format[DateQuestion]
+  given OFormat[AddressQuestion]               = Json.format[AddressQuestion]
+  given OFormat[NameQuestion]                  = Json.format[NameQuestion]
+  given OFormat[CompanyNumberQuestion]         = Json.format[CompanyNumberQuestion]
 
   given OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   given OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
   given OFormat[AcknowledgementOnly] = Json.format[AcknowledgementOnly]
+  given OFormat[ForwardToQuestion]   = Json.format[ForwardToQuestion]
 
   given Format[Question] = Union.from[Question]("questionType")
     .and[MultiChoiceQuestion]("multi")
     .and[YesNoQuestion]("yesNo")
+    .and[ConfirmCompanyNameQuestion]("confirmCompanyName")
+    .and[ConfirmCompanyAddressQuestion]("confirmCompanyAddress")
     .and[ChooseOneOfQuestion]("choose")
     .and[DateQuestion]("date")
     .and[AddressQuestion]("address")
@@ -287,5 +345,6 @@ object Question {
     .and[CompanyNumberQuestion]("companyNumber")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
+    .and[ForwardToQuestion]("forwardTo")
     .format
 }

@@ -43,6 +43,7 @@ object MarkAnswer {
       case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer)  => markMultiChoiceAnswer(q, a)
       case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)   => markSingleChoiceAnswer(q, a)
       case (_: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)       => Mark.Pass
+      case (_: Question.ForwardToQuestion, ActualAnswer.AcknowledgedAnswer)         => Mark.Pass
       case (_: Question.NameQuestion, _: ActualAnswer.NameAnswer)                   => Mark.Pass
       case (_: Question.AddressQuestion, _: ActualAnswer.AddressAnswer)             => Mark.Pass
       case (_: Question.CompanyNumberQuestion, _: ActualAnswer.CompanyNumberAnswer) => Mark.Pass
