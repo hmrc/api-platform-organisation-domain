@@ -362,12 +362,13 @@ trait QuestionnaireTestData {
 
   val testQuestionIdsOfInterest = QuestionIdsOfInterest(
     Map(
-      "organisationTypeId"          -> OrganisationDetails.questionOrgType.id,
-      "organisationNameLtdId"       -> OrganisationDetails.questionLtdOrgName.id,
-      "organisationNameLlpId"       -> OrganisationDetails.questionLlpOrgName.id,
-      "organisationNameLpId"        -> OrganisationDetails.questionLpOrgName.id,
-      "organisationNameSlpId"       -> OrganisationDetails.questionSlpOrgName.id,
-      "responsibleIndividualNameId" -> ResponsibleIndividualDetails.question2.id
+      "organisationTypeId"             -> OrganisationDetails.questionOrgType.id,
+      "organisationNameLtdId"          -> OrganisationDetails.questionLtdOrgName.id,
+      "organisationNameLlpId"          -> OrganisationDetails.questionLlpOrgName.id,
+      "organisationNameLpId"           -> OrganisationDetails.questionLpOrgName.id,
+      "organisationNameSlpId"          -> OrganisationDetails.questionSlpOrgName.id,
+      "organisationNameNonUkWithoutId" -> OrganisationDetails.questionNonUkWithoutOrgName.id,
+      "responsibleIndividualNameId"    -> ResponsibleIndividualDetails.question2.id
     )
   )
 
@@ -444,6 +445,15 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
     (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+  )
+
+  val sampleAnswersToQuestions2 = Map(
+    (OrganisationDetails.questionOrgType.id             -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
+    (OrganisationDetails.questionNonUkWithoutOrgName.id -> ActualAnswer.TextAnswer("Overseas SA")),
+    (ResponsibleIndividualDetails.question1.id          -> ActualAnswer.SingleChoiceAnswer("Yes")),
+    (ResponsibleIndividualDetails.question3.id          -> ActualAnswer.TextAnswer("Managing Director")),
+    (ResponsibleIndividualDetails.question5.id          -> ActualAnswer.TextAnswer("01234 567890")),
+    (ResponsibleIndividualDetails.question6.id          -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
   )
 
   def firstQuestion(questionnaire: Questionnaire) = questionnaire.questions.head.question.id

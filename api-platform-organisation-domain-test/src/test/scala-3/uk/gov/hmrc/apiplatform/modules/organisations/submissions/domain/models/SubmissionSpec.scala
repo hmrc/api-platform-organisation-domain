@@ -220,6 +220,10 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     Submission.updateLatestAdditionalDataTo(Some(AdditionalData(Some(companyDetails))))(aSubmission).organisationName shouldBe Some("Company name")
   }
 
+  "organisationName for non UK company" in {
+    createdSubmission.answeringWith(sampleAnswersToQuestions2).organisationName shouldBe Some("Overseas SA")
+  }
+
   "companyDetails" in {
     answeringSubmission.latestInstance.companyDetails shouldBe None
     val companyDetails = CompanyDetails("12345678", "Company name")
