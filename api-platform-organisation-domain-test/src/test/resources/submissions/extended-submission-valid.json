@@ -33,9 +33,9 @@
             },
             "questionType" : "choose"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "askWhen" : "alwaysAsk"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "4e148791-1a07-4f28-8fe4-ba3e18cdc118",
@@ -66,13 +66,13 @@
             },
             "questionType" : "companyNumber"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc",
@@ -84,13 +84,13 @@
             },
             "questionType" : "confirmCompanyName"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "e1dbf1a3-e28b-1c83-a739-86f1319ca8cc",
@@ -102,13 +102,13 @@
             },
             "questionType" : "confirmCompanyAddress"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "6be23951-ac69-47bf-aa56-86d3d690ee0b",
@@ -139,13 +139,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "0622cacd-e670-4a6c-879a-8fe2d54e4d3d",
@@ -169,13 +169,13 @@
             },
             "questionType" : "date"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "2c66be40-8eb4-4163-9899-a480928cfb6a",
@@ -185,13 +185,13 @@
             },
             "questionType" : "address"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "99e32823-f075-47c6-a9d5-112cb9eaef30",
@@ -205,13 +205,13 @@
             } ],
             "questionType" : "multi"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "95da25e8-af3a-4e05-a621-4a5f4ca788f6",
@@ -242,13 +242,13 @@
             },
             "questionType" : "acknowledgement"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "3f9c881f-9ca1-444f-9919-76a046694700",
@@ -262,13 +262,13 @@
             },
             "questionType" : "forwardTo"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "UK limited company"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "d1abf9a7-e31b-4c89-a755-21f0652ca23a",
@@ -282,13 +282,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "Sole trader"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "a2dbf9a7-e31b-4c89-a755-21f0652de91c",
@@ -302,13 +302,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "Registered society"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "d8aaf3a2-e31b-4c89-a755-21f0652ab52a",
@@ -322,13 +322,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "Charitable Incorporated Organisation (CIO)"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "b2fef9a2-e31b-4c89-a755-21f0652af99e",
@@ -342,13 +342,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "Non-UK company with a branch or place of business in the UK"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "a8eaf9a2-e31b-4c89-a755-21f0652ae45a",
@@ -362,13 +362,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "Non-UK company without a branch or place of business in the UK"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "adba162f-be58-2818-92ff-2ecd1799c513",
@@ -389,13 +389,13 @@
             },
             "questionType" : "choose"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
             "expectedValue" : {
               "value" : "Partnership"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "b6dbf9a2-e31b-4c89-a755-23f0652ab29d",
@@ -409,13 +409,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
             "expectedValue" : {
               "value" : "General partnership"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "a1dbf9a2-e31b-4c89-a755-23f0652ab17a",
@@ -429,13 +429,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
             "expectedValue" : {
               "value" : "Limited liability partnership"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e",
@@ -449,13 +449,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
             "expectedValue" : {
               "value" : "Limited partnership"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "c7dbf9a2-e31b-4c89-a755-23f0651ab48a",
@@ -469,13 +469,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
             "expectedValue" : {
               "value" : "Scottish partnership"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "e3dbf6a2-e31b-4c89-a755-23f0652ab17c",
@@ -490,13 +490,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
             "expectedValue" : {
               "value" : "Scottish limited partnership"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         } ]
       }, {
         "id" : "ac69b129-524a-4d10-89a5-7bfa46ed95c7",
@@ -541,9 +541,9 @@
             },
             "questionType" : "yesNo"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "askWhen" : "alwaysAsk"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "36b7e670-83fc-4b31-8f85-4d3394908495",
@@ -555,13 +555,13 @@
             },
             "questionType" : "name"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "99d9362d-e365-4af1-aa46-88e95f9858f7",
             "expectedValue" : {
               "value" : "No"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "18b4e672-43fc-8b33-9f83-7d324908496",
@@ -573,9 +573,9 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "askWhen" : "alwaysAsk"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "fb9b8036-cc88-4f4e-ad84-c02caa4cebae",
@@ -603,13 +603,13 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "questionId" : "99d9362d-e365-4af1-aa46-88e95f9858f7",
             "expectedValue" : {
               "value" : "No"
             },
             "askWhen" : "askWhenAnswer"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "a27b8039-cc32-4f2e-ad88-c96caa1cebae",
@@ -631,9 +631,9 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "askWhen" : "alwaysAsk"
-          }
+          } ]
         }, {
           "question" : {
             "id" : "b2dbf6a1-e39b-4c38-a524-19f0854ca1cc",
@@ -652,9 +652,9 @@
             },
             "questionType" : "text"
           },
-          "askWhen" : {
+          "askWhen" : [ {
             "askWhen" : "alwaysAsk"
-          }
+          } ]
         } ]
       } ]
     } ],

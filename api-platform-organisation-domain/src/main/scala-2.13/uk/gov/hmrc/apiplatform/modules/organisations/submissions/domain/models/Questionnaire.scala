@@ -47,7 +47,12 @@ object AskWhen {
     }
   }
 
-  def shouldAsk(context: Context, answersToQuestions: Submission.AnswersToQuestions)(askWhen: AskWhen): Boolean = {
+  def shouldAsk(context: Context, answersToQuestions: Submission.AnswersToQuestions)(askWhen: NonEmptyList[AskWhen]): Boolean = {
+    // Assume that all AskWhen's must be true for the overall one to be true - i.e. AND not OR
+    !askWhen.map(shouldAskWhen(context, answersToQuestions)(_)).exists(r => r == false)
+  }
+
+  private def shouldAskWhen(context: Context, answersToQuestions: Submission.AnswersToQuestions)(askWhen: AskWhen): Boolean = {
     askWhen match {
       case AlwaysAsk                                 => true
       case AskWhenContext(contextKey, expectedValue) => context.get(contextKey).map(_.equalsIgnoreCase(expectedValue)).getOrElse(false)
@@ -68,11 +73,12 @@ object AskWhen {
     .format
 }
 
-case class QuestionItem(question: Question, askWhen: AskWhen)
+case class QuestionItem(question: Question, askWhen: NonEmptyList[AskWhen])
 
 object QuestionItem extends NonEmptyListFormatters {
-  def apply(question: Question): QuestionItem                   = QuestionItem(question, AskWhen.AlwaysAsk)
-  def apply(question: Question, askWhen: AskWhen): QuestionItem = new QuestionItem(question, askWhen)
+  def apply(question: Question): QuestionItem                                 = QuestionItem(question, NonEmptyList.of(AskWhen.AlwaysAsk))
+  def apply(question: Question, askWhen: AskWhen): QuestionItem               = new QuestionItem(question, NonEmptyList.of(askWhen))
+  def apply(question: Question, askWhen: NonEmptyList[AskWhen]): QuestionItem = new QuestionItem(question, askWhen)
 
   import play.api.libs.json._
   import AskWhen._
