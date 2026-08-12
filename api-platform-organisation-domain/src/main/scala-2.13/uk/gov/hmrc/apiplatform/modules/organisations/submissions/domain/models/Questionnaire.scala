@@ -23,16 +23,25 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormat
 
 sealed trait AskWhen
 
-object AskWhen {
-  case class AskWhenContext(contextKey: String, expectedValue: String)                              extends AskWhen
-  case class AskWhenAnswer(questionId: Question.Id, expectedValue: ActualAnswer.SingleChoiceAnswer) extends AskWhen
-  case object AlwaysAsk                                                                             extends AskWhen
+object AskWhen extends NonEmptyListFormatters {
+  case class AskWhenContext(contextKey: String, expectedValue: String)                                              extends AskWhen
+  case class AskWhenAnswer(questionId: Question.Id, expectedValue: ActualAnswer.SingleChoiceAnswer)                 extends AskWhen
+  case class AskWhenAnswers(questionId: Question.Id, expectedValues: NonEmptyList[ActualAnswer.SingleChoiceAnswer]) extends AskWhen
+  case object AlwaysAsk                                                                                             extends AskWhen
 
   object AskWhenAnswer {
 
     def apply(question: Question.SingleChoiceQuestion, expectedValue: String): AskWhen = {
       require(question.choices.find(qc => qc.value == expectedValue).isDefined)
       AskWhenAnswer(question.id, ActualAnswer.SingleChoiceAnswer(expectedValue))
+    }
+  }
+
+  object AskWhenAnswers {
+
+    def apply(question: Question.SingleChoiceQuestion, expectedValues: NonEmptyList[String]): AskWhen = {
+      require(!expectedValues.map(ev => question.choices.find(qc => qc.value == ev).isDefined).exists(is => is == false))
+      AskWhenAnswers(question.id, expectedValues.map(ev => ActualAnswer.SingleChoiceAnswer(ev)))
     }
   }
 
@@ -54,9 +63,10 @@ object AskWhen {
 
   private def shouldAskWhen(context: Context, answersToQuestions: Submission.AnswersToQuestions)(askWhen: AskWhen): Boolean = {
     askWhen match {
-      case AlwaysAsk                                 => true
-      case AskWhenContext(contextKey, expectedValue) => context.get(contextKey).map(_.equalsIgnoreCase(expectedValue)).getOrElse(false)
-      case AskWhenAnswer(questionId, expectedAnswer) => answersToQuestions.get(questionId).map(_ == expectedAnswer).getOrElse(false)
+      case AlwaysAsk                                   => true
+      case AskWhenContext(contextKey, expectedValue)   => context.get(contextKey).map(_.equalsIgnoreCase(expectedValue)).getOrElse(false)
+      case AskWhenAnswer(questionId, expectedAnswer)   => answersToQuestions.get(questionId).map(_ == expectedAnswer).getOrElse(false)
+      case AskWhenAnswers(questionId, expectedAnswers) => answersToQuestions.get(questionId).map(aa => expectedAnswers.exists(ea => ea == aa)).getOrElse(false)
     }
   }
 
@@ -65,10 +75,12 @@ object AskWhen {
 
   implicit val jsonFormatAskWhenContext: OFormat[AskWhenContext] = Json.format[AskWhenContext]
   implicit val jsonFormatAskWhenAnswer: OFormat[AskWhenAnswer]   = Json.format[AskWhenAnswer]
+  implicit val jsonFormatAskWhenAnswers: OFormat[AskWhenAnswers] = Json.format[AskWhenAnswers]
 
   implicit val jsonFormatCondition: Format[AskWhen] = Union.from[AskWhen]("askWhen")
     .and[AskWhenContext]("askWhenContext")
     .and[AskWhenAnswer]("askWhenAnswer")
+    .and[AskWhenAnswers]("askWhenAnswers")
     .andType("alwaysAsk", () => AlwaysAsk)
     .format
 }

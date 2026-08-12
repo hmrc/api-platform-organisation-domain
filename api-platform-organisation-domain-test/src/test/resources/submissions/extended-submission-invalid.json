@@ -295,26 +295,6 @@
           } ]
         }, {
           "question" : {
-            "id" : "a1dbf9a2-e31b-4c89-a755-23f0652ab17a",
-            "wording" : "What is your organisation’s name?",
-            "validation" : {
-              "validationType" : "organisationName"
-            },
-            "errorInfo" : {
-              "summary" : "Your organsation name cannot be blank",
-              "message" : "Enter your organisation name"
-            },
-            "questionType" : "text"
-          },
-          "askWhen" : [ {
-            "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
-            "expectedValue" : {
-              "value" : "Limited liability partnership"
-            },
-            "askWhen" : "askWhenAnswer"
-          } ]
-        }, {
-          "question" : {
             "id" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e",
             "wording" : "What is your organisation’s name?",
             "validation" : {
@@ -328,10 +308,12 @@
           },
           "askWhen" : [ {
             "questionId" : "adba162f-be58-2818-92ff-2ecd1799c513",
-            "expectedValue" : {
+            "expectedValues" : [ {
               "value" : "Limited partnership"
-            },
-            "askWhen" : "askWhenAnswer"
+            }, {
+              "value" : "Limited liability partnership"
+            } ],
+            "askWhen" : "askWhenAnswers"
           } ]
         }, {
           "question" : {
@@ -537,7 +519,6 @@
     } ],
     "questionIdsOfInterest" : {
       "questionIds" : {
-        "organisationNameLlpId" : "a1dbf9a2-e31b-4c89-a755-23f0652ab17a",
         "organisationNameLtdId" : "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc",
         "organisationNameSlpId" : "e3dbf6a2-e31b-4c89-a755-23f0652ab17c",
         "organisationTypeId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",

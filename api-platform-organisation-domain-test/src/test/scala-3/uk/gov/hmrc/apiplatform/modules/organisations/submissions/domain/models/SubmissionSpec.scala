@@ -130,6 +130,17 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     AskWhen.shouldAsk(standardContext, answersToQuestions)(OrganisationDetails.questionnaire.questions.head.askWhen) shouldBe true
     AskWhen.shouldAsk(standardContext, answersToQuestions)(OrganisationDetails.questionnaire.questions.tail.head.askWhen) shouldBe true
     AskWhen.shouldAsk(standardContext, answersToQuestions)(ResponsibleIndividualDetails.questionnaire.questions.tail.tail.head.askWhen) shouldBe true
+    AskWhen.shouldAsk(standardContext, answersToQuestions)(
+      OrganisationDetails.questionnaire.questions.find(qi => qi.question == OrganisationDetails.questionLpOrgName).get.askWhen
+    ) shouldBe false
+
+    val answersToQuestionsPartnership: Submission.AnswersToQuestions = Map(
+      OrganisationDetails.questionOrgType.id         -> ActualAnswer.SingleChoiceAnswer("Partnership"),
+      OrganisationDetails.questionPartnershipType.id -> ActualAnswer.SingleChoiceAnswer("Limited partnership")
+    )
+    AskWhen.shouldAsk(standardContext, answersToQuestionsPartnership)(
+      OrganisationDetails.questionnaire.questions.find(qi => qi.question == OrganisationDetails.questionLpOrgName).get.askWhen
+    ) shouldBe true
   }
 
   "submission status isOpenToAnswers" in {

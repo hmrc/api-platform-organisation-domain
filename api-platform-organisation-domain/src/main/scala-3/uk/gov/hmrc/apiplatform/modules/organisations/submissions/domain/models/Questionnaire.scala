@@ -24,15 +24,24 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormat
 sealed trait AskWhen
 
 object AskWhen {
-  case class AskWhenContext(contextKey: String, expectedValue: String)                              extends AskWhen
-  case class AskWhenAnswer(questionId: Question.Id, expectedValue: ActualAnswer.SingleChoiceAnswer) extends AskWhen
-  case object AlwaysAsk                                                                             extends AskWhen
+  case class AskWhenContext(contextKey: String, expectedValue: String)                                              extends AskWhen
+  case class AskWhenAnswer(questionId: Question.Id, expectedValue: ActualAnswer.SingleChoiceAnswer)                 extends AskWhen
+  case class AskWhenAnswers(questionId: Question.Id, expectedValues: NonEmptyList[ActualAnswer.SingleChoiceAnswer]) extends AskWhen
+  case object AlwaysAsk                                                                                             extends AskWhen
 
   object AskWhenAnswer {
 
     def apply(question: Question.SingleChoiceQuestion, expectedValue: String): AskWhen = {
       require(question.choices.find(qc => qc.value == expectedValue).isDefined)
       AskWhenAnswer(question.id, ActualAnswer.SingleChoiceAnswer(expectedValue))
+    }
+  }
+
+  object AskWhenAnswers {
+
+    def apply(question: Question.SingleChoiceQuestion, expectedValues: NonEmptyList[String]): AskWhen = {
+      require(!expectedValues.map(ev => question.choices.find(qc => qc.value == ev).isDefined).exists(is => is == false))
+      AskWhenAnswers(question.id, expectedValues.map(ev => ActualAnswer.SingleChoiceAnswer(ev)))
     }
   }
 
@@ -54,21 +63,25 @@ object AskWhen {
 
   private def shouldAskWhen(context: Context, answersToQuestions: Submission.AnswersToQuestions)(askWhen: AskWhen): Boolean = {
     askWhen match {
-      case AlwaysAsk                                 => true
-      case AskWhenContext(contextKey, expectedValue) => context.get(contextKey).map(_.equalsIgnoreCase(expectedValue)).getOrElse(false)
-      case AskWhenAnswer(questionId, expectedAnswer) => answersToQuestions.get(questionId).map(_ == expectedAnswer).getOrElse(false)
+      case AlwaysAsk                                   => true
+      case AskWhenContext(contextKey, expectedValue)   => context.get(contextKey).map(_.equalsIgnoreCase(expectedValue)).getOrElse(false)
+      case AskWhenAnswer(questionId, expectedAnswer)   => answersToQuestions.get(questionId).map(_ == expectedAnswer).getOrElse(false)
+      case AskWhenAnswers(questionId, expectedAnswers) => answersToQuestions.get(questionId).map(aa => expectedAnswers.exists(ea => ea == aa)).getOrElse(false)
     }
   }
 
   import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
+  import NonEmptyListFormatters.given
 
   given OFormat[AskWhenContext] = Json.format[AskWhenContext]
   given OFormat[AskWhenAnswer]  = Json.format[AskWhenAnswer]
+  given OFormat[AskWhenAnswers] = Json.format[AskWhenAnswers]
 
   given Format[AskWhen] = Union.from[AskWhen]("askWhen")
     .and[AskWhenContext]("askWhenContext")
     .and[AskWhenAnswer]("askWhenAnswer")
+    .and[AskWhenAnswers]("askWhenAnswers")
     .andType("alwaysAsk", () => AlwaysAsk)
     .format
 }
