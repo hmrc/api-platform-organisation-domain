@@ -455,18 +455,33 @@ case class Submission(
 
   lazy val organisationType: Option[Organisation.OrganisationType] = {
     organisationTypeAsText match {
-      case "UK limited company"            => Some(Organisation.OrganisationType.UkLimitedCompany)
-      case "Limited liability partnership" => Some(Organisation.OrganisationType.LimitedLiabilityPartnership)
-      case "Limited partnership"           => Some(Organisation.OrganisationType.LimitedPartnership)
-      case "Scottish limited partnership"  => Some(Organisation.OrganisationType.ScottishLimitedPartnership)
-      case _                               => None
+      case "UK limited company"                                             => Some(Organisation.OrganisationType.UkLimitedCompany)
+      case "Limited liability partnership"                                  => Some(Organisation.OrganisationType.LimitedLiabilityPartnership)
+      case "Limited partnership"                                            => Some(Organisation.OrganisationType.LimitedPartnership)
+      case "Scottish limited partnership"                                   => Some(Organisation.OrganisationType.ScottishLimitedPartnership)
+      case "Non-UK company without a branch or place of business in the UK" => Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk)
+      case _                                                                => None
+    }
+  }
+
+  private def getCompanyNameFromTextQuestion(key: String): Option[String] = {
+    ActualAnswersAsText(getAnswerToQuestionOfInterest(key)) match {
+      case "n/a" => None
+      case value => Some(value)
+    }
+  }
+
+  private def getCompanyNameFromAdditionalData(): Option[String] = {
+    latestInstance.companyDetails match {
+      case Some(companyDetails) => Some(companyDetails.companyName)
+      case _                    => None
     }
   }
 
   lazy val organisationName: Option[String] = {
-    latestInstance.companyDetails match {
-      case Some(companyDetails) => Some(companyDetails.companyName)
-      case _                    => None
+    organisationType match {
+      case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getCompanyNameFromTextQuestion("organisationNameNonUkWithoutId")
+      case _                                                                   => getCompanyNameFromAdditionalData()
     }
   }
 }

@@ -130,6 +130,17 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     AskWhen.shouldAsk(standardContext, answersToQuestions)(OrganisationDetails.questionnaire.questions.head.askWhen) shouldBe true
     AskWhen.shouldAsk(standardContext, answersToQuestions)(OrganisationDetails.questionnaire.questions.tail.head.askWhen) shouldBe true
     AskWhen.shouldAsk(standardContext, answersToQuestions)(ResponsibleIndividualDetails.questionnaire.questions.tail.tail.head.askWhen) shouldBe true
+    AskWhen.shouldAsk(standardContext, answersToQuestions)(
+      OrganisationDetails.questionnaire.questions.find(qi => qi.question == OrganisationDetails.questionLpOrgName).get.askWhen
+    ) shouldBe false
+
+    val answersToQuestionsPartnership: Submission.AnswersToQuestions = Map(
+      OrganisationDetails.questionOrgType.id         -> ActualAnswer.SingleChoiceAnswer("Partnership"),
+      OrganisationDetails.questionPartnershipType.id -> ActualAnswer.SingleChoiceAnswer("Limited partnership")
+    )
+    AskWhen.shouldAsk(standardContext, answersToQuestionsPartnership)(
+      OrganisationDetails.questionnaire.questions.find(qi => qi.question == OrganisationDetails.questionLpOrgName).get.askWhen
+    ) shouldBe true
   }
 
   "submission status isOpenToAnswers" in {
@@ -218,6 +229,10 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     answeringSubmission.organisationName shouldBe None
     val companyDetails = CompanyDetails("12345678", "Company name")
     Submission.updateLatestAdditionalDataTo(Some(AdditionalData(Some(companyDetails))))(aSubmission).organisationName shouldBe Some("Company name")
+  }
+
+  "organisationName for non UK company" in {
+    createdSubmission.answeringWith(sampleAnswersToQuestions2).organisationName shouldBe Some("Overseas SA")
   }
 
   "companyDetails" in {
