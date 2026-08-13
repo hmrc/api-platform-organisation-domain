@@ -31,6 +31,7 @@
             "errorInfo" : {
               "summary" : "Select your organisation type"
             },
+            "changeInSummaryView" : true,
             "questionType" : "choose"
           },
           "askWhen" : [ {
@@ -64,6 +65,7 @@
               "summary" : "Your company registration number cannot be blank",
               "message" : "Enter your company registration number, like 01234567"
             },
+            "changeInSummaryView" : true,
             "questionType" : "companyNumber"
           },
           "askWhen" : [ {
@@ -82,6 +84,7 @@
             "errorInfo" : {
               "summary" : "Select Yes if the company name is correct"
             },
+            "changeInSummaryView" : false,
             "questionType" : "confirmCompanyName"
           },
           "askWhen" : [ {
@@ -100,6 +103,7 @@
             "errorInfo" : {
               "summary" : "Select Yes if the company address is correct"
             },
+            "changeInSummaryView" : false,
             "questionType" : "confirmCompanyAddress"
           },
           "askWhen" : [ {
@@ -137,6 +141,7 @@
               "summary" : "Your Corporation Tax Unique Taxpayer Reference cannot be blank",
               "message" : "Enter your Corporation Tax Unique Taxpayer Reference, like 1234567890"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -167,6 +172,7 @@
               "summary" : "Invalid Date",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "date"
           },
           "askWhen" : [ {
@@ -183,6 +189,7 @@
             "errorInfo" : {
               "summary" : "Invalid Address"
             },
+            "changeInSummaryView" : true,
             "questionType" : "address"
           },
           "askWhen" : [ {
@@ -203,6 +210,7 @@
             }, {
               "Green" : "pass"
             } ],
+            "changeInSummaryView" : true,
             "questionType" : "multi"
           },
           "askWhen" : [ {
@@ -240,6 +248,7 @@
                 "statementType" : "bullets"
               } ]
             },
+            "changeInSummaryView" : true,
             "questionType" : "acknowledgement"
           },
           "askWhen" : [ {
@@ -260,6 +269,7 @@
                 "statementType" : "text"
               } ]
             },
+            "changeInSummaryView" : true,
             "questionType" : "forwardTo"
           },
           "askWhen" : [ {
@@ -280,6 +290,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -300,6 +311,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -320,6 +332,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -340,6 +353,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -360,6 +374,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -387,6 +402,7 @@
             "errorInfo" : {
               "summary" : "Select your partnership type"
             },
+            "changeInSummaryView" : true,
             "questionType" : "choose"
           },
           "askWhen" : [ {
@@ -407,6 +423,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -427,6 +444,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -449,6 +467,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -470,6 +489,7 @@
               "summary" : "Your organsation name cannot be blank",
               "message" : "Enter your organisation name"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -521,6 +541,7 @@
             "errorInfo" : {
               "summary" : "Select Yes if you are the individual responsible for the software in your organisation"
             },
+            "changeInSummaryView" : true,
             "questionType" : "yesNo"
           },
           "askWhen" : [ {
@@ -535,6 +556,7 @@
               "summary" : "Enter a first and last name",
               "message" : "First and last name cannot be blank"
             },
+            "changeInSummaryView" : true,
             "questionType" : "name"
           },
           "askWhen" : [ {
@@ -553,6 +575,7 @@
               "summary" : "Enter a job title",
               "message" : "Job title cannot be blank"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -583,6 +606,7 @@
               "summary" : "Enter an email address in the correct format, like yourname@example.com",
               "message" : "Email address cannot be blank"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -611,6 +635,7 @@
               "summary" : "Enter a telephone number",
               "message" : "Telephone number cannot be blank"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {
@@ -632,6 +657,7 @@
               "summary" : "Enter a website address in the correct format, like https://example.com",
               "message" : "Enter a URL in the correct format, like https://example.com"
             },
+            "changeInSummaryView" : true,
             "questionType" : "text"
           },
           "askWhen" : [ {

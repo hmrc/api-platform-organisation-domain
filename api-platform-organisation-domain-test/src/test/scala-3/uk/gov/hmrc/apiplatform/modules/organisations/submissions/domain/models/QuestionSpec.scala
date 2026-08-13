@@ -38,7 +38,8 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
        |  "errorInfo" : {
        |    "summary" : "Enter a website address in the correct format, like https://example.com",
        |    "message" : "Enter a URL in the correct format, like https://example.com"
-       |  }
+       |  },
+       |  "changeInSummaryView" : true
        |}""".stripMargin
   }
 
@@ -79,7 +80,8 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
       |  "noMarking" : "pass",
       |  "errorInfo" : {
       |    "summary" : "Select Yes if you are the individual responsible for the software in your organisation"
-      |  }
+      |  },
+      |  "changeInSummaryView" : true
       |}""".stripMargin
 
   val jsonChooseOneOfQuestion =
@@ -103,7 +105,8 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
       |  } ],
       |  "errorInfo" : {
       |    "summary" : "Select your organisation type"
-      |  }
+      |  },
+      |  "changeInSummaryView" : true
       |}""".stripMargin
 
   "question absence text" in {

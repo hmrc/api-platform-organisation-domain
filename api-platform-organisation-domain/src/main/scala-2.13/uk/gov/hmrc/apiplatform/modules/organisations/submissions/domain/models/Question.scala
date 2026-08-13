@@ -56,8 +56,10 @@ sealed trait Question {
   def absenceMark: Option[Mark]   = absence.map(_._2)
 
   def summary: Option[String]
+  def changeInSummaryView: Option[Boolean]
 
-  final def isOptional: Boolean = absence.isDefined
+  final def isOptional: Boolean               = absence.isDefined
+  final def allowChangeInSummaryView: Boolean = changeInSummaryView.getOrElse(true)
 }
 
 case class PossibleAnswer(value: String) extends AnyVal {
@@ -118,7 +120,8 @@ object Question extends MapJsonFormatters {
       validation: Option[TextValidation] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class DateQuestion(
@@ -130,7 +133,8 @@ object Question extends MapJsonFormatters {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class AddressQuestion(
@@ -142,7 +146,8 @@ object Question extends MapJsonFormatters {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class CompanyNumberQuestion(
@@ -154,7 +159,8 @@ object Question extends MapJsonFormatters {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class NameQuestion(
@@ -166,14 +172,16 @@ object Question extends MapJsonFormatters {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class AcknowledgementOnly(
       id: Question.Id,
       wording: Wording,
       statement: Option[Statement],
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question {
     val absence        = None
     val afterStatement = None
@@ -184,7 +192,8 @@ object Question extends MapJsonFormatters {
       forwardToQuestionId: Question.Id,
       wording: Wording,
       statement: Option[Statement],
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends Question {
     val absence        = None
     val afterStatement = None
@@ -207,7 +216,8 @@ object Question extends MapJsonFormatters {
       marking: ListMap[PossibleAnswer, Mark],
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends ChoiceQuestion {
     lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
   }
@@ -222,7 +232,8 @@ object Question extends MapJsonFormatters {
       marking: ListMap[PossibleAnswer, Mark],
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends SingleChoiceQuestion {
     lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
   }
@@ -238,7 +249,8 @@ object Question extends MapJsonFormatters {
       noMarking: Mark,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(true)
     ) extends SingleChoiceQuestion {
 
     val YES = PossibleAnswer("Yes")
@@ -259,7 +271,8 @@ object Question extends MapJsonFormatters {
       noMarking: Mark,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(false)
     ) extends SingleChoiceQuestion {
 
     val YES = PossibleAnswer("Yes")
@@ -280,7 +293,8 @@ object Question extends MapJsonFormatters {
       noMarking: Mark,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      changeInSummaryView: Option[Boolean] = Some(false)
     ) extends SingleChoiceQuestion {
 
     val YES = PossibleAnswer("Yes")
