@@ -79,7 +79,7 @@ lazy val library = (project in file("."))
 lazy val apiPlatformApplicationDomain = Project("api-platform-organisation-domain", file("api-platform-organisation-domain"))
   .settings(
     commonSettings,
-    libraryDependencies ++= LibraryDependencies.applicationDomain(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.domain(scalaVersion.value),
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
@@ -92,7 +92,7 @@ lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-organisati
   )
   .settings(
     commonSettings,
-    libraryDependencies ++= LibraryDependencies.root(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.fixtures(scalaVersion.value),
     ScoverageKeys.coverageEnabled := false,
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
@@ -107,7 +107,7 @@ lazy val apiPlatformApplicationDomainTest = Project("api-platform-organisation-d
   .settings(
     commonSettings,
     publish / skip := true,
-    libraryDependencies ++= LibraryDependencies.root(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.tests(scalaVersion.value),
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
