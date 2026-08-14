@@ -9,7 +9,7 @@ import bloop.integrations.sbt.BloopDefaults
 Global / bloopAggregateSourceDependencies := true
 Global / bloopExportJarClassifiers := Some(Set("sources"))
 
-val appName = "api-platform-organisation-domain"
+val libName = "api-platform-organisation-domain"
 
 val scala2_13 = "2.13.18"
 val scala3 = "3.3.7"
@@ -76,30 +76,30 @@ lazy val library = (project in file("."))
   )
 
 
-lazy val apiPlatformApplicationDomain = Project("api-platform-organisation-domain", file("api-platform-organisation-domain"))
+lazy val apiPlatformApplicationDomain = Project(libName, file(libName))
   .settings(
     commonSettings,
-    libraryDependencies ++= LibraryDependencies.applicationDomain(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.domain(scalaVersion.value),
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
   .disablePlugins(JUnitXmlReportPlugin)
 
 
-lazy val apiPlatformApplicationDomainFixtures = Project("api-platform-organisation-domain-fixtures", file("api-platform-organisation-domain-fixtures"))
+lazy val apiPlatformApplicationDomainFixtures = Project(s"$libName-fixtures", file(s"$libName-fixtures"))
   .dependsOn(
     apiPlatformApplicationDomain % "compile"
   )
   .settings(
     commonSettings,
-    libraryDependencies ++= LibraryDependencies.root(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.fixtures(scalaVersion.value),
     ScoverageKeys.coverageEnabled := false,
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
   .disablePlugins(JUnitXmlReportPlugin)
 
 
-lazy val apiPlatformApplicationDomainTest = Project("api-platform-organisation-domain-test", file("api-platform-organisation-domain-test"))
+lazy val apiPlatformApplicationDomainTest = Project(s"$libName-test", file(s"$libName-test"))
   .dependsOn(
     apiPlatformApplicationDomain,
     apiPlatformApplicationDomainFixtures
@@ -107,7 +107,7 @@ lazy val apiPlatformApplicationDomainTest = Project("api-platform-organisation-d
   .settings(
     commonSettings,
     publish / skip := true,
-    libraryDependencies ++= LibraryDependencies.root(scalaVersion.value),
+    libraryDependencies ++= LibraryDependencies.tests(scalaVersion.value),
     ScoverageSettings(),
     Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-eT"),
   )
