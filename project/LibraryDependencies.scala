@@ -20,7 +20,7 @@ object LibraryDependencies {
     commonTestDependencies(scalaVersion)
 
   private def compileDependencies(scalaVersion: String) = Seq(
-    "uk.gov.hmrc"             %% "api-platform-common-domain"          % commonDomainVersion,
+    "uk.gov.hmrc"      %% "api-platform-common-domain" % commonDomainVersion % "provided",
     "com.typesafe"      % "config"                     % "1.4.2",
     "commons-validator" % "commons-validator"          % "1.10.1",
     "dev.optics"       %% "monocle-core"               % monocleVersion,
