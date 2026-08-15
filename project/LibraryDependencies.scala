@@ -1,23 +1,20 @@
 import sbt._
 
 object LibraryDependencies {
-  val commonDomainVersion = "1.3.0"
+  val commonDomainVersion = "1.4.0"
   val monocleVersion      = "3.1.0"
 
-  def domain(scalaVersion: String) = 
-    compileDependencies(scalaVersion) ++
-    fixturesDependencies.map(_ % "test") ++ 
-    commonTestDependencies(scalaVersion)
+  def domain(scalaVersion: String) =
+    compileDependencies(scalaVersion)
 
   def fixtures(scalaVersion: String) =
     compileDependencies(scalaVersion) ++
-    fixturesDependencies.map(_ % "provided") ++ 
-    commonTestDependencies(scalaVersion)
+    fixturesDependencies.map(_ % "provided")
 
   def tests(scalaVersion: String) =
-    compileDependencies(scalaVersion: String) ++
+    compileDependencies(scalaVersion) ++
     fixturesDependencies.map(_ % "test") ++ 
-    commonTestDependencies(scalaVersion)
+    testDependencies
 
   private def compileDependencies(scalaVersion: String) = Seq(
     "uk.gov.hmrc"      %% "api-platform-common-domain" % commonDomainVersion % "provided",
@@ -36,10 +33,6 @@ object LibraryDependencies {
     "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures" % commonDomainVersion
   )
 
-  def commonTestDependencies(scalaVersion: String) = Seq(
-    "org.scalactic"       %% "scalactic"                           % "3.2.14",
-    "com.vladsch.flexmark" % "flexmark-all"                        % "0.64.8",
-    "org.mockito"         %% "mockito-scala-scalatest"             % "2.2.1",
-    "org.scalatest"       %% "scalatest"                           % "3.2.19",
-  ).map(_ % "test")
+  def testDependencies = Seq.empty[ModuleID]
+    .map(_ % "test")
 }
