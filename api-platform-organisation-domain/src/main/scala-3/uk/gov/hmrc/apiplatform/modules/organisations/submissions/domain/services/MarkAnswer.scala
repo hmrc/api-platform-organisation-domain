@@ -46,6 +46,7 @@ object MarkAnswer {
       case (_: Question.ForwardToQuestion, ActualAnswer.AcknowledgedAnswer)         => Mark.Pass
       case (_: Question.NameQuestion, _: ActualAnswer.NameAnswer)                   => Mark.Pass
       case (_: Question.AddressQuestion, _: ActualAnswer.AddressAnswer)             => Mark.Pass
+      case (_: Question.AttachmentQuestion, _: ActualAnswer.AttachmentAnswer)       => Mark.Pass
       case (_: Question.CompanyNumberQuestion, _: ActualAnswer.CompanyNumberAnswer) => Mark.Pass
       case _                                                                        => throw new IllegalArgumentException(s"Unexpectely the answer is not valid - ${question.wording.value}")
     }

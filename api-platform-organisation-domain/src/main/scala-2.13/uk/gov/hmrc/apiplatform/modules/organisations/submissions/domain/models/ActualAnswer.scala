@@ -33,6 +33,11 @@ case class FullName(
     lastName: Option[String]
   )
 
+case class Attachment(
+    fileRef: Option[String],
+    fileName: Option[String]
+  )
+
 object ActualAnswer {
 
   case class MultipleChoiceAnswer(values: Set[String])     extends ActualAnswer
@@ -42,6 +47,7 @@ object ActualAnswer {
   case class AddressAnswer(value: RegisteredOfficeAddress) extends ActualAnswer
   case class NameAnswer(value: FullName)                   extends ActualAnswer
   case class CompanyNumberAnswer(value: String)            extends ActualAnswer
+  case class AttachmentAnswer(value: Attachment)           extends ActualAnswer
   case object AcknowledgedAnswer                           extends ActualAnswer
   case object NoAnswer                                     extends ActualAnswer
 
@@ -55,6 +61,8 @@ object ActualAnswer {
   implicit val jfFullName: OFormat[FullName]                         = Json.format[FullName]
   implicit val jfNameAnswer: OFormat[NameAnswer]                     = Json.format[NameAnswer]
   implicit val jfCompanyNumberAnswer: OFormat[CompanyNumberAnswer]   = Json.format[CompanyNumberAnswer]
+  implicit val jfAttachment: OFormat[Attachment]                     = Json.format[Attachment]
+  implicit val jfAttachmentAnswer: OFormat[AttachmentAnswer]         = Json.format[AttachmentAnswer]
   implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]     = Json.format[SingleChoiceAnswer]
   implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]
 
@@ -65,6 +73,7 @@ object ActualAnswer {
     .and[AddressAnswer]("address")
     .and[NameAnswer]("name")
     .and[CompanyNumberAnswer]("companyNumber")
+    .and[AttachmentAnswer]("attachment")
     .and[TextAnswer]("text")
     .andType("acknowledged", () => AcknowledgedAnswer)
     .andType("noAnswer", () => NoAnswer)

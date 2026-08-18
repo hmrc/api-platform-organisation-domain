@@ -150,24 +150,25 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val orgId = OrganisationId.random
     val usrId = UserId.random
 
-    val question1          = chooseOneOfQuestion(1, "a", "b", "c", "d", "e", "f", "g")
-    val question2          = chooseOneOfQuestion(2, "ga", "gb", "gc", "gd", "ge")
-    val questionName1      = textQuestion(3)
-    val questionName2      = textQuestion(4)
-    val questionName3      = textQuestion(5)
-    val questionName4      = textQuestion(6)
-    val questionName5      = textQuestion(7)
-    val questionName6      = textQuestion(8)
-    val questionName7      = textQuestion(9)
-    val questionName8      = textQuestion(10)
-    val questionName9      = dateQuestion(11)
-    val questionName10     = addressQuestion(12)
-    val questionName11     = companyNumberQuestion(13)
-    val questionPrivacyUrl = textQuestion(14)
-    val questionTermsUrl   = textQuestion(15)
-    val questionWeb        = textQuestion(16)
-    val questionAck        = acknowledgementOnly(17)
-    val questionMulti      = multichoiceQuestion(18, "a1", "b", "c")
+    val question1                      = chooseOneOfQuestion(1, "a", "b", "c", "d", "e", "f", "g")
+    val question2                      = chooseOneOfQuestion(2, "ga", "gb", "gc", "gd", "ge")
+    val questionName1                  = textQuestion(3)
+    val questionName2                  = textQuestion(4)
+    val questionName3                  = textQuestion(5)
+    val questionName4                  = textQuestion(6)
+    val questionName5                  = textQuestion(7)
+    val questionName6                  = textQuestion(8)
+    val questionName7                  = textQuestion(9)
+    val questionName8                  = textQuestion(10)
+    val questionName9                  = dateQuestion(11)
+    val questionName10                 = addressQuestion(12)
+    val questionName11                 = companyNumberQuestion(13)
+    val questionPrivacyUrl             = textQuestion(14)
+    val questionTermsUrl               = textQuestion(15)
+    val questionWeb                    = textQuestion(16)
+    val questionAck                    = acknowledgementOnly(17)
+    val questionMulti                  = multichoiceQuestion(18, "a1", "b", "c")
+    val questionNonUkWithoutAttachment = attachmentQuestion(19)
 
     val questionnaire1 = Questionnaire(
       id = Questionnaire.Id.random,
@@ -186,6 +187,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         QuestionItem(questionName9, AskWhen.AskWhenAnswer(question2, "gc")),
         QuestionItem(questionName10, AskWhen.AskWhenAnswer(question2, "gd")),
         QuestionItem(questionName11, AskWhen.AskWhenAnswer(question2, "ge")),
+        QuestionItem(questionNonUkWithoutAttachment, AskWhen.AskWhenAnswer(question2, "gf")),
         QuestionItem(questionPrivacyUrl),
         QuestionItem(questionTermsUrl),
         QuestionItem(questionWeb),
@@ -225,8 +227,9 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   }
 
   private def buildAnsweredSubmission(fullyAnswered: Boolean)(submission: Submission): Submission = {
-    val address  = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-    val fullName = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+    val address    = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
+    val fullName   = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+    val attachment = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
@@ -243,6 +246,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                                           => ActualAnswer.AddressAnswer(address)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
         case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)                                                     => ActualAnswer.CompanyNumberAnswer("12345678")
+        case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)                                                        => ActualAnswer.AttachmentAnswer(attachment)
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _)                 =>
           if (yesMarking == Mark.Pass) ActualAnswer.SingleChoiceAnswer("Yes") else ActualAnswer.SingleChoiceAnswer("No")
         case Question.ConfirmCompanyNameQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _)    =>
@@ -281,8 +285,9 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 }
 
 trait AnsweringQuestionsHelper extends FixedClock {
-  val address  = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-  val fullName = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+  val address    = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
+  val fullName   = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+  val attachment = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
@@ -328,6 +333,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
       case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)       => List(Some(ActualAnswer.AddressAnswer(address)))
       case Question.NameQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.NameAnswer(fullName)))
       case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
+      case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)    => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
 
       case Question.MultiChoiceQuestion(id, _, _, _, _, _, marking, absence, _, _) =>
         marking.map {

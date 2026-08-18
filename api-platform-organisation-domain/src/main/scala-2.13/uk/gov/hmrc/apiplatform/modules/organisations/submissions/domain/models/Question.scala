@@ -157,6 +157,18 @@ object Question extends MapJsonFormatters {
       summary: Option[String] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
+  case class AttachmentQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
   case class NameQuestion(
       id: Question.Id,
       wording: Wording,
@@ -327,6 +339,7 @@ object Question extends MapJsonFormatters {
   implicit val jsonFormatAddressQuestion: OFormat[AddressQuestion]                             = Json.format[AddressQuestion]
   implicit val jsonFormatNameQuestion: OFormat[NameQuestion]                                   = Json.format[NameQuestion]
   implicit val jsonFormatCompanyNumberQuestion: OFormat[CompanyNumberQuestion]                 = Json.format[CompanyNumberQuestion]
+  implicit val jsonFormatAttachmentQuestion: OFormat[AttachmentQuestion]                       = Json.format[AttachmentQuestion]
 
   implicit val jsonFormatChooseOneOfQuestion: OFormat[ChooseOneOfQuestion] = Json.format[ChooseOneOfQuestion]
   implicit val jsonFormatMultiChoiceQuestion: OFormat[MultiChoiceQuestion] = Json.format[MultiChoiceQuestion]
@@ -343,6 +356,7 @@ object Question extends MapJsonFormatters {
     .and[AddressQuestion]("address")
     .and[NameQuestion]("name")
     .and[CompanyNumberQuestion]("companyNumber")
+    .and[AttachmentQuestion]("attachment")
     .and[TextQuestion]("text")
     .and[AcknowledgementOnly]("acknowledgement")
     .and[ForwardToQuestion]("forwardTo")
