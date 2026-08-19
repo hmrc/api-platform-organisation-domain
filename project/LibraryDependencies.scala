@@ -1,17 +1,23 @@
 import sbt._
 
 object LibraryDependencies {
-  def apply(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion)
-
-  val commonDomainVersion = "1.2.0"
+  val commonDomainVersion = "1.4.0"
   val monocleVersion      = "3.1.0"
 
-  def applicationDomain(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion).map(_ % "test")
+  def domain(scalaVersion: String) =
+    compileDependencies(scalaVersion)
 
-  def root(scalaVersion: String) = compileDependencies(scalaVersion) ++ testDependencies(scalaVersion)
+  def fixtures(scalaVersion: String) =
+    compileDependencies(scalaVersion) ++
+    fixturesDependencies.map(_ % "provided")
 
-  def compileDependencies(scalaVersion: String) = Seq(
-    ("uk.gov.hmrc"     %% "api-platform-common-domain" % commonDomainVersion),
+  def tests(scalaVersion: String) =
+    compileDependencies(scalaVersion) ++
+    fixturesDependencies.map(_ % "test") ++ 
+    testDependencies
+
+  private def compileDependencies(scalaVersion: String) = Seq(
+    "uk.gov.hmrc"      %% "api-platform-common-domain" % commonDomainVersion % "provided",
     "com.typesafe"      % "config"                     % "1.4.2",
     "commons-validator" % "commons-validator"          % "1.10.1",
     "dev.optics"       %% "monocle-core"               % monocleVersion,
@@ -23,11 +29,10 @@ object LibraryDependencies {
     }
   )
 
-  def testDependencies(scalaVersion: String) = Seq(
-    "org.scalactic"       %% "scalactic"                           % "3.2.14",
-    "com.vladsch.flexmark" % "flexmark-all"                        % "0.64.8",
-    "org.mockito"         %% "mockito-scala-scalatest"             % "2.2.1",
-    "org.scalatest"       %% "scalatest"                           % "3.2.19",
-    "uk.gov.hmrc"         %% "api-platform-common-domain-fixtures" % commonDomainVersion
+  private def fixturesDependencies = Seq(
+    "uk.gov.hmrc"             %% "api-platform-common-domain-fixtures" % commonDomainVersion
   )
+
+  def testDependencies = Seq.empty[ModuleID]
+    .map(_ % "test")
 }

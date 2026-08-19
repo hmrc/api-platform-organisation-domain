@@ -464,10 +464,24 @@ case class Submission(
     }
   }
 
-  lazy val organisationName: Option[String] = {
+  private def getCompanyNameFromTextQuestion(key: String): Option[String] = {
+    ActualAnswersAsText(getAnswerToQuestionOfInterest(key)) match {
+      case "n/a" => None
+      case value => Some(value)
+    }
+  }
+
+  private def getCompanyNameFromAdditionalData(): Option[String] = {
     latestInstance.companyDetails match {
       case Some(companyDetails) => Some(companyDetails.companyName)
       case _                    => None
+    }
+  }
+
+  lazy val organisationName: Option[String] = {
+    organisationType match {
+      case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getCompanyNameFromTextQuestion("organisationNameNonUkWithoutId")
+      case _                                                                   => getCompanyNameFromAdditionalData()
     }
   }
 }

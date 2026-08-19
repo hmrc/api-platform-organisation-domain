@@ -200,14 +200,6 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your organsation name cannot be blank", "Enter your organisation name").some
     )
 
-    val questionLlpOrgName = Question.TextQuestion(
-      Question.Id("a1dbf9a2-e31b-4c89-a755-23f0652ab17a"),
-      Wording("What is your organisation’s name?"),
-      statement = None,
-      validation = TextValidation.OrganisationName.some,
-      errorInfo = ErrorInfo("Your organsation name cannot be blank", "Enter your organisation name").some
-    )
-
     val questionLpOrgName = Question.TextQuestion(
       Question.Id("f3dbf9a2-e31b-4c89-a755-23f0652ab57e"),
       Wording("What is your organisation’s name?"),
@@ -262,8 +254,7 @@ trait QuestionnaireTestData {
         QuestionItem(questionNonUkWithoutAttachment, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company without a branch or place of business in the UK")),
         QuestionItem(questionPartnershipType, AskWhen.AskWhenAnswer(questionOrgType, "Partnership")),
         QuestionItem(questionGpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "General partnership")),
-        QuestionItem(questionLlpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "Limited liability partnership")),
-        QuestionItem(questionLpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "Limited partnership")),
+        QuestionItem(questionLpOrgName, AskWhen.AskWhenAnswers(questionPartnershipType, NonEmptyList.of("Limited partnership", "Limited liability partnership"))),
         QuestionItem(questionSpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "Scottish partnership")),
         QuestionItem(questionSlpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "Scottish limited partnership"))
       )
@@ -370,12 +361,12 @@ trait QuestionnaireTestData {
 
   val testQuestionIdsOfInterest = QuestionIdsOfInterest(
     Map(
-      "organisationTypeId"          -> OrganisationDetails.questionOrgType.id,
-      "organisationNameLtdId"       -> OrganisationDetails.questionLtdOrgName.id,
-      "organisationNameLlpId"       -> OrganisationDetails.questionLlpOrgName.id,
-      "organisationNameLpId"        -> OrganisationDetails.questionLpOrgName.id,
-      "organisationNameSlpId"       -> OrganisationDetails.questionSlpOrgName.id,
-      "responsibleIndividualNameId" -> ResponsibleIndividualDetails.question2.id
+      "organisationTypeId"             -> OrganisationDetails.questionOrgType.id,
+      "organisationNameLtdId"          -> OrganisationDetails.questionLtdOrgName.id,
+      "organisationNameLpId"           -> OrganisationDetails.questionLpOrgName.id,
+      "organisationNameSlpId"          -> OrganisationDetails.questionSlpOrgName.id,
+      "organisationNameNonUkWithoutId" -> OrganisationDetails.questionNonUkWithoutOrgName.id,
+      "responsibleIndividualNameId"    -> ResponsibleIndividualDetails.question2.id
     )
   )
 
@@ -452,6 +443,15 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
     (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+  )
+
+  val sampleAnswersToQuestions2 = Map(
+    (OrganisationDetails.questionOrgType.id             -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
+    (OrganisationDetails.questionNonUkWithoutOrgName.id -> ActualAnswer.TextAnswer("Overseas SA")),
+    (ResponsibleIndividualDetails.question1.id          -> ActualAnswer.SingleChoiceAnswer("Yes")),
+    (ResponsibleIndividualDetails.question3.id          -> ActualAnswer.TextAnswer("Managing Director")),
+    (ResponsibleIndividualDetails.question5.id          -> ActualAnswer.TextAnswer("01234 567890")),
+    (ResponsibleIndividualDetails.question6.id          -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
   )
 
   def firstQuestion(questionnaire: Questionnaire) = questionnaire.questions.head.question.id
