@@ -155,13 +155,11 @@ object ValidateAnswers {
   }
 
   def validateAttachment(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
-    (
-      validateStringField("fileRef", rawAnswers = rawAnswers, error = ValidationError("fileRef", "File reference required")),
-      validateStringField("fileName", rawAnswers = rawAnswers, error = ValidationError("fileName", "File name required"))
-    ).parMapN((fileRef, fileName) =>
+    validateStringField("fileRef", rawAnswers = rawAnswers, error = ValidationError("fileRef", "File reference required"))
+    .map(fileRef =>
       ActualAnswer.AttachmentAnswer(Attachment(
         Some(fileRef),
-        Some(fileName)
+        rawAnswers.get("fileName").flatMap(_.headOption)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
   }

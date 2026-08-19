@@ -155,15 +155,13 @@ object ValidateAnswers {
   }
 
   def validateAttachment(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
-    (
-      validateStringField("fileRef", rawAnswers = rawAnswers, error = ValidationError("fileRef", "File reference required")),
-      validateStringField("fileName", rawAnswers = rawAnswers, error = ValidationError("fileName", "File name required"))
-    ).parMapN((fileRef, fileName) =>
-      ActualAnswer.AttachmentAnswer(Attachment(
-        Some(fileRef),
-        Some(fileName)
-      ))
-    ).leftMap(err => ValidationErrors(err: _*))
+    validateStringField("fileRef", rawAnswers = rawAnswers, error = ValidationError("fileRef", "File reference required"))
+      .map(fileRef =>
+        ActualAnswer.AttachmentAnswer(Attachment(
+          Some(fileRef),
+          rawAnswers.get("fileName").flatMap(_.headOption)
+        ))
+      ).leftMap(err => ValidationErrors(err: _*))
   }
 
   def validateAgainstPossibleAnswers(question: Question.SingleChoiceQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
