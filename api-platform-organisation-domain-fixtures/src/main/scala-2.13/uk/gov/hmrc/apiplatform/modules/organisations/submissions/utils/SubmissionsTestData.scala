@@ -151,7 +151,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val usrId = UserId.random
 
     val question1                      = chooseOneOfQuestion(1, "a", "b", "c", "d", "e", "f", "g")
-    val question2                      = chooseOneOfQuestion(2, "ga", "gb", "gc", "gd", "ge")
+    val question2                      = chooseOneOfQuestion(2, "ga", "gb", "gc", "gd", "ge", "gf")
     val questionName1                  = textQuestion(3)
     val questionName2                  = textQuestion(4)
     val questionName3                  = textQuestion(5)
@@ -388,7 +388,7 @@ trait MarkedSubmissionsTestData extends SubmissionsTestData with AnsweringQuesti
 
   def markAsPass(requestedBy: String = "bob@example.com")(submission: Submission): MarkedSubmission = {
     val answers = answersForGroups(Mark.Pass)(submission.groups)
-    val marks   = answers.map { case (q, a) => q -> Mark.Pass }
+    val marks   = answers.map { case (q, _) => q -> Mark.Pass }
 
     MarkedSubmission(submission.hasCompletelyAnsweredWith(answers), marks)
   }

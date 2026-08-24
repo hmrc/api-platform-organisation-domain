@@ -38,7 +38,7 @@ trait QuestionnaireTestData {
         (PossibleAnswer("Registered society")                                             -> Mark.Pass),
         (PossibleAnswer("Charitable Incorporated Organisation (CIO)")                     -> Mark.Pass),
         (PossibleAnswer("Non-UK company with a branch or place of business in the UK")    -> Mark.Warn),
-        (PossibleAnswer("Non-UK company without a branch or place of business in the UK") -> Mark.Fail)
+        (PossibleAnswer("Non-UK company without a branch or place of business in the UK") -> Mark.Pass)
       ),
       errorInfo = ErrorInfo("Select your organisation type").some
     )

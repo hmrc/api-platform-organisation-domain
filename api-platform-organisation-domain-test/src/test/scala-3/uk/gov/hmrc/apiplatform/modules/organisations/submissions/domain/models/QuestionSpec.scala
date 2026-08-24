@@ -99,7 +99,7 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
       |  }, {
       |    "Non-UK company with a branch or place of business in the UK" : "warn"
       |  }, {
-      |    "Non-UK company without a branch or place of business in the UK" : "fail"
+      |    "Non-UK company without a branch or place of business in the UK" : "pass"
       |  } ],
       |  "errorInfo" : {
       |    "summary" : "Select your organisation type"
@@ -148,6 +148,7 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "toJson for choose one of question" in {
+    println(Json.prettyPrint(Json.toJson(OrganisationDetails.questionOrgType)))
     Json.prettyPrint(Json.toJson(OrganisationDetails.questionOrgType)) shouldBe jsonChooseOneOfQuestion
   }
 

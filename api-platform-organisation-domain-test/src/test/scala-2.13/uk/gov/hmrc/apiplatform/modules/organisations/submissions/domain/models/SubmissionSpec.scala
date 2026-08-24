@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Submission.{AdditionalData, CompanyDetails}
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AnsweringQuestionsHelper, SubmissionsTestData}
 
 class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
@@ -95,7 +95,14 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "submission automaticallyMark fail" in {
     val answering1       = Submission.addStatusHistory(Submission.Status.Answering(instant, false))(aSubmission)
-    val answering2       = Submission.updateLatestAnswersTo(sampleFailAnswersToQuestions)(answering1)
+    val baseValidAnswers = samplePassAnswersToQuestions
+
+    val failingAnswerOption = AnsweringQuestionsHelper.answerForQuestion(Mark.Fail)(ResponsibleIndividualDetails.question6)
+
+    val failingAnswerMap   = failingAnswerOption.collect { case (k, Some(v)) => k -> v }
+    val answersWithOneFail = baseValidAnswers ++ failingAnswerMap
+
+    val answering2       = Submission.updateLatestAnswersTo(answersWithOneFail)(answering1)
     val answered         = Submission.addStatusHistory(Submission.Status.Answering(instant, true))(answering2)
     val submitted        = Submission.submit(instant, "bob@example.com")(answered)
     val markedSubmission = Submission.automaticallyMark(instant, "bob@example.com")(submitted)
@@ -248,6 +255,8 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "read extended submission from json" in {
     val jsonExtendedSubmission = Source.fromResource(s"./submissions/extended-submission-valid.json").mkString
+    println(s"****${Json.prettyPrint(Json.toJson(extendedSubmission))}")
+
     testFromJson[ExtendedSubmission](jsonExtendedSubmission)(extendedSubmission)
   }
 

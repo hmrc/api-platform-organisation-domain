@@ -386,7 +386,7 @@ trait MarkedSubmissionsTestData extends SubmissionsTestData with AnsweringQuesti
 
   val markedSubmission = MarkedSubmission(submittedSubmission, markedAnswers)
 
-  def markAsPass(submission: Submission): MarkedSubmission = {
+  def markAsPass(requestedBy: String = "bob@example.com")(submission: Submission): MarkedSubmission = {
     val answers = answersForGroups(Mark.Pass)(submission.groups)
     val marks   = answers.map { case (q, _) => q -> Mark.Pass }
 
