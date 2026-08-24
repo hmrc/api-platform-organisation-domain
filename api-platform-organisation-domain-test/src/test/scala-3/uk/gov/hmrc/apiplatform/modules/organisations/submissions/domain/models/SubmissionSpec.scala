@@ -248,6 +248,8 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "read extended submission from json" in {
     val jsonExtendedSubmission = Source.fromResource(s"./submissions/extended-submission-valid.json").mkString
+    println(s"****${Json.prettyPrint(Json.toJson(extendedSubmission))}")
+
     testFromJson[ExtendedSubmission](jsonExtendedSubmission)(extendedSubmission)
   }
 

@@ -33,6 +33,7 @@ object ActualAnswersAsText {
     case ActualAnswer.CompanyNumberAnswer(value)   => value
     case ActualAnswer.NoAnswer                     => "n/a"
     case ActualAnswer.AcknowledgedAnswer           => ""
+    case ActualAnswer.AttachmentAnswer(Attachment(Some(fileRef), _)) => s"File uploaded; file reference: $fileRef"
   }
 
 }
