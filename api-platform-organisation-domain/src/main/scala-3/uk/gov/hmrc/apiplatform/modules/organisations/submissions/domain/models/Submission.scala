@@ -451,7 +451,12 @@ case class Submission(
   lazy val latestInstance: Submission.Instance = instances.head
   lazy val status: Submission.Status           = latestInstance.statusHistory.head
 
-  lazy val organisationTypeAsText: String = ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationTypeId"))
+  lazy val organisationTypeAsText: String = {
+    ActualAnswersAsText(getAnswerToQuestionOfInterest("organisationTypeId")) match {
+      case "Partnership" => ActualAnswersAsText(getAnswerToQuestionOfInterest("partnershipTypeId"))
+      case t @ _         => t
+    }
+  }
 
   lazy val organisationType: Option[Organisation.OrganisationType] = {
     organisationTypeAsText match {

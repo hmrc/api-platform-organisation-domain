@@ -223,6 +223,7 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   "organisationType" in {
     answeringSubmission.organisationType shouldBe Some(OrganisationType.UkLimitedCompany)
     Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).organisationType shouldBe Some(OrganisationType.UkLimitedCompany)
+    Submission.updateLatestAnswersTo(sampleAnswersToQuestions3)(aSubmission).organisationType shouldBe Some(OrganisationType.LimitedLiabilityPartnership)
   }
 
   "organisationName" in {
