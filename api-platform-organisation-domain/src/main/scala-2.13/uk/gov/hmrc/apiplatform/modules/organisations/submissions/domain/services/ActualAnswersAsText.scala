@@ -24,15 +24,16 @@ object ActualAnswersAsText {
   private val dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
   def apply(answer: ActualAnswer): String = answer match {
-    case ActualAnswer.SingleChoiceAnswer(value)    => value
-    case ActualAnswer.TextAnswer(value)            => value
-    case ActualAnswer.MultipleChoiceAnswer(values) => values.mkString
-    case ActualAnswer.DateAnswer(date)             => date.format(dateTimeFormatter)
-    case ActualAnswer.AddressAnswer(add)           => Seq(add.addressLineOne, add.addressLineTwo, add.locality, add.region, add.postalCode).filter(_.isDefined).map(_.get).mkString(", ")
-    case ActualAnswer.NameAnswer(name)             => s"${name.firstName} ${name.lastName}"
-    case ActualAnswer.CompanyNumberAnswer(value)   => value
-    case ActualAnswer.NoAnswer                     => "n/a"
-    case ActualAnswer.AcknowledgedAnswer           => ""
+    case ActualAnswer.SingleChoiceAnswer(value)                      => value
+    case ActualAnswer.TextAnswer(value)                              => value
+    case ActualAnswer.MultipleChoiceAnswer(values)                   => values.mkString
+    case ActualAnswer.DateAnswer(date)                               => date.format(dateTimeFormatter)
+    case ActualAnswer.AddressAnswer(add)                             => Seq(add.addressLineOne, add.addressLineTwo, add.locality, add.region, add.postalCode).filter(_.isDefined).map(_.get).mkString(", ")
+    case ActualAnswer.NameAnswer(name)                               => s"${name.firstName} ${name.lastName}"
+    case ActualAnswer.CompanyNumberAnswer(value)                     => value
+    case ActualAnswer.NoAnswer                                       => "n/a"
+    case ActualAnswer.AcknowledgedAnswer                             => ""
+    case ActualAnswer.AttachmentAnswer(Attachment(Some(fileRef), _)) => s"File uploaded; file reference: $fileRef"
   }
 
 }

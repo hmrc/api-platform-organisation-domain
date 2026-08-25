@@ -59,6 +59,7 @@ object ValidateAnswers {
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.InternationalAddressQuestion                                             => validateInternationalAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
+      case _: Question.AttachmentQuestion                                                       => validateAttachment(rawAnswers)
       case _: Question.CompanyNumberQuestion                                                    =>
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
           .map(a => validateCompanyNumber(a.head))
@@ -170,6 +171,16 @@ object ValidateAnswers {
     TextValidation.OrganisationNumber.validate(rawAnswer)
       .map(ActualAnswer.CompanyNumberAnswer(_))
       .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
+  }
+
+  def validateAttachment(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    validateStringField("fileRef", rawAnswers = rawAnswers, error = ValidationError("fileRef", "File reference required"))
+      .map(fileRef =>
+        ActualAnswer.AttachmentAnswer(Attachment(
+          Some(fileRef),
+          rawAnswers.get("fileName").flatMap(_.headOption)
+        ))
+      ).leftMap(err => ValidationErrors(err: _*))
   }
 
   def validateAgainstPossibleAnswers(question: Question.SingleChoiceQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {

@@ -225,6 +225,13 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your organsation name cannot be blank", "Enter your organisation name").some
     )
 
+    val questionNonUkWithoutAttachment = Question.AttachmentQuestion(
+      Question.Id("019feccc-4457-7605-bd0e-037821ff0123"),
+      Wording("Attach the tax document"),
+      statement = None,
+      errorInfo = ErrorInfo("File is required", "Upload your tax document").some
+    )
+
     val questionnaire = Questionnaire(
       id = Questionnaire.Id("ac69b129-524a-4d10-89a5-7bfa46ed95c7"),
       label = Questionnaire.Label("Enter organisation details"),
@@ -244,6 +251,7 @@ trait QuestionnaireTestData {
         QuestionItem(questionCioOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Charitable Incorporated Organisation (CIO)")),
         QuestionItem(questionNonUkWithOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company with a branch or place of business in the UK")),
         QuestionItem(questionNonUkWithoutOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company without a branch or place of business in the UK")),
+        QuestionItem(questionNonUkWithoutAttachment, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company without a branch or place of business in the UK")),
         QuestionItem(questionPartnershipType, AskWhen.AskWhenAnswer(questionOrgType, "Partnership")),
         QuestionItem(questionGpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "General partnership")),
         QuestionItem(questionLpOrgName, AskWhen.AskWhenAnswers(questionPartnershipType, NonEmptyList.of("Limited partnership", "Limited liability partnership"))),

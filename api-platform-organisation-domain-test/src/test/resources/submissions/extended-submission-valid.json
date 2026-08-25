@@ -371,6 +371,23 @@
           } ]
         }, {
           "question" : {
+            "id" : "019feccc-4457-7605-bd0e-037821ff0123",
+            "wording" : "Attach the tax document",
+            "errorInfo" : {
+              "summary" : "File is required",
+              "message" : "Upload your tax document"
+            },
+            "questionType" : "attachment"
+          },
+          "askWhen" : [ {
+            "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
+            "expectedValue" : {
+              "value" : "Non-UK company without a branch or place of business in the UK"
+            },
+            "askWhen" : "askWhenAnswer"
+          } ]
+        }, {
+          "question" : {
             "id" : "adba162f-be58-2818-92ff-2ecd1799c513",
             "wording" : "What type of partnership are you registering?",
             "marking" : [ {

@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Submission.{AdditionalData, CompanyDetails}
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AnsweringQuestionsHelper, SubmissionsTestData}
 
 class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
@@ -247,7 +247,7 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     Json.prettyPrint(Json.toJson(extendedSubmission)) shouldBe jsonExtendedSubmission
   }
 
-  "read extended submssion from json" in {
+  "read extended submission from json" in {
     val jsonExtendedSubmission = Source.fromResource(s"./submissions/extended-submission-valid.json").mkString
     testFromJson[ExtendedSubmission](jsonExtendedSubmission)(extendedSubmission)
   }
