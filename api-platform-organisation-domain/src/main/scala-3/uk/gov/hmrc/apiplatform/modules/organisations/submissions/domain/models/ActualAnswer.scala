@@ -27,6 +27,15 @@ case class RegisteredOfficeAddress(
     postalCode: Option[String]
   )
 
+case class InternationalAddress(
+    addressLineOne: Option[String],
+    addressLineTwo: Option[String],
+    addressLineThree: Option[String],
+    locality: Option[String],
+    postalCode: Option[String],
+    country: Option[String]
+  )
+
 case class FullName(
     isThisYourName: Option[String],
     firstName: Option[String],
@@ -35,34 +44,38 @@ case class FullName(
 
 object ActualAnswer {
 
-  case class MultipleChoiceAnswer(values: Set[String])     extends ActualAnswer
-  case class SingleChoiceAnswer(value: String)             extends ActualAnswer
-  case class TextAnswer(value: String)                     extends ActualAnswer
-  case class DateAnswer(value: LocalDate)                  extends ActualAnswer
-  case class AddressAnswer(value: RegisteredOfficeAddress) extends ActualAnswer
-  case class NameAnswer(value: FullName)                   extends ActualAnswer
-  case class CompanyNumberAnswer(value: String)            extends ActualAnswer
-  case object AcknowledgedAnswer                           extends ActualAnswer
-  case object NoAnswer                                     extends ActualAnswer
+  case class MultipleChoiceAnswer(values: Set[String])               extends ActualAnswer
+  case class SingleChoiceAnswer(value: String)                       extends ActualAnswer
+  case class TextAnswer(value: String)                               extends ActualAnswer
+  case class DateAnswer(value: LocalDate)                            extends ActualAnswer
+  case class AddressAnswer(value: RegisteredOfficeAddress)           extends ActualAnswer
+  case class InternationalAddressAnswer(value: InternationalAddress) extends ActualAnswer
+  case class NameAnswer(value: FullName)                             extends ActualAnswer
+  case class CompanyNumberAnswer(value: String)                      extends ActualAnswer
+  case object AcknowledgedAnswer                                     extends ActualAnswer
+  case object NoAnswer                                               extends ActualAnswer
 
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
-  given OFormat[TextAnswer]              = Json.format[TextAnswer]
-  given OFormat[DateAnswer]              = Json.format[DateAnswer]
-  given OFormat[RegisteredOfficeAddress] = Json.format[RegisteredOfficeAddress]
-  given OFormat[AddressAnswer]           = Json.format[AddressAnswer]
-  given OFormat[FullName]                = Json.format[FullName]
-  given OFormat[NameAnswer]              = Json.format[NameAnswer]
-  given OFormat[CompanyNumberAnswer]     = Json.format[CompanyNumberAnswer]
-  given OFormat[SingleChoiceAnswer]      = Json.format[SingleChoiceAnswer]
-  given OFormat[MultipleChoiceAnswer]    = Json.format[MultipleChoiceAnswer]
+  given OFormat[TextAnswer]                 = Json.format[TextAnswer]
+  given OFormat[DateAnswer]                 = Json.format[DateAnswer]
+  given OFormat[RegisteredOfficeAddress]    = Json.format[RegisteredOfficeAddress]
+  given OFormat[AddressAnswer]              = Json.format[AddressAnswer]
+  given OFormat[InternationalAddress]       = Json.format[InternationalAddress]
+  given OFormat[InternationalAddressAnswer] = Json.format[InternationalAddressAnswer]
+  given OFormat[FullName]                   = Json.format[FullName]
+  given OFormat[NameAnswer]                 = Json.format[NameAnswer]
+  given OFormat[CompanyNumberAnswer]        = Json.format[CompanyNumberAnswer]
+  given OFormat[SingleChoiceAnswer]         = Json.format[SingleChoiceAnswer]
+  given OFormat[MultipleChoiceAnswer]       = Json.format[MultipleChoiceAnswer]
 
   given OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
     .and[MultipleChoiceAnswer]("multipleChoice")
     .and[SingleChoiceAnswer]("singleChoice")
     .and[DateAnswer]("date")
     .and[AddressAnswer]("address")
+    .and[InternationalAddressAnswer]("internationalAddress")
     .and[NameAnswer]("name")
     .and[CompanyNumberAnswer]("companyNumber")
     .and[TextAnswer]("text")

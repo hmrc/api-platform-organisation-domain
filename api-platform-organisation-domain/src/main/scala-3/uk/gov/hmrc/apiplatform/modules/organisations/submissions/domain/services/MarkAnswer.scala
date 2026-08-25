@@ -38,16 +38,17 @@ object MarkAnswer {
 
   protected def markQuestion(question: Question, answer: ActualAnswer): Mark = {
     (question, answer) match {
-      case (_, ActualAnswer.NoAnswer)                                               => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
-      case (_: Question.TextQuestion, _: ActualAnswer.TextAnswer)                   => Mark.Pass
-      case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer)  => markMultiChoiceAnswer(q, a)
-      case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)   => markSingleChoiceAnswer(q, a)
-      case (_: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)       => Mark.Pass
-      case (_: Question.ForwardToQuestion, ActualAnswer.AcknowledgedAnswer)         => Mark.Pass
-      case (_: Question.NameQuestion, _: ActualAnswer.NameAnswer)                   => Mark.Pass
-      case (_: Question.AddressQuestion, _: ActualAnswer.AddressAnswer)             => Mark.Pass
-      case (_: Question.CompanyNumberQuestion, _: ActualAnswer.CompanyNumberAnswer) => Mark.Pass
-      case _                                                                        => throw new IllegalArgumentException(s"Unexpectely the answer is not valid - ${question.wording.value}")
+      case (_, ActualAnswer.NoAnswer)                                                             => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
+      case (_: Question.TextQuestion, _: ActualAnswer.TextAnswer)                                 => Mark.Pass
+      case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer)                => markMultiChoiceAnswer(q, a)
+      case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)                 => markSingleChoiceAnswer(q, a)
+      case (_: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)                     => Mark.Pass
+      case (_: Question.ForwardToQuestion, ActualAnswer.AcknowledgedAnswer)                       => Mark.Pass
+      case (_: Question.NameQuestion, _: ActualAnswer.NameAnswer)                                 => Mark.Pass
+      case (_: Question.AddressQuestion, _: ActualAnswer.AddressAnswer)                           => Mark.Pass
+      case (_: Question.InternationalAddressQuestion, _: ActualAnswer.InternationalAddressAnswer) => Mark.Pass
+      case (_: Question.CompanyNumberQuestion, _: ActualAnswer.CompanyNumberAnswer)               => Mark.Pass
+      case _                                                                                      => throw new IllegalArgumentException(s"Unexpectely the answer is not valid - ${question.wording.value}")
     }
   }
 
