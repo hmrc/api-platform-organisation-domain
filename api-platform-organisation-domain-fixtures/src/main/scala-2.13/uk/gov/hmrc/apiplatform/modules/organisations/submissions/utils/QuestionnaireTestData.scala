@@ -362,6 +362,7 @@ trait QuestionnaireTestData {
   val testQuestionIdsOfInterest = QuestionIdsOfInterest(
     Map(
       "organisationTypeId"             -> OrganisationDetails.questionOrgType.id,
+      "partnershipTypeId"              -> OrganisationDetails.questionPartnershipType.id,
       "organisationNameLtdId"          -> OrganisationDetails.questionLtdOrgName.id,
       "organisationNameLpId"           -> OrganisationDetails.questionLpOrgName.id,
       "organisationNameSlpId"          -> OrganisationDetails.questionSlpOrgName.id,
@@ -452,6 +453,16 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question3.id          -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id          -> ActualAnswer.TextAnswer("01234 567890")),
     (ResponsibleIndividualDetails.question6.id          -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+  )
+
+  val sampleAnswersToQuestions3 = Map(
+    (OrganisationDetails.questionOrgType.id         -> ActualAnswer.SingleChoiceAnswer("Partnership")),
+    (OrganisationDetails.questionPartnershipType.id -> ActualAnswer.SingleChoiceAnswer("Limited liability partnership")),
+    (OrganisationDetails.questionLpOrgName.id       -> ActualAnswer.TextAnswer("Dave's Limited Partnership Ltd")),
+    (ResponsibleIndividualDetails.question1.id      -> ActualAnswer.SingleChoiceAnswer("Yes")),
+    (ResponsibleIndividualDetails.question3.id      -> ActualAnswer.TextAnswer("Managing Director")),
+    (ResponsibleIndividualDetails.question5.id      -> ActualAnswer.TextAnswer("01234 567890")),
+    (ResponsibleIndividualDetails.question6.id      -> ActualAnswer.TextAnswer("https://www.dave.com"))
   )
 
   def firstQuestion(questionnaire: Questionnaire) = questionnaire.questions.head.question.id
