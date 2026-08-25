@@ -29,11 +29,13 @@ object ActualAnswersAsText {
     case ActualAnswer.MultipleChoiceAnswer(values)                   => values.mkString
     case ActualAnswer.DateAnswer(date)                               => date.format(dateTimeFormatter)
     case ActualAnswer.AddressAnswer(add)                             => Seq(add.addressLineOne, add.addressLineTwo, add.locality, add.region, add.postalCode).filter(_.isDefined).map(_.get).mkString(", ")
+    case ActualAnswer.InternationalAddressAnswer(add)                =>
+      Seq(add.addressLineOne, add.addressLineTwo, add.addressLineThree, add.locality, add.postalCode, add.country).filter(_.isDefined).map(_.get).mkString(", ")
     case ActualAnswer.NameAnswer(name)                               => s"${name.firstName} ${name.lastName}"
     case ActualAnswer.CompanyNumberAnswer(value)                     => value
     case ActualAnswer.NoAnswer                                       => "n/a"
     case ActualAnswer.AcknowledgedAnswer                             => ""
     case ActualAnswer.AttachmentAnswer(Attachment(Some(fileRef), _)) => s"File uploaded; file reference: $fileRef"
+    case ActualAnswer.AttachmentAnswer(Attachment(None, _))          => "File failed to upload"
   }
-
 }

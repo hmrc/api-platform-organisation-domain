@@ -36,6 +36,6 @@ object ActualAnswersAsText {
     case ActualAnswer.NoAnswer                                       => "n/a"
     case ActualAnswer.AcknowledgedAnswer                             => ""
     case ActualAnswer.AttachmentAnswer(Attachment(Some(fileRef), _)) => s"File uploaded; file reference: $fileRef"
+    case ActualAnswer.AttachmentAnswer(Attachment(None, _))          => "File failed to upload"
   }
-
 }
