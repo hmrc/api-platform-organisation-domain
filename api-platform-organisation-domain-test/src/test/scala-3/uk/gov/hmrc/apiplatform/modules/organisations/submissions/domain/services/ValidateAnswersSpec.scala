@@ -165,6 +165,76 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       }
     }
 
+    "for international address questions" in {
+      val question = internationalAddressQuestion(1)
+      type AnswerMatching = Either[Unit, ActualAnswer]
+      val failure1: AnswerMatching     = Left(())
+      val failure2: AnswerMatching     = Left(ValidationErrors(ValidationError("locality", "Town or City required")))
+      val addLineOne                   = "1 Cour Victor Hugo"
+      val addLineTwo                   = "line two"
+      val addLineThree                 = "line three"
+      val locality                     = "St Etienne"
+      val region                       = "Auvergne"
+      val postcode                     = "12345"
+      val country                      = "France"
+      val validAnswer1: AnswerMatching =
+        Right(ActualAnswer.InternationalAddressAnswer(InternationalAddress(
+          Some(addLineOne),
+          Some(addLineTwo),
+          Some(addLineThree),
+          Some(locality),
+          Some(region),
+          Some(postcode),
+          Some(country)
+        )))
+      val validRawAnswers1             = Map(
+        "addressLineOne"   -> Seq(addLineOne),
+        "addressLineTwo"   -> Seq(addLineTwo),
+        "addressLineThree" -> Seq(addLineThree),
+        "locality"         -> Seq(locality),
+        "region"           -> Seq(region),
+        "postcode"         -> Seq(postcode),
+        "country"          -> Seq(country)
+      )
+      val validAnswer2: AnswerMatching =
+        Right(ActualAnswer.InternationalAddressAnswer(InternationalAddress(Some(addLineOne), None, None, Some(locality), None, Some(postcode), Some(country))))
+      val validRawAnswers2             = Map(
+        "addressLineOne"   -> Seq(addLineOne),
+        "addressLineTwo"   -> Seq.empty,
+        "addressLineThree" -> Seq.empty,
+        "locality"         -> Seq(locality),
+        "region"           -> Seq.empty,
+        "postcode"         -> Seq(postcode),
+        "country"          -> Seq(country)
+      )
+      val invalidRawAnswers            = Map(
+        "addressLineOne"   -> Seq(addLineOne),
+        "addressLineTwo"   -> Seq.empty,
+        "addressLineThree" -> Seq.empty,
+        "locality"         -> Seq.empty,
+        "region"           -> Seq(region),
+        "postcode"         -> Seq(postcode),
+        "country"          -> Seq(country)
+      )
+
+      val passes = Table(
+        ("description", "question", Question.answerKey, "expects"),
+        ("valid answer 1", question, validRawAnswers1, validAnswer1),
+        ("valid answer 2", question, validRawAnswers2, validAnswer2),
+        ("invalid answer 1", question, answerOf("Bob"), failure1),
+        ("invalid answer 2", question, invalidRawAnswers, failure2)
+      )
+
+      forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+        expects match {
+          case Right(answer) =>
+            ValidateAnswers.validate(question, answers) shouldBe Right(answer)
+          case Left(())      =>
+            ValidateAnswers.validate(question, answers).left.value
+        }
+      }
+    }
+
     "for name questions" in {
       val question = nameQuestion(1)
       type AnswerMatching = Either[Unit, ActualAnswer]

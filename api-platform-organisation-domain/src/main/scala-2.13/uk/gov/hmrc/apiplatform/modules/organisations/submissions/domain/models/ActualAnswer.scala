@@ -32,6 +32,7 @@ case class InternationalAddress(
     addressLineTwo: Option[String],
     addressLineThree: Option[String],
     locality: Option[String],
+    region: Option[String],
     postalCode: Option[String],
     country: Option[String]
   )

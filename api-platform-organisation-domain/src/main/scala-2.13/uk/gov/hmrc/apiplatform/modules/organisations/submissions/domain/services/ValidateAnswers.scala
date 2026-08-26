@@ -147,6 +147,7 @@ object ValidateAnswers {
         rawAnswers.get("addressLineTwo").flatMap(_.headOption),
         rawAnswers.get("addressLineThree").flatMap(_.headOption),
         Some(locality),
+        rawAnswers.get("region").flatMap(_.headOption),
         Some(postcode),
         Some(country)
       ))

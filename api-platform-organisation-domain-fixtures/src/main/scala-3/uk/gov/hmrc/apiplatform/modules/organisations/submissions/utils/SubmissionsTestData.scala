@@ -228,7 +228,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 
   private def buildAnsweredSubmission(fullyAnswered: Boolean)(submission: Submission): Submission = {
     val address     = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-    val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("123456"), Some("France"))
+    val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
     val fullName    = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
     val attachment  = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
@@ -288,7 +288,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 
 trait AnsweringQuestionsHelper extends FixedClock {
   val address     = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-  val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("123456"), Some("France"))
+  val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
   val fullName    = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
   val attachment  = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
