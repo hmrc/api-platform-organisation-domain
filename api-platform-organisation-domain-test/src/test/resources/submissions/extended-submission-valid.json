@@ -352,15 +352,32 @@
         }, {
           "question" : {
             "id" : "a8eaf9a2-e31b-4c89-a755-21f0652ae45a",
-            "wording" : "What is your organisation’s name?",
+            "wording" : "What is the company name?",
             "validation" : {
               "validationType" : "organisationName"
             },
             "errorInfo" : {
-              "summary" : "Your organsation name cannot be blank",
-              "message" : "Enter your organisation name"
+              "summary" : "Your company name cannot be blank",
+              "message" : "Enter your company name"
             },
             "questionType" : "text"
+          },
+          "askWhen" : [ {
+            "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",
+            "expectedValue" : {
+              "value" : "Non-UK company without a branch or place of business in the UK"
+            },
+            "askWhen" : "askWhenAnswer"
+          } ]
+        }, {
+          "question" : {
+            "id" : "775b3592-1c45-4b10-b13c-5bf213c7f9c9",
+            "wording" : "Enter the registered address for the company",
+            "errorInfo" : {
+              "summary" : "Your company address cannot be blank",
+              "message" : "Enter your company address"
+            },
+            "questionType" : "internationalAddress"
           },
           "askWhen" : [ {
             "questionId" : "cbdf264f-be39-4638-92ff-6ecd2259c662",

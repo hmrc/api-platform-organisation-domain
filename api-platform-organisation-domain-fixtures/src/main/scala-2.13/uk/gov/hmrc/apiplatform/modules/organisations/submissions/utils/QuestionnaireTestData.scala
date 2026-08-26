@@ -186,10 +186,17 @@ trait QuestionnaireTestData {
 
     val questionNonUkWithoutOrgName = Question.TextQuestion(
       Question.Id("a8eaf9a2-e31b-4c89-a755-21f0652ae45a"),
-      Wording("What is your organisation’s name?"),
+      Wording("What is the company name?"),
       statement = None,
       validation = TextValidation.OrganisationName.some,
-      errorInfo = ErrorInfo("Your organsation name cannot be blank", "Enter your organisation name").some
+      errorInfo = ErrorInfo("Your company name cannot be blank", "Enter your company name").some
+    )
+
+    val questionNonUkWithoutAddress = Question.InternationalAddressQuestion(
+      Question.Id("775b3592-1c45-4b10-b13c-5bf213c7f9c9"),
+      Wording("Enter the registered address for the company"),
+      statement = None,
+      errorInfo = ErrorInfo("Your company address cannot be blank", "Enter your company address").some
     )
 
     val questionGpOrgName = Question.TextQuestion(
@@ -251,6 +258,7 @@ trait QuestionnaireTestData {
         QuestionItem(questionCioOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Charitable Incorporated Organisation (CIO)")),
         QuestionItem(questionNonUkWithOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company with a branch or place of business in the UK")),
         QuestionItem(questionNonUkWithoutOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company without a branch or place of business in the UK")),
+        QuestionItem(questionNonUkWithoutAddress, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company without a branch or place of business in the UK")),
         QuestionItem(questionNonUkWithoutAttachment, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company without a branch or place of business in the UK")),
         QuestionItem(questionPartnershipType, AskWhen.AskWhenAnswer(questionOrgType, "Partnership")),
         QuestionItem(questionGpOrgName, AskWhen.AskWhenAnswer(questionPartnershipType, "General partnership")),
@@ -449,6 +457,15 @@ trait QuestionnaireTestData {
   val sampleAnswersToQuestions2 = Map(
     (OrganisationDetails.questionOrgType.id             -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
     (OrganisationDetails.questionNonUkWithoutOrgName.id -> ActualAnswer.TextAnswer("Overseas SA")),
+    (OrganisationDetails.questionNonUkWithoutAddress.id -> ActualAnswer.InternationalAddressAnswer(InternationalAddress(
+      Some("1 Cr Victor Hugo"),
+      None,
+      None,
+      Some("St Etienne"),
+      Some("Auvergne"),
+      Some("123456"),
+      Some("France")
+    ))),
     (ResponsibleIndividualDetails.question1.id          -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (ResponsibleIndividualDetails.question3.id          -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id          -> ActualAnswer.TextAnswer("01234 567890")),
