@@ -16,20 +16,63 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services
 
+import cats.data.NonEmptyList
 import org.scalatest.Inside
 
-import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
+import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
+import uk.gov.hmrc.apiplatform.modules.common.utils.{FixedClock, HmrcSpec}
 
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AsIdsHelpers, QuestionBuilder, SubmissionsTestData}
 
-class AnswerQuestionSpec extends HmrcSpec with Inside with QuestionBuilder with AsIdsHelpers {
+class AnswerQuestionSpec extends HmrcSpec with Inside with QuestionBuilder with AsIdsHelpers with FixedClock {
 
   trait Setup extends SubmissionsTestData
   val blankContext: AskWhen.Context = Map.empty
 
   val YesAnswer = Map(Question.answerKey -> Seq("Yes"))
   val NoAnswer  = Map(Question.answerKey -> Seq("No"))
+
+  val questionOrgType = chooseOneOfQuestion(1, "ltd", "other")
+  val questionName    = chooseOneOfQuestion(2, "Yes", "No")
+  val questionAddress = chooseOneOfQuestion(3, "Yes", "No")
+  val questionUtr     = textQuestion(4)
+  val questionWeb     = textQuestion(5)
+
+  val nestedQuestionnaire = Questionnaire(
+    id = Questionnaire.Id.random,
+    label = Questionnaire.Label("Nested Questionnaire"),
+    questions = NonEmptyList.of(
+      QuestionItem(questionOrgType),
+      QuestionItem(questionName, AskWhen.AskWhenAnswer(questionOrgType, "ltd")),
+      QuestionItem(questionAddress, AskWhen.AskWhenAnswer(questionName, "Yes")),
+      QuestionItem(questionUtr, AskWhen.AskWhenAnswer(questionAddress, "Yes")),
+      QuestionItem(questionWeb)
+    )
+  )
+
+  val nestedGroups = NonEmptyList.of(
+    GroupOfQuestionnaires(heading = "Group 1", links = NonEmptyList.of(nestedQuestionnaire))
+  )
+
+  val nestedSubmission = Submission.create(
+    "bob@example.com",
+    SubmissionId.random,
+    Some(OrganisationId.random),
+    instant,
+    UserId.random,
+    nestedGroups,
+    QuestionIdsOfInterest(Map.empty),
+    Map.empty
+  )
+
+  val allNestedAnswers: Submission.AnswersToQuestions = Map(
+    questionOrgType.id -> ActualAnswer.SingleChoiceAnswer("ltd"),
+    questionName.id    -> ActualAnswer.SingleChoiceAnswer("Yes"),
+    questionAddress.id -> ActualAnswer.SingleChoiceAnswer("Yes"),
+    questionUtr.id     -> ActualAnswer.TextAnswer("1234567890"),
+    questionWeb.id     -> ActualAnswer.TextAnswer("https://example.com")
+  )
 
   "AnswerQuestion" when {
     "answer is called" should {
@@ -77,6 +120,22 @@ class AnswerQuestionSpec extends HmrcSpec with Inside with QuestionBuilder with 
         val after = AnswerQuestion.recordAnswer(aSubmission, ResponsibleIndividualDetails.question1.id, Map(Question.answerKey -> Seq("Bob")))
 
         after.left.value
+      }
+
+      "clears multiple nested dependent answers when an upstream answer changes" in {
+        val answered = Submission.updateLatestAnswersTo(allNestedAnswers)(nestedSubmission)
+
+        val result = AnswerQuestion.recordAnswer(answered, questionOrgType.id, Map(Question.answerKey -> Seq("other")))
+
+        result.value.submission.latestInstance.answersToQuestions.keySet shouldBe Set(questionOrgType.id, questionWeb.id)
+      }
+
+      "keeps all answers when the recorded answer leaves none unreachable" in {
+        val answered = Submission.updateLatestAnswersTo(allNestedAnswers)(nestedSubmission)
+
+        val result = AnswerQuestion.recordAnswer(answered, questionWeb.id, Map(Question.answerKey -> Seq("https://example.com")))
+
+        result.value.submission.latestInstance.answersToQuestions.keySet shouldBe Set(questionOrgType.id, questionName.id, questionAddress.id, questionUtr.id, questionWeb.id)
       }
     }
 
