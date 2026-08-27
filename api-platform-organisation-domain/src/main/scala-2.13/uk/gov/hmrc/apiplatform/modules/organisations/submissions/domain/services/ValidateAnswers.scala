@@ -57,6 +57,7 @@ object ValidateAnswers {
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
+      case _: Question.InternationalAddressQuestion                                             => validateInternationalAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
       case _: Question.AttachmentQuestion                                                       => validateAttachment(rawAnswers)
       case q: Question.CompanyNumberQuestion                                                    =>
@@ -130,6 +131,25 @@ object ValidateAnswers {
         Some(locality),
         rawAnswers.get("region").flatMap(_.headOption),
         Some(postcode)
+      ))
+    ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  def validateInternationalAddress(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    (
+      validateStringField("addressLineOne", rawAnswers = rawAnswers, error = ValidationError("addressLineOne", "Address Line One required")),
+      validateStringField("locality", rawAnswers = rawAnswers, error = ValidationError("locality", "Town or City required")),
+      validateStringField("postcode", rawAnswers = rawAnswers, error = ValidationError("postcode", "Postcode required")),
+      validateStringField("country", rawAnswers = rawAnswers, error = ValidationError("country", "Country required"))
+    ).parMapN((addressLineOne, locality, postcode, country) =>
+      ActualAnswer.InternationalAddressAnswer(InternationalAddress(
+        Some(addressLineOne),
+        rawAnswers.get("addressLineTwo").flatMap(_.headOption),
+        rawAnswers.get("addressLineThree").flatMap(_.headOption),
+        Some(locality),
+        rawAnswers.get("region").flatMap(_.headOption),
+        Some(postcode),
+        Some(country)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
   }

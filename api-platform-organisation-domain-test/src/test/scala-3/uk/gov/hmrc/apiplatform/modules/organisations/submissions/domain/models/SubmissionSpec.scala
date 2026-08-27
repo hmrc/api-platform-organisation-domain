@@ -25,7 +25,7 @@ import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Submission.{AdditionalData, CompanyDetails}
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.{AnsweringQuestionsHelper, SubmissionsTestData}
+import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData
 
 class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 

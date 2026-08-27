@@ -16,8 +16,6 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
-import org.mockito.MockitoSugar.mock
-
 import uk.gov.hmrc.apiplatform.modules.common.utils.HmrcSpec
 
 class MarkedSubmissionSpec extends HmrcSpec {

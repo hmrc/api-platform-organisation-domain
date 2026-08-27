@@ -227,9 +227,10 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   }
 
   private def buildAnsweredSubmission(fullyAnswered: Boolean)(submission: Submission): Submission = {
-    val address    = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-    val fullName   = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
-    val attachment = Attachment(Some("12345678"), Some("tax-document.pdf"))
+    val address     = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
+    val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
+    val fullName    = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+    val attachment  = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
@@ -244,6 +245,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         case Question.ForwardToQuestion(id, forwardToQuestionId, wording, statement, _)                                    => ActualAnswer.AcknowledgedAnswer
         case Question.DateQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.DateAnswer(now.toLocalDate)
         case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                                           => ActualAnswer.AddressAnswer(address)
+        case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _)                                              => ActualAnswer.InternationalAddressAnswer(intlAddress)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
         case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)                                                     => ActualAnswer.CompanyNumberAnswer("12345678")
         case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)                                                        => ActualAnswer.AttachmentAnswer(attachment)
@@ -285,9 +287,10 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 }
 
 trait AnsweringQuestionsHelper extends FixedClock {
-  val address    = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-  val fullName   = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
-  val attachment = Attachment(Some("12345678"), Some("tax-document.pdf"))
+  val address     = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
+  val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
+  val fullName    = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+  val attachment  = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
@@ -327,13 +330,14 @@ trait AnsweringQuestionsHelper extends FixedClock {
         else
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
-      case Question.AcknowledgementOnly(id, _, _, _)                 => List(Some(ActualAnswer.AcknowledgedAnswer))
-      case Question.ForwardToQuestion(id, _, _, _, _)                => List(Some(ActualAnswer.AcknowledgedAnswer))
-      case Question.DateQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
-      case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)       => List(Some(ActualAnswer.AddressAnswer(address)))
-      case Question.NameQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.NameAnswer(fullName)))
-      case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
-      case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)    => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
+      case Question.AcknowledgementOnly(id, _, _, _)                        => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.ForwardToQuestion(id, _, _, _, _)                       => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case Question.DateQuestion(_, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
+      case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)              => List(Some(ActualAnswer.AddressAnswer(address)))
+      case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.InternationalAddressAnswer(intlAddress)))
+      case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.NameAnswer(fullName)))
+      case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)        => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
+      case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)           => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
 
       case Question.MultiChoiceQuestion(id, _, _, _, _, _, marking, absence, _, _) =>
         marking.map {

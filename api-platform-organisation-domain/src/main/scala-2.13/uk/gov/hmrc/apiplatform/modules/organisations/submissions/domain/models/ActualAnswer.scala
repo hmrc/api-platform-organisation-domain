@@ -27,6 +27,16 @@ case class RegisteredOfficeAddress(
     postalCode: Option[String]
   )
 
+case class InternationalAddress(
+    addressLineOne: Option[String],
+    addressLineTwo: Option[String],
+    addressLineThree: Option[String],
+    locality: Option[String],
+    region: Option[String],
+    postalCode: Option[String],
+    country: Option[String]
+  )
+
 case class FullName(
     isThisYourName: Option[String],
     firstName: Option[String],
@@ -40,37 +50,41 @@ case class Attachment(
 
 object ActualAnswer {
 
-  case class MultipleChoiceAnswer(values: Set[String])     extends ActualAnswer
-  case class SingleChoiceAnswer(value: String)             extends ActualAnswer
-  case class TextAnswer(value: String)                     extends ActualAnswer
-  case class DateAnswer(value: LocalDate)                  extends ActualAnswer
-  case class AddressAnswer(value: RegisteredOfficeAddress) extends ActualAnswer
-  case class NameAnswer(value: FullName)                   extends ActualAnswer
-  case class CompanyNumberAnswer(value: String)            extends ActualAnswer
-  case class AttachmentAnswer(value: Attachment)           extends ActualAnswer
-  case object AcknowledgedAnswer                           extends ActualAnswer
-  case object NoAnswer                                     extends ActualAnswer
+  case class MultipleChoiceAnswer(values: Set[String])               extends ActualAnswer
+  case class SingleChoiceAnswer(value: String)                       extends ActualAnswer
+  case class TextAnswer(value: String)                               extends ActualAnswer
+  case class DateAnswer(value: LocalDate)                            extends ActualAnswer
+  case class AddressAnswer(value: RegisteredOfficeAddress)           extends ActualAnswer
+  case class InternationalAddressAnswer(value: InternationalAddress) extends ActualAnswer
+  case class NameAnswer(value: FullName)                             extends ActualAnswer
+  case class CompanyNumberAnswer(value: String)                      extends ActualAnswer
+  case class AttachmentAnswer(value: Attachment)                     extends ActualAnswer
+  case object AcknowledgedAnswer                                     extends ActualAnswer
+  case object NoAnswer                                               extends ActualAnswer
 
   import play.api.libs.json._
   import uk.gov.hmrc.play.json.Union
 
-  implicit val jfTextAnswer: OFormat[TextAnswer]                     = Json.format[TextAnswer]
-  implicit val jfDateAnswer: OFormat[DateAnswer]                     = Json.format[DateAnswer]
-  implicit val jfAddress: OFormat[RegisteredOfficeAddress]           = Json.format[RegisteredOfficeAddress]
-  implicit val jfAddAnswer: OFormat[AddressAnswer]                   = Json.format[AddressAnswer]
-  implicit val jfFullName: OFormat[FullName]                         = Json.format[FullName]
-  implicit val jfNameAnswer: OFormat[NameAnswer]                     = Json.format[NameAnswer]
-  implicit val jfCompanyNumberAnswer: OFormat[CompanyNumberAnswer]   = Json.format[CompanyNumberAnswer]
-  implicit val jfAttachment: OFormat[Attachment]                     = Json.format[Attachment]
-  implicit val jfAttachmentAnswer: OFormat[AttachmentAnswer]         = Json.format[AttachmentAnswer]
-  implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]     = Json.format[SingleChoiceAnswer]
-  implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer] = Json.format[MultipleChoiceAnswer]
+  implicit val jfTextAnswer: OFormat[TextAnswer]                                 = Json.format[TextAnswer]
+  implicit val jfDateAnswer: OFormat[DateAnswer]                                 = Json.format[DateAnswer]
+  implicit val jfAddress: OFormat[RegisteredOfficeAddress]                       = Json.format[RegisteredOfficeAddress]
+  implicit val jfAddressAnswer: OFormat[AddressAnswer]                           = Json.format[AddressAnswer]
+  implicit val jfInternationalAddress: OFormat[InternationalAddress]             = Json.format[InternationalAddress]
+  implicit val jfInternationalAddressAnswer: OFormat[InternationalAddressAnswer] = Json.format[InternationalAddressAnswer]
+  implicit val jfFullName: OFormat[FullName]                                     = Json.format[FullName]
+  implicit val jfNameAnswer: OFormat[NameAnswer]                                 = Json.format[NameAnswer]
+  implicit val jfCompanyNumberAnswer: OFormat[CompanyNumberAnswer]               = Json.format[CompanyNumberAnswer]
+  implicit val jfAttachment: OFormat[Attachment]                                 = Json.format[Attachment]
+  implicit val jfAttachmentAnswer: OFormat[AttachmentAnswer]                     = Json.format[AttachmentAnswer]
+  implicit val jfSingleChoiceAnswer: OFormat[SingleChoiceAnswer]                 = Json.format[SingleChoiceAnswer]
+  implicit val jfMultipleChoiceAnswer: OFormat[MultipleChoiceAnswer]             = Json.format[MultipleChoiceAnswer]
 
   implicit val jfActualAnswer: OFormat[ActualAnswer] = Union.from[ActualAnswer]("answerType")
     .and[MultipleChoiceAnswer]("multipleChoice")
     .and[SingleChoiceAnswer]("singleChoice")
     .and[DateAnswer]("date")
     .and[AddressAnswer]("address")
+    .and[InternationalAddressAnswer]("internationalAddress")
     .and[NameAnswer]("name")
     .and[CompanyNumberAnswer]("companyNumber")
     .and[AttachmentAnswer]("attachment")
