@@ -40,24 +40,32 @@ object AnswerQuestion {
   def recordAnswer(submission: Submission, questionId: Question.Id, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ExtendedSubmission] = {
     for {
       question         <- fromOption(submission.findQuestion(questionId), "Not valid for this submission")
-      context           = submission.context
       validatedAnswers <- ValidateAnswers.validate(question, rawAnswers)
       latestInstance    = submission.latestInstance
 
-      updatedAnswersToQuestions   <- cond(
-                                       latestInstance.isOpenToAnswers,
-                                       latestInstance.answersToQuestions + (questionId -> validatedAnswers),
-                                       "Answers cannot be recorded for a Submission that is not in progress"
-                                     )
-      // we assume no recursion needed for the next 3 steps - otherwise the ask when question structure must have been implemented in a complex recursive mess
-      updatedQuestionnaireProgress = deriveProgressOfQuestionnaires(submission.allQuestionnaires, context, updatedAnswersToQuestions)
-      areQuestionsAnswered         = updatedQuestionnaireProgress.values
-                                       .map(_.state)
-                                       .forall(QuestionnaireState.isCompleted)
-      questionsThatShouldBeAsked   = updatedQuestionnaireProgress.flatMap(_._2.questionsToAsk).toList
-      finalAnswersToQuestions      = updatedAnswersToQuestions.filter { case (qid, _) => questionsThatShouldBeAsked.contains(qid) }
-      updatedSubmission            = updateSubmissionState(finalAnswersToQuestions, areQuestionsAnswered, submission)
-    } yield ExtendedSubmission(updatedSubmission, updatedQuestionnaireProgress)
+      updatedAnswersToQuestions <- cond(
+                                     latestInstance.isOpenToAnswers,
+                                     latestInstance.answersToQuestions + (questionId -> validatedAnswers),
+                                     "Answers cannot be recorded for a Submission that is not in progress"
+                                   )
+    } yield pruneUnreachableAnswers(submission, updatedAnswersToQuestions)
+  }
+
+  private def pruneUnreachableAnswers(submission: Submission, answers: Submission.AnswersToQuestions): ExtendedSubmission = {
+    val finalAnswersToQuestions      = pruneAnswers(submission, answers)
+    val updatedQuestionnaireProgress = deriveProgressOfQuestionnaires(submission.allQuestionnaires, submission.context, finalAnswersToQuestions)
+    val areQuestionsAnswered         = updatedQuestionnaireProgress.values.map(_.state).forall(QuestionnaireState.isCompleted)
+    val updatedSubmission            = updateSubmissionState(finalAnswersToQuestions, areQuestionsAnswered, submission)
+    ExtendedSubmission(updatedSubmission, updatedQuestionnaireProgress)
+  }
+
+  @scala.annotation.tailrec
+  private def pruneAnswers(submission: Submission, answers: Submission.AnswersToQuestions): Submission.AnswersToQuestions = {
+    val updatedQuestionnaireProgress = deriveProgressOfQuestionnaires(submission.allQuestionnaires, submission.context, answers)
+    val questionsThatShouldBeAsked   = updatedQuestionnaireProgress.flatMap(_._2.questionsToAsk).toSet
+    val prunedAnswers                = answers.filter { case (qid, _) => questionsThatShouldBeAsked.contains(qid) }
+    if (prunedAnswers.size == answers.size) answers
+    else pruneAnswers(submission, prunedAnswers)
   }
 
   def updateSubmissionState(answers: Submission.AnswersToQuestions, areQuestionsAnswered: Boolean, submission: Submission): Submission = {
