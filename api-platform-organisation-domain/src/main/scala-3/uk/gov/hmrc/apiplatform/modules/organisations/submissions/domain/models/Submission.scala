@@ -489,6 +489,20 @@ case class Submission(
       case _                                                                   => getCompanyNameFromAdditionalData()
     }
   }
+
+  private def getAttachment(key: String): Option[Attachment] = {
+    getAnswerToQuestionOfInterest(key) match {
+      case ActualAnswer.AttachmentAnswer(value) => Some(value)
+      case ActualAnswer.NoAnswer                => None
+    }
+  }
+
+  lazy val attachment: Option[Attachment] = {
+    organisationType match {
+      case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getAttachment("attachmentNonUkWithoutId")
+      case _                                                                   => None
+    }
+  }
 }
 
 case class ExtendedSubmission(
