@@ -459,6 +459,7 @@ case class Submission(
   lazy val organisationType: Option[Organisation.OrganisationType] = {
     organisationTypeAsText match {
       case "UK limited company"                                             => Some(Organisation.OrganisationType.UkLimitedCompany)
+      case "Registered society"                                             => Some(Organisation.OrganisationType.RegisteredSociety)
       case "General partnership"                                            => Some(Organisation.OrganisationType.GeneralPartnership)
       case "Limited liability partnership"                                  => Some(Organisation.OrganisationType.LimitedLiabilityPartnership)
       case "Limited partnership"                                            => Some(Organisation.OrganisationType.LimitedPartnership)
