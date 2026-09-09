@@ -168,6 +168,18 @@ object Question {
       summary: Option[String] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
+  case class ConfirmNameQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
   case class CompanyNumberQuestion(
       id: Question.Id,
       wording: Wording,
@@ -351,6 +363,7 @@ object Question {
   given OFormat[AddressQuestion]               = Json.format[AddressQuestion]
   given OFormat[InternationalAddressQuestion]  = Json.format[InternationalAddressQuestion]
   given OFormat[NameQuestion]                  = Json.format[NameQuestion]
+  given OFormat[ConfirmNameQuestion]           = Json.format[ConfirmNameQuestion]
   given OFormat[CompanyNumberQuestion]         = Json.format[CompanyNumberQuestion]
   given OFormat[AttachmentQuestion]            = Json.format[AttachmentQuestion]
 
@@ -369,6 +382,7 @@ object Question {
     .and[AddressQuestion]("address")
     .and[InternationalAddressQuestion]("internationalAddress")
     .and[NameQuestion]("name")
+    .and[ConfirmNameQuestion]("confirmName")
     .and[CompanyNumberQuestion]("companyNumber")
     .and[AttachmentQuestion]("attachment")
     .and[TextQuestion]("text")

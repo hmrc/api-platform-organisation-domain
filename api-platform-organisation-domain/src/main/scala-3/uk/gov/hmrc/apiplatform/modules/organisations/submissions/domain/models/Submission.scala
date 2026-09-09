@@ -461,6 +461,7 @@ case class Submission(
   lazy val organisationType: Option[Organisation.OrganisationType] = {
     organisationTypeAsText match {
       case "UK limited company"                                             => Some(Organisation.OrganisationType.UkLimitedCompany)
+      case "Sole trader"                                                    => Some(Organisation.OrganisationType.SoleTrader)
       case "Registered society"                                             => Some(Organisation.OrganisationType.RegisteredSociety)
       case "General partnership"                                            => Some(Organisation.OrganisationType.GeneralPartnership)
       case "Limited liability partnership"                                  => Some(Organisation.OrganisationType.LimitedLiabilityPartnership)
@@ -498,7 +499,7 @@ case class Submission(
   private def getAttachment(key: String): Option[Attachment] = {
     getAnswerToQuestionOfInterest(key) match {
       case ActualAnswer.AttachmentAnswer(value) => Some(value)
-      case ActualAnswer.NoAnswer                => None
+      case _                                    => None
     }
   }
 
