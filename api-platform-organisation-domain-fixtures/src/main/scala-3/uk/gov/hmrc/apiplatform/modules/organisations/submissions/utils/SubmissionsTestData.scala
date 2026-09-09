@@ -227,10 +227,11 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   }
 
   private def buildAnsweredSubmission(fullyAnswered: Boolean)(submission: Submission): Submission = {
-    val address     = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-    val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
-    val fullName    = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
-    val attachment  = Attachment(Some("12345678"), Some("tax-document.pdf"))
+    val address         = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
+    val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
+    val fullName        = FullName(Some("Bob"), Some("Roberts"))
+    val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+    val attachment      = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
@@ -247,6 +248,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)                                                           => ActualAnswer.AddressAnswer(address)
         case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _)                                              => ActualAnswer.InternationalAddressAnswer(intlAddress)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
+        case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _)                                                       => ActualAnswer.ConfirmNameAnswer(confirmFullName)
         case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)                                                     => ActualAnswer.CompanyNumberAnswer("12345678")
         case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)                                                        => ActualAnswer.AttachmentAnswer(attachment)
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _)                 =>
@@ -287,10 +289,11 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
 }
 
 trait AnsweringQuestionsHelper extends FixedClock {
-  val address     = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
-  val intlAddress = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
-  val fullName    = FullName(Some("Yes"), Some("Bob"), Some("Roberts"))
-  val attachment  = Attachment(Some("12345678"), Some("tax-document.pdf"))
+  val address         = RegisteredOfficeAddress(Some("1 main st"), None, None, None, Some("AB1 2CD"))
+  val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
+  val fullName        = FullName(Some("Bob"), Some("Roberts"))
+  val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+  val attachment      = Attachment(Some("12345678"), Some("tax-document.pdf"))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
@@ -336,6 +339,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
       case Question.AddressQuestion(_, _, _, _, _, _, _, _, _)              => List(Some(ActualAnswer.AddressAnswer(address)))
       case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.InternationalAddressAnswer(intlAddress)))
       case Question.NameQuestion(_, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.NameAnswer(fullName)))
+      case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.ConfirmNameAnswer(confirmFullName)))
       case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _)        => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
       case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _)           => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
 

@@ -69,7 +69,17 @@ class ActualAnswersAsTextSpec extends HmrcSpec with Inside with QuestionBuilder 
       "return name" in new Setup {
         val firstName    = "Bob"
         val lastName     = "Fleming"
-        val actualAnswer = ActualAnswer.NameAnswer(FullName(Some("yes"), Some(firstName), Some(lastName)))
+        val actualAnswer = ActualAnswer.NameAnswer(FullName(Some(firstName), Some(lastName)))
+
+        ActualAnswersAsText(actualAnswer) shouldBe s"$firstName $lastName"
+      }
+    }
+
+    "confirm name answer" should {
+      "return name" in new Setup {
+        val firstName    = "Bob"
+        val lastName     = "Fleming"
+        val actualAnswer = ActualAnswer.ConfirmNameAnswer(ConfirmFullName(Some("yes"), Some(firstName), Some(lastName)))
 
         ActualAnswersAsText(actualAnswer) shouldBe s"$firstName $lastName"
       }

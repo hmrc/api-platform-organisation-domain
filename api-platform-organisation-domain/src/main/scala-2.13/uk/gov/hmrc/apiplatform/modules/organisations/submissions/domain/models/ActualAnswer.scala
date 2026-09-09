@@ -38,6 +38,11 @@ case class InternationalAddress(
   )
 
 case class FullName(
+    firstName: Option[String],
+    lastName: Option[String]
+  )
+
+case class ConfirmFullName(
     isThisYourName: Option[String],
     firstName: Option[String],
     lastName: Option[String]
@@ -57,6 +62,7 @@ object ActualAnswer {
   case class AddressAnswer(value: RegisteredOfficeAddress)           extends ActualAnswer
   case class InternationalAddressAnswer(value: InternationalAddress) extends ActualAnswer
   case class NameAnswer(value: FullName)                             extends ActualAnswer
+  case class ConfirmNameAnswer(value: ConfirmFullName)               extends ActualAnswer
   case class CompanyNumberAnswer(value: String)                      extends ActualAnswer
   case class AttachmentAnswer(value: Attachment)                     extends ActualAnswer
   case object AcknowledgedAnswer                                     extends ActualAnswer
@@ -72,7 +78,9 @@ object ActualAnswer {
   implicit val jfInternationalAddress: OFormat[InternationalAddress]             = Json.format[InternationalAddress]
   implicit val jfInternationalAddressAnswer: OFormat[InternationalAddressAnswer] = Json.format[InternationalAddressAnswer]
   implicit val jfFullName: OFormat[FullName]                                     = Json.format[FullName]
+  implicit val jfConfirmFullName: OFormat[ConfirmFullName]                       = Json.format[ConfirmFullName]
   implicit val jfNameAnswer: OFormat[NameAnswer]                                 = Json.format[NameAnswer]
+  implicit val jfConfirmNameAnswer: OFormat[ConfirmNameAnswer]                   = Json.format[ConfirmNameAnswer]
   implicit val jfCompanyNumberAnswer: OFormat[CompanyNumberAnswer]               = Json.format[CompanyNumberAnswer]
   implicit val jfAttachment: OFormat[Attachment]                                 = Json.format[Attachment]
   implicit val jfAttachmentAnswer: OFormat[AttachmentAnswer]                     = Json.format[AttachmentAnswer]
@@ -86,6 +94,7 @@ object ActualAnswer {
     .and[AddressAnswer]("address")
     .and[InternationalAddressAnswer]("internationalAddress")
     .and[NameAnswer]("name")
+    .and[ConfirmNameAnswer]("confirmName")
     .and[CompanyNumberAnswer]("companyNumber")
     .and[AttachmentAnswer]("attachment")
     .and[TextAnswer]("text")
