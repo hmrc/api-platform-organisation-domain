@@ -227,6 +227,9 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     Submission.updateLatestAnswersTo(
       Map(OrganisationDetails.questionOrgType.id -> ActualAnswer.SingleChoiceAnswer("Registered society"))
     )(aSubmission).organisationType shouldBe Some(OrganisationType.RegisteredSociety)
+    Submission.updateLatestAnswersTo(
+      Map(OrganisationDetails.questionOrgType.id -> ActualAnswer.SingleChoiceAnswer("Non-UK company with a branch or place of business in the UK"))
+    )(aSubmission).organisationType shouldBe Some(OrganisationType.NonUkWithPlaceOfBusinessInUk)
   }
 
   "organisationName" in {
