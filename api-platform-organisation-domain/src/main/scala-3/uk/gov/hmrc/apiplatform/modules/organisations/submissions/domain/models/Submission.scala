@@ -467,6 +467,7 @@ case class Submission(
       case "Limited partnership"                                            => Some(Organisation.OrganisationType.LimitedPartnership)
       case "Scottish partnership"                                           => Some(Organisation.OrganisationType.ScottishPartnership)
       case "Scottish limited partnership"                                   => Some(Organisation.OrganisationType.ScottishLimitedPartnership)
+      case "Non-UK company with a branch or place of business in the UK"    => Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)
       case "Non-UK company without a branch or place of business in the UK" => Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk)
       case _                                                                => None
     }
