@@ -491,6 +491,7 @@ case class Submission(
       case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getCompanyNameFromTextQuestion("organisationNameNonUkWithoutId")
       case Some(Organisation.OrganisationType.GeneralPartnership)              => getCompanyNameFromTextQuestion("organisationNamePartnershipId")
       case Some(Organisation.OrganisationType.ScottishPartnership)             => getCompanyNameFromTextQuestion("organisationNamePartnershipId")
+      case Some(Organisation.OrganisationType.SoleTrader)                      => getCompanyNameFromTextQuestion("organisationNameSoleTraderId")
       case _                                                                   => getCompanyNameFromAdditionalData()
     }
   }
