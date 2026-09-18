@@ -32,6 +32,7 @@ object ActualAnswersAsText {
     case ActualAnswer.InternationalAddressAnswer(add) =>
       Seq(add.addressLineOne, add.addressLineTwo, add.addressLineThree, add.locality, add.region, add.postalCode, add.country).filter(_.isDefined).map(_.get).mkString(", ")
     case ActualAnswer.NameAnswer(name)                => Seq(name.firstName, name.lastName).filter(_.isDefined).map(_.get).mkString(" ")
+    case ActualAnswer.ConfirmNameAnswer(name)         => Seq(name.firstName, name.lastName).filter(_.isDefined).map(_.get).mkString(" ")
     case ActualAnswer.CompanyNumberAnswer(value)      => value
     case ActualAnswer.NoAnswer                        => "n/a"
     case ActualAnswer.AcknowledgedAnswer              => ""

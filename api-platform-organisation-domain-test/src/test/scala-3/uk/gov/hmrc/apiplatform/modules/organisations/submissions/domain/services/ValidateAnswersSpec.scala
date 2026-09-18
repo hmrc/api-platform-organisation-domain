@@ -241,7 +241,39 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val failure: AnswerMatching     = Left(ValidationErrors(ValidationError("firstName", "First name required"), ValidationError("lastName", "Last name required")))
       val firstName                   = "Bob"
       val lastName                    = "Roberts"
-      val validAnswer: AnswerMatching = Right(ActualAnswer.NameAnswer(FullName(Some("Yes"), Some(firstName), Some(lastName))))
+      val validAnswer: AnswerMatching = Right(ActualAnswer.NameAnswer(FullName(Some(firstName), Some(lastName))))
+      val validRawAnswers             = Map(
+        "firstName" -> Seq(firstName),
+        "lastName"  -> Seq(lastName)
+      )
+      val invalidRawAnswers           = Map(
+        "firstName" -> Seq.empty,
+        "lastName"  -> Seq.empty
+      )
+
+      val passes = Table(
+        ("description", "question", Question.answerKey, "expects"),
+        ("valid answer 1", question, validRawAnswers, validAnswer),
+        ("invalid answer", question, invalidRawAnswers, failure)
+      )
+
+      forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+        expects match {
+          case Right(answer) =>
+            ValidateAnswers.validate(question, answers) shouldBe Right(answer)
+          case Left(())      =>
+            ValidateAnswers.validate(question, answers).left.value
+        }
+      }
+    }
+
+    "for confirm name questions" in {
+      val question = confirmNameQuestion(1)
+      type AnswerMatching = Either[Unit, ActualAnswer]
+      val failure: AnswerMatching     = Left(ValidationErrors(ValidationError("firstName", "First name required"), ValidationError("lastName", "Last name required")))
+      val firstName                   = "Bob"
+      val lastName                    = "Roberts"
+      val validAnswer: AnswerMatching = Right(ActualAnswer.ConfirmNameAnswer(ConfirmFullName(Some("Yes"), Some(firstName), Some(lastName))))
       val validRawAnswers             = Map(
         "isThisYourName" -> Seq("Yes", "No"),
         "firstName"      -> Seq(firstName),

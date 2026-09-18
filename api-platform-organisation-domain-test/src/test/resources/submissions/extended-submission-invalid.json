@@ -446,7 +446,7 @@
               "summary" : "Enter a first and last name",
               "message" : "First and last name cannot be blank"
             },
-            "questionType" : "name"
+            "questionType" : "confirmName"
           },
           "askWhen" : [ {
             "questionId" : "99d9362d-e365-4af1-aa46-88e95f9858f7",

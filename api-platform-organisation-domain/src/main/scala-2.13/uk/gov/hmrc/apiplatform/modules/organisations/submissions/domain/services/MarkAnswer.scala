@@ -46,6 +46,7 @@ object MarkAnswer {
       case (q: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)                     => Mark.Pass
       case (q: Question.ForwardToQuestion, ActualAnswer.AcknowledgedAnswer)                       => Mark.Pass
       case (q: Question.NameQuestion, a: ActualAnswer.NameAnswer)                                 => Mark.Pass
+      case (q: Question.ConfirmNameQuestion, a: ActualAnswer.ConfirmNameAnswer)                   => Mark.Pass
       case (q: Question.AddressQuestion, a: ActualAnswer.AddressAnswer)                           => Mark.Pass
       case (_: Question.InternationalAddressQuestion, _: ActualAnswer.InternationalAddressAnswer) => Mark.Pass
       case (_: Question.AttachmentQuestion, _: ActualAnswer.AttachmentAnswer)                     => Mark.Pass

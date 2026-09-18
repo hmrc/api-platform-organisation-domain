@@ -292,7 +292,7 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Select Yes if you are the individual responsible for the software in your organisation").some
     )
 
-    val question2 = Question.NameQuestion(
+    val question2 = Question.ConfirmNameQuestion(
       Question.Id("36b7e670-83fc-4b31-8f85-4d3394908495"),
       Wording("Who is responsible for the software in your organisation?"),
       statement = None,
@@ -407,7 +407,7 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("No")),
-    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.NameAnswer(FullName(Some("Yes"), Some("Bob"), Some("Fleming")))),
+    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.ConfirmNameAnswer(ConfirmFullName(Some("Yes"), Some("Bob"), Some("Fleming")))),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
@@ -421,7 +421,7 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("No")),
-    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.NameAnswer(FullName(Some("Yes"), Some("Bob"), Some("Fleming")))),
+    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.ConfirmNameAnswer(ConfirmFullName(Some("Yes"), Some("Bob"), Some("Fleming")))),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
@@ -435,7 +435,7 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionLtdOrgAddress.id -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (OrganisationDetails.questionLtdOrgUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("No")),
-    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.NameAnswer(FullName(Some("Yes"), Some("Bob"), Some("Fleming")))),
+    (ResponsibleIndividualDetails.question2.id    -> ActualAnswer.ConfirmNameAnswer(ConfirmFullName(Some("Yes"), Some("Bob"), Some("Fleming")))),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),

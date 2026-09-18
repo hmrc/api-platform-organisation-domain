@@ -38,6 +38,11 @@ case class InternationalAddress(
   )
 
 case class FullName(
+    firstName: Option[String],
+    lastName: Option[String]
+  )
+
+case class ConfirmFullName(
     isThisYourName: Option[String],
     firstName: Option[String],
     lastName: Option[String]
@@ -57,6 +62,7 @@ object ActualAnswer {
   case class AddressAnswer(value: RegisteredOfficeAddress)           extends ActualAnswer
   case class InternationalAddressAnswer(value: InternationalAddress) extends ActualAnswer
   case class NameAnswer(value: FullName)                             extends ActualAnswer
+  case class ConfirmNameAnswer(value: ConfirmFullName)               extends ActualAnswer
   case class CompanyNumberAnswer(value: String)                      extends ActualAnswer
   case class AttachmentAnswer(value: Attachment)                     extends ActualAnswer
   case object AcknowledgedAnswer                                     extends ActualAnswer
@@ -72,7 +78,9 @@ object ActualAnswer {
   given OFormat[InternationalAddress]       = Json.format[InternationalAddress]
   given OFormat[InternationalAddressAnswer] = Json.format[InternationalAddressAnswer]
   given OFormat[FullName]                   = Json.format[FullName]
+  given OFormat[ConfirmFullName]            = Json.format[ConfirmFullName]
   given OFormat[NameAnswer]                 = Json.format[NameAnswer]
+  given OFormat[ConfirmNameAnswer]          = Json.format[ConfirmNameAnswer]
   given OFormat[CompanyNumberAnswer]        = Json.format[CompanyNumberAnswer]
   given OFormat[Attachment]                 = Json.format[Attachment]
   given OFormat[AttachmentAnswer]           = Json.format[AttachmentAnswer]
@@ -86,6 +94,7 @@ object ActualAnswer {
     .and[AddressAnswer]("address")
     .and[InternationalAddressAnswer]("internationalAddress")
     .and[NameAnswer]("name")
+    .and[ConfirmNameAnswer]("confirmName")
     .and[CompanyNumberAnswer]("companyNumber")
     .and[AttachmentAnswer]("attachment")
     .and[TextAnswer]("text")

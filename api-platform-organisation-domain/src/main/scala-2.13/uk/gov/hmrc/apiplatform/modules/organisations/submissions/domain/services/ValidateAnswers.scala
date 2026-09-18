@@ -59,6 +59,7 @@ object ValidateAnswers {
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.InternationalAddressQuestion                                             => validateInternationalAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
+      case _: Question.ConfirmNameQuestion                                                      => validateConfirmName(rawAnswers)
       case _: Question.AttachmentQuestion                                                       => validateAttachment(rawAnswers)
       case q: Question.CompanyNumberQuestion                                                    =>
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
@@ -156,11 +157,23 @@ object ValidateAnswers {
 
   def validateName(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
     (
+      validateStringField("firstName", rawAnswers = rawAnswers, error = ValidationError("firstName", "First name required")),
+      validateStringField("lastName", rawAnswers = rawAnswers, error = ValidationError("lastName", "Last name required"))
+    ).parMapN((firstName, lastName) =>
+      ActualAnswer.NameAnswer(FullName(
+        Some(firstName),
+        Some(lastName)
+      ))
+    ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  def validateConfirmName(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    (
       validateStringField("isThisYourName", rawAnswers = rawAnswers, error = ValidationError("isThisYourName", "Radio button selection required")),
       validateStringField("firstName", rawAnswers = rawAnswers, error = ValidationError("firstName", "First name required")),
       validateStringField("lastName", rawAnswers = rawAnswers, error = ValidationError("lastName", "Last name required"))
     ).parMapN((isThisYourName, firstName, lastName) =>
-      ActualAnswer.NameAnswer(FullName(
+      ActualAnswer.ConfirmNameAnswer(ConfirmFullName(
         Some(isThisYourName),
         Some(firstName),
         Some(lastName)
