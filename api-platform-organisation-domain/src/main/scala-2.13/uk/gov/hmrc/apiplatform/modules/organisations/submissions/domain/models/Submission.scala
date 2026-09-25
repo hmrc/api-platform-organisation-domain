@@ -24,7 +24,7 @@ import play.api.libs.json.EnvReads
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.{InstantJsonFormatter, NonEmptyListFormatters}
 
-import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.{Organisation, OrganisationAddress}
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services.{ActualAnswersAsText, MarkAnswer}
 
@@ -493,6 +493,88 @@ case class Submission(
       case Some(Organisation.OrganisationType.ScottishPartnership)             => getCompanyNameFromTextQuestion("organisationNamePartnershipId")
       case Some(Organisation.OrganisationType.SoleTrader)                      => getCompanyNameFromTextQuestion("organisationNameSoleTraderId")
       case _                                                                   => getCompanyNameFromAdditionalData()
+    }
+  }
+
+  lazy val companyNumber: Option[String] = organisationType match {
+    case Some(orgType) if orgType.isRegisteredAtCompaniesHouse => latestInstance.companyDetails.map(_.companyNumber)
+    case _                                                     => None
+  }
+
+  lazy val utr: Option[String] = organisationType match {
+    case Some(Organisation.OrganisationType.UkLimitedCompany)             => getTextAnswer("utrLtdId")
+    case Some(Organisation.OrganisationType.RegisteredSociety)            => getTextAnswer("utrRegSocietyId")
+    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk) => getTextAnswer("utrNonUkBranchId")
+    case Some(orgType) if orgType.isPartnership                           => getTextAnswer("utrPartnershipId")
+    case _                                                                => None
+  }
+
+  lazy val websiteUrl: Option[String] = organisationType match {
+    case Some(Organisation.OrganisationType.UkLimitedCompany)                => getTextAnswer("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.RegisteredSociety)               => getTextAnswer("websiteUrlRegSocietyId")
+    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getTextAnswer("websiteUrlNonUkBranchId")
+    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getTextAnswer("websiteUrlNonUkWithoutId")
+    case Some(orgType) if orgType.isPartnership                              => getTextAnswer("websiteUrlPartnershipId")
+    case _                                                                   => None
+  }
+
+  lazy val organisationAddress: Option[OrganisationAddress] = organisationType match {
+    case Some(orgType) if orgType.isRegisteredAtCompaniesHouse => getAddressFromAdditionalData()
+    case Some(Organisation.OrganisationType.GeneralPartnership | Organisation.OrganisationType.ScottishPartnership) =>
+      getAddressFromUkAddressAnswer("addressPartnershipId")
+    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) =>
+      getAddressFromInternationalAddressAnswer("addressNonUkWithoutId")
+    case _ => None
+  }
+
+  private def getTextAnswer(key: String): Option[String] = {
+    getAnswerToQuestionOfInterest(key) match {
+      case ActualAnswer.TextAnswer(value) => Some(value)
+      case _                              => None
+    }
+  }
+
+  private def getAddressFromAdditionalData(): Option[OrganisationAddress] = {
+    latestInstance.companyDetails.map(companyDetails =>
+      OrganisationAddress(
+        addressLineOne = companyDetails.addressLineOne,
+        addressLineTwo = companyDetails.addressLineTwo,
+        careOf = companyDetails.careOf,
+        country = companyDetails.country,
+        locality = companyDetails.locality,
+        poBox = companyDetails.poBox,
+        postalCode = companyDetails.postalCode,
+        premises = companyDetails.premises,
+        region = companyDetails.region
+      )
+    )
+  }
+
+  private def getAddressFromUkAddressAnswer(key: String): Option[OrganisationAddress] = {
+    getAnswerToQuestionOfInterest(key) match {
+      case ActualAnswer.AddressAnswer(value) => Some(OrganisationAddress(
+          addressLineOne = value.addressLineOne,
+          addressLineTwo = value.addressLineTwo,
+          locality = value.locality,
+          region = value.region,
+          postalCode = value.postalCode
+        ))
+      case _                                 => None
+    }
+  }
+
+  private def getAddressFromInternationalAddressAnswer(key: String): Option[OrganisationAddress] = {
+    getAnswerToQuestionOfInterest(key) match {
+      case ActualAnswer.InternationalAddressAnswer(value) => Some(OrganisationAddress(
+          addressLineOne = value.addressLineOne,
+          addressLineTwo = value.addressLineTwo,
+          addressLineThree = value.addressLineThree,
+          locality = value.locality,
+          region = value.region,
+          postalCode = value.postalCode,
+          country = value.country
+        ))
+      case _                                              => None
     }
   }
 

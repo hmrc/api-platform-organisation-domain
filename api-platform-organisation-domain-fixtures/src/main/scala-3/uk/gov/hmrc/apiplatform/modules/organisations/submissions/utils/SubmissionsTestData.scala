@@ -96,6 +96,20 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   val submissionId   = SubmissionId.random
   val userId         = UserId.random
 
+  val sampleCompanyDetails = Submission.CompanyDetails(
+    companyNumber = "12345678",
+    companyName = "Company name",
+    addressLineOne = Some("1 main st"),
+    addressLineTwo = Some("Kings Cross"),
+    careOf = Some("Bob Roberts"),
+    country = Some("United Kingdom"),
+    locality = Some("London"),
+    poBox = Some("PO Box 123"),
+    postalCode = Some("AB1 2CD"),
+    premises = Some("Unit 1"),
+    region = Some("Greater London")
+  )
+
   val standardContext: AskWhen.Context = Map(
     AskWhen.Context.Keys.IN_HOUSE_SOFTWARE       -> "No",
     AskWhen.Context.Keys.VAT_OR_ITSA             -> "No",
