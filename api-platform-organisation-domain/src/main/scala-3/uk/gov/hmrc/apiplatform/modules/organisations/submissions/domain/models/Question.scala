@@ -18,6 +18,8 @@ package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
 import scala.collection.immutable.{ListMap, ListSet}
 
+import cats.data.NonEmptyList
+
 import play.api.libs.json.{Format, Json, OFormat, *}
 import uk.gov.hmrc.apiplatform.modules.common.domain.services.ListMapJsonFormatters.given
 
@@ -53,6 +55,7 @@ sealed trait Question {
   def absenceMark: Option[Mark]   = absence.map(_._2)
 
   def summary: Option[String]
+  def clearQuestionsOnChange: Option[NonEmptyList[Question.Id]]
 
   final def isOptional: Boolean = absence.isDefined
 }
@@ -117,7 +120,8 @@ object Question {
       validation: Option[TextValidation] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging {}
 
   case class DateQuestion(
@@ -129,7 +133,8 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class AddressQuestion(
@@ -141,7 +146,8 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class InternationalAddressQuestion(
@@ -153,7 +159,8 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class NameQuestion(
@@ -165,7 +172,8 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class ConfirmNameQuestion(
@@ -177,7 +185,8 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class CompanyNumberQuestion(
@@ -189,7 +198,8 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class AttachmentQuestion(
@@ -201,14 +211,16 @@ object Question {
       hintText: Option[NonBulletStatementFragment] = None,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
   case class AcknowledgementOnly(
       id: Question.Id,
       wording: Wording,
       statement: Option[Statement],
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question {
     val absence        = None
     val afterStatement = None
@@ -219,7 +231,8 @@ object Question {
       forwardToQuestionId: Question.Id,
       wording: Wording,
       statement: Option[Statement],
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question {
     val absence        = None
     val afterStatement = None
@@ -242,7 +255,8 @@ object Question {
       marking: ListMap[PossibleAnswer, Mark],
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends ChoiceQuestion {
     lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
   }
@@ -257,7 +271,8 @@ object Question {
       marking: ListMap[PossibleAnswer, Mark],
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends SingleChoiceQuestion {
     lazy val choices: ListSet[PossibleAnswer] = ListSet(marking.keys.toList: _*)
   }
@@ -273,7 +288,8 @@ object Question {
       noMarking: Mark,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends SingleChoiceQuestion {
 
     val YES = PossibleAnswer("Yes")
@@ -294,7 +310,8 @@ object Question {
       noMarking: Mark,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends SingleChoiceQuestion {
 
     val YES = PossibleAnswer("Yes")
@@ -315,7 +332,8 @@ object Question {
       noMarking: Mark,
       absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
-      summary: Option[String] = None
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends SingleChoiceQuestion {
 
     val YES = PossibleAnswer("Yes")
@@ -327,6 +345,7 @@ object Question {
 
   import play.api.libs.json.*
   import uk.gov.hmrc.play.json.Union
+  import uk.gov.hmrc.apiplatform.modules.common.domain.services.NonEmptyListFormatters.given
 
   given Format[Wording] = Json.valueFormat[Wording]
 
