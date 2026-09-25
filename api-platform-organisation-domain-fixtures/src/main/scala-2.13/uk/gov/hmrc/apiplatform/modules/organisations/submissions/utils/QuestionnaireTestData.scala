@@ -68,7 +68,12 @@ trait QuestionnaireTestData {
         )
       ).some,
       hintText = StatementText("It is 8 characters. For example, 01234567 or AC012345.").some,
-      errorInfo = ErrorInfo("Your company registration number cannot be blank", "Enter your company registration number, like 01234567").some
+      errorInfo = ErrorInfo("Your company registration number cannot be blank", "Enter your company registration number, like 01234567").some,
+      clearQuestionsOnChange = Some(NonEmptyList.of(
+        Question.Id("a2dbf1a7-e31b-4c89-a755-21f0652ca9cc"),
+        Question.Id("e1dbf1a3-e28b-1c83-a739-86f1319ca8cc"),
+        Question.Id("6be23951-ac69-47bf-aa56-86d3d690ee0b")
+      ))
     )
 
     val questionLtdOrgName = Question.ConfirmCompanyNameQuestion(
