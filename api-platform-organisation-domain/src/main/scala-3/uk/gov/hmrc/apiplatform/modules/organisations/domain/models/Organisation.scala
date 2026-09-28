@@ -59,6 +59,13 @@ object Organisation {
         ot == OrganisationType.LimitedPartnership ||
         ot == OrganisationType.ScottishPartnership ||
         ot == OrganisationType.ScottishLimitedPartnership
+
+      def isRegisteredAtCompaniesHouse: Boolean = ot == OrganisationType.UkLimitedCompany ||
+        ot == OrganisationType.RegisteredSociety ||
+        ot == OrganisationType.NonUkWithPlaceOfBusinessInUk ||
+        ot == OrganisationType.LimitedLiabilityPartnership ||
+        ot == OrganisationType.LimitedPartnership ||
+        ot == OrganisationType.ScottishLimitedPartnership
     }
 
     def apply(text: String): Option[OrganisationType] = OrganisationType.values.find(_.toString.toUpperCase == text.toUpperCase())
@@ -78,5 +85,9 @@ case class Organisation(
     organisationName: OrganisationName,
     organisationType: Organisation.OrganisationType,
     createdDateTime: Instant,
-    collaborators: Set[Collaborator]
+    collaborators: Set[Collaborator],
+    companyNumber: Option[String] = None,
+    corporationTaxUtr: Option[String] = None,
+    websiteUrl: Option[String] = None,
+    address: Option[OrganisationAddress] = None
   )

@@ -45,6 +45,13 @@ object Organisation {
       this == OrganisationType.LimitedPartnership ||
       this == OrganisationType.ScottishPartnership ||
       this == OrganisationType.ScottishLimitedPartnership
+
+    val isRegisteredAtCompaniesHouse: Boolean = this == OrganisationType.UkLimitedCompany ||
+      this == OrganisationType.RegisteredSociety ||
+      this == OrganisationType.NonUkWithPlaceOfBusinessInUk ||
+      this == OrganisationType.LimitedLiabilityPartnership ||
+      this == OrganisationType.LimitedPartnership ||
+      this == OrganisationType.ScottishLimitedPartnership
   }
 
   object OrganisationType {
@@ -91,5 +98,9 @@ case class Organisation(
     organisationName: OrganisationName,
     organisationType: Organisation.OrganisationType,
     createdDateTime: Instant,
-    collaborators: Set[Collaborator]
+    collaborators: Set[Collaborator],
+    companyNumber: Option[String] = None,
+    corporationTaxUtr: Option[String] = None,
+    websiteUrl: Option[String] = None,
+    address: Option[OrganisationAddress] = None
   )
