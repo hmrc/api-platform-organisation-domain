@@ -262,12 +262,12 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).companyNumber shouldBe None
   }
 
-  "utr" in {
-    createdSubmission.answeringWith(samplePassAnswersToQuestions).utr shouldBe Some("1234567890")
-    createdSubmission.answeringWith(sampleLlpAnswersToQuestions).utr shouldBe Some("1234567890")
-    createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).utr shouldBe Some("1234567890")
-    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).utr shouldBe None
-    answeringSubmission.utr shouldBe None
+  "corporationTaxUtr" in {
+    createdSubmission.answeringWith(samplePassAnswersToQuestions).corporationTaxUtr shouldBe Some("1234567890")
+    createdSubmission.answeringWith(sampleLlpAnswersToQuestions).corporationTaxUtr shouldBe Some("1234567890")
+    createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).corporationTaxUtr shouldBe Some("1234567890")
+    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).corporationTaxUtr shouldBe None
+    answeringSubmission.corporationTaxUtr shouldBe None
   }
 
   "websiteUrl" in {

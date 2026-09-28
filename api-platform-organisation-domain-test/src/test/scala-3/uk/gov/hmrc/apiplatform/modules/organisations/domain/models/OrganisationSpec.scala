@@ -65,7 +65,7 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
        |    "role" : "${role.toString()}"
        |  } ],
        |  "companyNumber" : "12345678",
-       |  "utr" : "1234567890",
+       |  "corporationTaxUtr" : "1234567890",
        |  "websiteUrl" : "https://www.bobsburgers.com",
        |  "address" : {
        |    "addressLineOne" : "1 main st",
@@ -131,7 +131,7 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
         createdDateTime,
         Set(Member(userId)),
         companyNumber = Some("12345678"),
-        utr = Some("1234567890"),
+        corporationTaxUtr = Some("1234567890"),
         websiteUrl = Some("https://www.bobsburgers.com"),
         address = Some(orgAddress)
       ))) shouldBe jsonOrganisationWithExtraData(orgId, orgName, orgType, createdDateTime, Roles.Member, userId)
@@ -145,7 +145,7 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
         createdDateTime,
         Set(Member(userId)),
         companyNumber = Some("12345678"),
-        utr = Some("1234567890"),
+        corporationTaxUtr = Some("1234567890"),
         websiteUrl = Some("https://www.bobsburgers.com"),
         address = Some(orgAddress)
       ))

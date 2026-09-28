@@ -503,7 +503,7 @@ case class Submission(
     case _                                                     => None
   }
 
-  lazy val utr: Option[String] = organisationType match {
+  lazy val corporationTaxUtr: Option[String] = organisationType match {
     case Some(Organisation.OrganisationType.UkLimitedCompany)             => getTextAnswer("utrLtdId")
     case Some(Organisation.OrganisationType.RegisteredSociety)            => getTextAnswer("utrRegSocietyId")
     case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk) => getTextAnswer("utrNonUkBranchId")

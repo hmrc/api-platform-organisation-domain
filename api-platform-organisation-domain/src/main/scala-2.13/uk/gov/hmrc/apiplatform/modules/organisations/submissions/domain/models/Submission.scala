@@ -501,7 +501,7 @@ case class Submission(
     case _                                                     => None
   }
 
-  lazy val utr: Option[String] = organisationType match {
+  lazy val corporationTaxUtr: Option[String] = organisationType match {
     case Some(Organisation.OrganisationType.UkLimitedCompany)             => getTextAnswer("utrLtdId")
     case Some(Organisation.OrganisationType.RegisteredSociety)            => getTextAnswer("utrRegSocietyId")
     case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk) => getTextAnswer("utrNonUkBranchId")
@@ -519,12 +519,12 @@ case class Submission(
   }
 
   lazy val organisationAddress: Option[OrganisationAddress] = organisationType match {
-    case Some(orgType) if orgType.isRegisteredAtCompaniesHouse => getAddressFromAdditionalData()
+    case Some(orgType) if orgType.isRegisteredAtCompaniesHouse                                                      => getAddressFromAdditionalData()
     case Some(Organisation.OrganisationType.GeneralPartnership | Organisation.OrganisationType.ScottishPartnership) =>
       getAddressFromUkAddressAnswer("addressPartnershipId")
-    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) =>
+    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk)                                        =>
       getAddressFromInternationalAddressAnswer("addressNonUkWithoutId")
-    case _ => None
+    case _                                                                                                          => None
   }
 
   private def getTextAnswer(key: String): Option[String] = {

@@ -100,7 +100,7 @@ case class Organisation(
     createdDateTime: Instant,
     collaborators: Set[Collaborator],
     companyNumber: Option[String] = None,
-    utr: Option[String] = None,
+    corporationTaxUtr: Option[String] = None,
     websiteUrl: Option[String] = None,
     address: Option[OrganisationAddress] = None
   )
