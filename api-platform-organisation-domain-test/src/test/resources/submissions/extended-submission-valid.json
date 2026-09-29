@@ -683,7 +683,18 @@
         "organisationNameLpId" : "f3dbf9a2-e31b-4c89-a755-23f0652ab57e",
         "organisationNameNonUkWithoutId" : "a8eaf9a2-e31b-4c89-a755-21f0652ae45a",
         "partnershipTypeId" : "adba162f-be58-2818-92ff-2ecd1799c513",
-        "responsibleIndividualNameId" : "36b7e670-83fc-4b31-8f85-4d3394908495"
+        "responsibleIndividualNameId" : "36b7e670-83fc-4b31-8f85-4d3394908495",
+        "utrLtdId" : "6be23951-ac69-47bf-aa56-86d3d690ee0b",
+        "utrPartnershipId" : "6ed7c85b-d5a3-4e9e-8ce4-5bd2f5b63d80",
+        "utrRegSocietyId" : "a375fd36-8b79-43c2-abc8-2ef2e28457aa",
+        "utrNonUkBranchId" : "da500c87-0100-4340-8c11-9d7f5038996e",
+        "websiteUrlLtdId" : "b2dbf6a1-e39b-4c38-a524-19f0854ca1cc",
+        "websiteUrlPartnershipId" : "8beee360-c221-43f0-bb74-9ac61905818b",
+        "websiteUrlRegSocietyId" : "4b784dc1-3173-483d-934b-87b6763361ba",
+        "websiteUrlNonUkBranchId" : "1eb0a74e-3bf0-4d53-992a-0fc14ff204fd",
+        "websiteUrlNonUkWithoutId" : "1f9a80d7-720f-4574-b61f-f81bc3620ec5",
+        "addressPartnershipId" : "ec330546-72a4-4d42-9d81-94417b1affe4",
+        "addressNonUkWithoutId" : "775b3592-1c45-4b10-b13c-5bf213c7f9c9"
       }
     },
     "instances" : [ {

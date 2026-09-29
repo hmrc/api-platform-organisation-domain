@@ -23,6 +23,7 @@ import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, Use
 import uk.gov.hmrc.apiplatform.modules.common.utils.BaseJsonFormattersSpec
 
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.OrganisationAddress
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.Submission.{AdditionalData, CompanyDetails}
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.SubmissionId
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.SubmissionsTestData
@@ -223,7 +224,7 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   "organisationType" in {
     answeringSubmission.organisationType shouldBe Some(OrganisationType.UkLimitedCompany)
     Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).organisationType shouldBe Some(OrganisationType.UkLimitedCompany)
-    Submission.updateLatestAnswersTo(sampleAnswersToQuestions3)(aSubmission).organisationType shouldBe Some(OrganisationType.LimitedLiabilityPartnership)
+    Submission.updateLatestAnswersTo(sampleLlpAnswersToQuestions)(aSubmission).organisationType shouldBe Some(OrganisationType.LimitedLiabilityPartnership)
     Submission.updateLatestAnswersTo(
       Map(OrganisationDetails.questionOrgType.id -> ActualAnswer.SingleChoiceAnswer("Registered society"))
     )(aSubmission).organisationType shouldBe Some(OrganisationType.RegisteredSociety)
@@ -239,7 +240,7 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "organisationName for non UK company" in {
-    createdSubmission.answeringWith(sampleAnswersToQuestions2).organisationName shouldBe Some("Overseas SA")
+    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).organisationName shouldBe Some("Overseas SA")
   }
 
   "companyDetails" in {
@@ -248,9 +249,80 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     Submission.updateLatestAdditionalDataTo(Some(AdditionalData(Some(companyDetails))))(aSubmission).latestInstance.companyDetails shouldBe Some(companyDetails)
   }
 
+  "companyNumber for UK company" in {
+    val ukLimitedCompanySubmission = Submission.updateLatestAdditionalDataTo(Some(AdditionalData(Some(sampleCompanyDetails))))(answeringSubmission)
+    ukLimitedCompanySubmission.companyNumber shouldBe Some(sampleCompanyDetails.companyNumber)
+  }
+
+  "companyNumber for UK company without Companies House details" in {
+    Submission.updateLatestAnswersTo(samplePassAnswersToQuestions)(aSubmission).companyNumber shouldBe None
+  }
+
+  "companyNumber for non UK company without UK branch" in {
+    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).companyNumber shouldBe None
+  }
+
+  "corporationTaxUtr" in {
+    createdSubmission.answeringWith(samplePassAnswersToQuestions).corporationTaxUtr shouldBe Some("1234567890")
+    createdSubmission.answeringWith(sampleLlpAnswersToQuestions).corporationTaxUtr shouldBe Some("1234567890")
+    createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).corporationTaxUtr shouldBe Some("1234567890")
+    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).corporationTaxUtr shouldBe None
+    answeringSubmission.corporationTaxUtr shouldBe None
+  }
+
+  "websiteUrl" in {
+    createdSubmission.answeringWith(samplePassAnswersToQuestions).websiteUrl shouldBe Some("https://www.bobsburgers.com")
+    createdSubmission.answeringWith(sampleLlpAnswersToQuestions).websiteUrl shouldBe Some("https://www.dave.com")
+    createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).websiteUrl shouldBe None
+    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).websiteUrl shouldBe Some("https://www.overseas-sa.com")
+    answeringSubmission.websiteUrl shouldBe None
+  }
+
+  "organisationAddress for UK company" in {
+    val ukLimitedCompanySubmission = Submission.updateLatestAdditionalDataTo(Some(AdditionalData(Some(sampleCompanyDetails))))(answeringSubmission)
+    ukLimitedCompanySubmission.organisationAddress shouldBe Some(OrganisationAddress(
+      addressLineOne = Some("1 main st"),
+      addressLineTwo = Some("Kings Cross"),
+      careOf = Some("Bob Roberts"),
+      country = Some("United Kingdom"),
+      locality = Some("London"),
+      poBox = Some("PO Box 123"),
+      postalCode = Some("AB1 2CD"),
+      premises = Some("Unit 1"),
+      region = Some("Greater London")
+    ))
+  }
+
+  "organisationAddress for partnership" in {
+    createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).organisationAddress shouldBe Some(OrganisationAddress(
+      addressLineOne = Some("1 main st"),
+      locality = Some("Anytown"),
+      region = Some("Anyshire"),
+      postalCode = Some("AB1 2CD")
+    ))
+  }
+
+  "organisationAddress for non UK company" in {
+    createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).organisationAddress shouldBe Some(OrganisationAddress(
+      addressLineOne = Some("1 Cr Victor Hugo"),
+      addressLineTwo = Some("Zone Industrielle"),
+      addressLineThree = Some("Batiment B"),
+      locality = Some("St Etienne"),
+      region = Some("Auvergne"),
+      postalCode = Some("123456"),
+      country = Some("France")
+    ))
+  }
+
+  "organisationAddress for sole trader" in {
+    createdSubmission.answeringWith(
+      Map(OrganisationDetails.questionOrgType.id -> ActualAnswer.SingleChoiceAnswer("Sole trader"))
+    ).organisationAddress shouldBe None
+  }
+
   "toJson for extended submission" in {
     val jsonExtendedSubmission = Source.fromResource(s"./submissions/extended-submission-valid.json").mkString
-    Json.prettyPrint(Json.toJson(extendedSubmission)) shouldBe jsonExtendedSubmission
+    Json.toJson(extendedSubmission) shouldBe Json.parse(jsonExtendedSubmission)
   }
 
   "read extended submission from json" in {
