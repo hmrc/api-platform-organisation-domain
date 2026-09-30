@@ -66,6 +66,20 @@ object Organisation {
         ot == OrganisationType.LimitedLiabilityPartnership ||
         ot == OrganisationType.LimitedPartnership ||
         ot == OrganisationType.ScottishLimitedPartnership
+
+      def displayText: String = ot match {
+        case OrganisationType.UkLimitedCompany                   => "UK limited company"
+        case OrganisationType.SoleTrader                         => "Sole trader"
+        case OrganisationType.RegisteredSociety                  => "Registered society"
+        case OrganisationType.CharitableIncorporatedOrganisation => "Charitable incorporated organisation"
+        case OrganisationType.GeneralPartnership                 => "General partnership"
+        case OrganisationType.LimitedLiabilityPartnership        => "Limited liability partnership"
+        case OrganisationType.LimitedPartnership                 => "Limited partnership"
+        case OrganisationType.ScottishPartnership                => "Scottish partnership"
+        case OrganisationType.ScottishLimitedPartnership         => "Scottish limited partnership"
+        case OrganisationType.NonUkWithPlaceOfBusinessInUk       => "Non-UK company with a branch or place of business in the UK"
+        case OrganisationType.NonUkWithoutPlaceOfBusinessInUk    => "Non-UK company without a branch or place of business in the UK"
+      }
     }
 
     def apply(text: String): Option[OrganisationType] = OrganisationType.values.find(_.toString.toUpperCase == text.toUpperCase())
