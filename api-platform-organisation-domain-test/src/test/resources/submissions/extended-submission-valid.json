@@ -64,6 +64,7 @@
               "summary" : "Your company registration number cannot be blank",
               "message" : "Enter your company registration number, like 01234567"
             },
+            "clearQuestionsOnChange" : [ "a2dbf1a7-e31b-4c89-a755-21f0652ca9cc", "e1dbf1a3-e28b-1c83-a739-86f1319ca8cc", "6be23951-ac69-47bf-aa56-86d3d690ee0b" ],
             "questionType" : "companyNumber"
           },
           "askWhen" : [ {

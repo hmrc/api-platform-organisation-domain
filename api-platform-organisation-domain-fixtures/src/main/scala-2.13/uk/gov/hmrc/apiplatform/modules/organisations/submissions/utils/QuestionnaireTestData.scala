@@ -27,6 +27,10 @@ trait QuestionnaireTestData {
 
   object OrganisationDetails {
 
+    val questionLtdOrgNameId    = Question.Id("a2dbf1a7-e31b-4c89-a755-21f0652ca9cc")
+    val questionLtdOrgAddressId = Question.Id("e1dbf1a3-e28b-1c83-a739-86f1319ca8cc")
+    val questionLtdOrgUtrId     = Question.Id("6be23951-ac69-47bf-aa56-86d3d690ee0b")
+
     val questionOrgType = Question.ChooseOneOfQuestion(
       Question.Id("cbdf264f-be39-4638-92ff-6ecd2259c662"),
       Wording("What is your organisation type?"),
@@ -68,11 +72,16 @@ trait QuestionnaireTestData {
         )
       ).some,
       hintText = StatementText("It is 8 characters. For example, 01234567 or AC012345.").some,
-      errorInfo = ErrorInfo("Your company registration number cannot be blank", "Enter your company registration number, like 01234567").some
+      errorInfo = ErrorInfo("Your company registration number cannot be blank", "Enter your company registration number, like 01234567").some,
+      clearQuestionsOnChange = Some(NonEmptyList.of(
+        questionLtdOrgNameId,
+        questionLtdOrgAddressId,
+        questionLtdOrgUtrId
+      ))
     )
 
     val questionLtdOrgName = Question.ConfirmCompanyNameQuestion(
-      Question.Id("a2dbf1a7-e31b-4c89-a755-21f0652ca9cc"),
+      questionLtdOrgNameId,
       Wording("Is this your company?"),
       statement = None,
       yesMarking = Mark.Pass,
@@ -81,7 +90,7 @@ trait QuestionnaireTestData {
     )
 
     val questionLtdOrgAddress = Question.ConfirmCompanyAddressQuestion(
-      Question.Id("e1dbf1a3-e28b-1c83-a739-86f1319ca8cc"),
+      questionLtdOrgAddressId,
       Wording("Is this the correct registered address for your company?"),
       statement = None,
       yesMarking = Mark.Pass,
@@ -90,7 +99,7 @@ trait QuestionnaireTestData {
     )
 
     val questionLtdOrgUtr = Question.TextQuestion(
-      Question.Id("6be23951-ac69-47bf-aa56-86d3d690ee0b"),
+      questionLtdOrgUtrId,
       Wording("What is your Corporation Tax Unique Taxpayer Reference (UTR)?"),
       statement = Statement(
         CompoundFragment(

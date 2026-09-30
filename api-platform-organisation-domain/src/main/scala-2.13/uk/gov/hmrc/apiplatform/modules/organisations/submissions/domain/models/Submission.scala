@@ -503,16 +503,16 @@ case class Submission(
 
   lazy val corporationTaxUtr: Option[String] = organisationType match {
     case Some(Organisation.OrganisationType.UkLimitedCompany)             => getTextAnswer("utrLtdId")
-    case Some(Organisation.OrganisationType.RegisteredSociety)            => getTextAnswer("utrRegSocietyId")
-    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk) => getTextAnswer("utrNonUkBranchId")
+    case Some(Organisation.OrganisationType.RegisteredSociety)            => getTextAnswer("utrLtdId")
+    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk) => getTextAnswer("utrLtdId")
     case Some(orgType) if orgType.isPartnership                           => getTextAnswer("utrPartnershipId")
     case _                                                                => None
   }
 
   lazy val websiteUrl: Option[String] = organisationType match {
     case Some(Organisation.OrganisationType.UkLimitedCompany)                => getTextAnswer("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.RegisteredSociety)               => getTextAnswer("websiteUrlRegSocietyId")
-    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getTextAnswer("websiteUrlNonUkBranchId")
+    case Some(Organisation.OrganisationType.RegisteredSociety)               => getTextAnswer("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getTextAnswer("websiteUrlLtdId")
     case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getTextAnswer("websiteUrlNonUkWithoutId")
     case Some(orgType) if orgType.isPartnership                              => getTextAnswer("websiteUrlPartnershipId")
     case _                                                                   => None
