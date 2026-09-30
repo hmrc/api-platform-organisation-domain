@@ -405,14 +405,17 @@ object Submission extends EnvReads {
   import GroupOfQuestionnaires.given
   import Question.given
 
-  given OFormat[CompanyDetails]      = Json.format[CompanyDetails]
-  given OFormat[AdditionalData]      = Json.format[AdditionalData]
-  given OFormat[Submission.Instance] = Json.format[Submission.Instance]
-  given OFormat[Submission]          = Json.format[Submission]
-  given OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]
-  given OFormat[MarkedSubmission]    = Json.format[MarkedSubmission]
+  given OFormat[CompanyDetails]           = Json.format[CompanyDetails]
+  given OFormat[AdditionalData]           = Json.format[AdditionalData]
+  given OFormat[Submission.Instance]      = Json.format[Submission.Instance]
+  given OFormat[AdditionalSubmissionData] = Json.format[AdditionalSubmissionData]
+  given OFormat[Submission]               = Json.format[Submission]
+  given OFormat[ExtendedSubmission]       = Json.format[ExtendedSubmission]
+  given OFormat[MarkedSubmission]         = Json.format[MarkedSubmission]
 
 }
+
+case class AdditionalSubmissionData(supportTicketId: Option[Int] = None, supportTicketRef: Option[String] = None)
 
 case class Submission(
     id: SubmissionId,
@@ -422,7 +425,8 @@ case class Submission(
     groups: NonEmptyList[GroupOfQuestionnaires],
     questionIdsOfInterest: QuestionIdsOfInterest,
     instances: NonEmptyList[Submission.Instance],
-    context: AskWhen.Context
+    context: AskWhen.Context,
+    additionalSubmissionData: Option[AdditionalSubmissionData] = None
   ) {
   lazy val allQuestionnaires: NonEmptyList[Questionnaire] = groups.flatMap(g => g.links)
 

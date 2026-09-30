@@ -403,14 +403,17 @@ object Submission extends EnvReads with NonEmptyListFormatters {
   import GroupOfQuestionnaires._
   import Question._
 
-  implicit val companyDetailsFormat: OFormat[CompanyDetails]          = Json.format[CompanyDetails]
-  implicit val additionalDataFormat: OFormat[AdditionalData]          = Json.format[AdditionalData]
-  implicit val submissionInstanceFormat: OFormat[Submission.Instance] = Json.format[Submission.Instance]
-  implicit val submissionFormat: OFormat[Submission]                  = Json.format[Submission]
-  implicit val extendedSubmissionFormat: OFormat[ExtendedSubmission]  = Json.format[ExtendedSubmission]
-  implicit val markedSubmissionFormat: OFormat[MarkedSubmission]      = Json.format[MarkedSubmission]
+  implicit val companyDetailsFormat: OFormat[CompanyDetails]                     = Json.format[CompanyDetails]
+  implicit val additionalDataFormat: OFormat[AdditionalData]                     = Json.format[AdditionalData]
+  implicit val submissionInstanceFormat: OFormat[Submission.Instance]            = Json.format[Submission.Instance]
+  implicit val additionalSubmissionDataFormat: OFormat[AdditionalSubmissionData] = Json.format[AdditionalSubmissionData]
+  implicit val submissionFormat: OFormat[Submission]                             = Json.format[Submission]
+  implicit val extendedSubmissionFormat: OFormat[ExtendedSubmission]             = Json.format[ExtendedSubmission]
+  implicit val markedSubmissionFormat: OFormat[MarkedSubmission]                 = Json.format[MarkedSubmission]
 
 }
+
+case class AdditionalSubmissionData(supportTicketId: Option[Int] = None, supportTicketRef: Option[String] = None)
 
 case class Submission(
     id: SubmissionId,
@@ -420,7 +423,8 @@ case class Submission(
     groups: NonEmptyList[GroupOfQuestionnaires],
     questionIdsOfInterest: QuestionIdsOfInterest,
     instances: NonEmptyList[Submission.Instance],
-    context: AskWhen.Context
+    context: AskWhen.Context,
+    additionalSubmissionData: Option[AdditionalSubmissionData] = None
   ) {
   lazy val allQuestionnaires: NonEmptyList[Questionnaire] = groups.flatMap(g => g.links)
 
