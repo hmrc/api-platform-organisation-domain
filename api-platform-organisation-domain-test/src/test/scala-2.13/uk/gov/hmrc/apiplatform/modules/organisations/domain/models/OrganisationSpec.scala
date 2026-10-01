@@ -18,14 +18,17 @@ package uk.gov.hmrc.apiplatform.modules.organisations.domain.models
 
 import java.time.Instant
 
+import org.scalatest.prop.TableDrivenPropertyChecks
+
 import play.api.libs.json.Json
 import uk.gov.hmrc.apiplatform.modules.common.domain.models.{OrganisationId, UserId}
 import uk.gov.hmrc.apiplatform.modules.common.utils.{BaseJsonFormattersSpec, FixedClock}
 
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborator.{Role, Roles}
 import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Collaborators.Member
+import uk.gov.hmrc.apiplatform.modules.organisations.domain.models.Organisation.OrganisationType
 
-class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
+class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock with TableDrivenPropertyChecks {
 
   def jsonOrganisation(
       organisationId: OrganisationId,
@@ -149,6 +152,30 @@ class OrganisationSpec extends BaseJsonFormattersSpec with FixedClock {
         websiteUrl = Some("https://www.bobsburgers.com"),
         address = Some(orgAddress)
       ))
+    }
+  }
+
+  "OrganisationType" should {
+    "displayText correctly" in {
+      val displayTexts =
+        Table(
+          ("organisationType", "displayText"),
+          (OrganisationType.UkLimitedCompany, "UK limited company"),
+          (OrganisationType.SoleTrader, "Sole trader"),
+          (OrganisationType.RegisteredSociety, "Registered society"),
+          (OrganisationType.CharitableIncorporatedOrganisation, "Charitable incorporated organisation"),
+          (OrganisationType.GeneralPartnership, "General partnership"),
+          (OrganisationType.LimitedLiabilityPartnership, "Limited liability partnership"),
+          (OrganisationType.LimitedPartnership, "Limited partnership"),
+          (OrganisationType.ScottishPartnership, "Scottish partnership"),
+          (OrganisationType.ScottishLimitedPartnership, "Scottish limited partnership"),
+          (OrganisationType.NonUkWithPlaceOfBusinessInUk, "Non-UK company with a branch or place of business in the UK"),
+          (OrganisationType.NonUkWithoutPlaceOfBusinessInUk, "Non-UK company without a branch or place of business in the UK")
+        )
+
+      forAll(displayTexts) { (organisationType, displayText) =>
+        organisationType.displayText shouldBe displayText
+      }
     }
   }
 }

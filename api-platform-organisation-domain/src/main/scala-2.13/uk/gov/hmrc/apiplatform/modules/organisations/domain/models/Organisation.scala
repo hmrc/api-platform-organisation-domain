@@ -52,6 +52,20 @@ object Organisation {
       this == OrganisationType.LimitedLiabilityPartnership ||
       this == OrganisationType.LimitedPartnership ||
       this == OrganisationType.ScottishLimitedPartnership
+
+    lazy val displayText: String = this match {
+      case OrganisationType.UkLimitedCompany                   => "UK limited company"
+      case OrganisationType.SoleTrader                         => "Sole trader"
+      case OrganisationType.RegisteredSociety                  => "Registered society"
+      case OrganisationType.CharitableIncorporatedOrganisation => "Charitable incorporated organisation"
+      case OrganisationType.GeneralPartnership                 => "General partnership"
+      case OrganisationType.LimitedLiabilityPartnership        => "Limited liability partnership"
+      case OrganisationType.LimitedPartnership                 => "Limited partnership"
+      case OrganisationType.ScottishPartnership                => "Scottish partnership"
+      case OrganisationType.ScottishLimitedPartnership         => "Scottish limited partnership"
+      case OrganisationType.NonUkWithPlaceOfBusinessInUk       => "Non-UK company with a branch or place of business in the UK"
+      case OrganisationType.NonUkWithoutPlaceOfBusinessInUk    => "Non-UK company without a branch or place of business in the UK"
+    }
   }
 
   object OrganisationType {
