@@ -142,7 +142,7 @@ object ValidateAnswers {
       validateStringField("addressLineOne", rawAnswers = rawAnswers, error = ValidationError("addressLineOne", "Address Line One required")),
       validateStringField("locality", rawAnswers = rawAnswers, error = ValidationError("locality", "Town or City required")),
       validateStringField("postcode", rawAnswers = rawAnswers, error = ValidationError("postcode", "Postcode required")),
-      validateStringField("country", rawAnswers = rawAnswers, error = ValidationError("country", "Country required"))
+      validateCountryField(rawAnswers)
     ).parMapN((addressLineOne, locality, postcode, country) =>
       ActualAnswer.InternationalAddressAnswer(InternationalAddress(
         Some(addressLineOne),
@@ -154,6 +154,16 @@ object ValidateAnswers {
         Some(country)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  private def validateCountryField(rawAnswers: Map[String, Seq[String]]): Either[Seq[ValidationError], String] = {
+    validateStringField("country", rawAnswers = rawAnswers, error = ValidationError("country", "Country required")).flatMap(country =>
+      if (Country.countries.map(_.name).contains(country)) {
+        Either.right(country)
+      } else {
+        Either.left(Seq(ValidationError("country", "Select a country from the list")))
+      }
+    )
   }
 
   def validateName(rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
