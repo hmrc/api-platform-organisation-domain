@@ -16,7 +16,7 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models
 
-import java.time.LocalDate
+import java.time.{Instant, LocalDate}
 sealed trait ActualAnswer
 
 case class RegisteredOfficeAddress(
@@ -50,7 +50,7 @@ case class ConfirmFullName(
 
 case class Attachment(
     fileRef: Option[String],
-    fileName: Option[String]
+    createdOn: Option[Instant]
   )
 
 object ActualAnswer {

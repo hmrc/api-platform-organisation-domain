@@ -694,7 +694,8 @@
         "websiteUrlNonUkBranchId" : "1eb0a74e-3bf0-4d53-992a-0fc14ff204fd",
         "websiteUrlNonUkWithoutId" : "1f9a80d7-720f-4574-b61f-f81bc3620ec5",
         "addressPartnershipId" : "ec330546-72a4-4d42-9d81-94417b1affe4",
-        "addressNonUkWithoutId" : "775b3592-1c45-4b10-b13c-5bf213c7f9c9"
+        "addressNonUkWithoutId" : "775b3592-1c45-4b10-b13c-5bf213c7f9c9",
+        "attachmentNonUkWithoutId" : "019feccc-4457-7605-bd0e-037821ff0123"
       }
     },
     "instances" : [ {

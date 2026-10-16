@@ -203,7 +203,9 @@ object ValidateAnswers {
       .map(fileRef =>
         ActualAnswer.AttachmentAnswer(Attachment(
           Some(fileRef),
-          rawAnswers.get("fileName").flatMap(_.headOption)
+          rawAnswers.get("createdOn")
+            .flatMap(_.headOption)
+            .flatMap(str => Try(java.time.Instant.parse(str)).toOption)
         ))
       ).leftMap(err => ValidationErrors(err: _*))
   }

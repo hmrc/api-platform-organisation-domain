@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils
 
+import java.time.Instant
+import java.time.temporal.ChronoUnit
 import scala.collection.immutable.ListMap
 
 import cats.data.NonEmptyList
@@ -463,7 +465,8 @@ trait QuestionnaireTestData {
       "websiteUrlNonUkBranchId"        -> OrganisationDetails.questionNonUkWithWebsite.id,
       "websiteUrlNonUkWithoutId"       -> OrganisationDetails.questionNonUkWithoutWebsite.id,
       "addressPartnershipId"           -> OrganisationDetails.questionPartnershipAddress.id,
-      "addressNonUkWithoutId"          -> OrganisationDetails.questionNonUkWithoutAddress.id
+      "addressNonUkWithoutId"          -> OrganisationDetails.questionNonUkWithoutAddress.id,
+      "attachmentNonUkWithoutId"       -> OrganisationDetails.questionNonUkWithoutAttachment.id
     )
   )
 
@@ -562,6 +565,30 @@ trait QuestionnaireTestData {
   )
 
   val sampleNonUkWithoutUkBranchAnswersToQuestions = sampleAnswersToQuestions2
+
+  val nowMinus4Days = Instant.now.minus(4, ChronoUnit.DAYS).truncatedTo(ChronoUnit.MILLIS)
+
+  val sampleNonUkWithoutUkBranchAnswersExpiredAttachment = Map(
+    (OrganisationDetails.questionOrgType.id                -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
+    (OrganisationDetails.questionNonUkWithoutOrgName.id    -> ActualAnswer.TextAnswer("Overseas SA")),
+    (OrganisationDetails.questionNonUkWithoutWebsite.id    -> ActualAnswer.TextAnswer("https://www.overseas-sa.com")),
+    (OrganisationDetails.questionNonUkWithoutAddress.id    -> ActualAnswer.InternationalAddressAnswer(InternationalAddress(
+      Some("1 Cr Victor Hugo"),
+      Some("Zone Industrielle"),
+      Some("Batiment B"),
+      Some("St Etienne"),
+      Some("Auvergne"),
+      Some("123456"),
+      Some("France")
+    ))),
+    (OrganisationDetails.questionNonUkWithoutAttachment.id -> ActualAnswer.AttachmentAnswer(
+      Attachment(fileRef = Some("e4993090-945c-4ab1-a7f8-0c9c236a17fb"), createdOn = Some(nowMinus4Days))
+    )),
+    (ResponsibleIndividualDetails.question1.id             -> ActualAnswer.SingleChoiceAnswer("Yes")),
+    (ResponsibleIndividualDetails.question3.id             -> ActualAnswer.TextAnswer("Managing Director")),
+    (ResponsibleIndividualDetails.question5.id             -> ActualAnswer.TextAnswer("01234 567890")),
+    (ResponsibleIndividualDetails.question6.id             -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+  )
 
   val sampleLlpAnswersToQuestions = Map(
     (OrganisationDetails.questionOrgType.id            -> ActualAnswer.SingleChoiceAnswer("Partnership")),
