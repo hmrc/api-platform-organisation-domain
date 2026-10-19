@@ -135,16 +135,18 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
   val reasons            = "some reasons"
   val warnings           = "this is a warning"
 
-  val createdSubmission             = aSubmission
-  val answeringSubmission           = createdSubmission.answeringWith(answersToQuestions)
-  val answeredSubmission            = createdSubmission.hasCompletelyAnsweredWith(AnsweringQuestionsHelper.answersForGroups(Mark.Pass)(answeringSubmission.groups))
-  val submittedSubmission           = Submission.submit(instant, "bob@example.com")(answeredSubmission)
-  val declinedSubmission            = Submission.decline(instant, gatekeeperUserName, reasons)(submittedSubmission)
-  val grantedSubmission             = Submission.grant(instant, gatekeeperUserName, None, None)(submittedSubmission)
-  val grantedWithWarningsSubmission = Submission.grantWithWarnings(instant, gatekeeperUserName, "Warnings", None)(submittedSubmission)
-  val pendingRISubmission           = Submission.pendingResponsibleIndividual(instant, "bob@example.com")(submittedSubmission)
-  val warningsSubmission            = Submission.warnings(instant, "bob@example.com")(submittedSubmission)
-  val failSubmission                = Submission.fail(instant, "bob@example.com")(submittedSubmission)
+  val createdSubmission                 = aSubmission
+  val answeringSubmission               = createdSubmission.answeringWith(answersToQuestions)
+  val answeredSubmission                = createdSubmission.hasCompletelyAnsweredWith(AnsweringQuestionsHelper.answersForGroups(Mark.Pass)(answeringSubmission.groups))
+  val submittedSubmission               = Submission.submit(instant, "bob@example.com")(answeredSubmission)
+  val declinedSubmission                = Submission.decline(instant, gatekeeperUserName, reasons)(submittedSubmission)
+  val grantedSubmission                 = Submission.grant(instant, gatekeeperUserName, None, None)(submittedSubmission)
+  val grantedWithWarningsSubmission     = Submission.grantWithWarnings(instant, gatekeeperUserName, "Warnings", None)(submittedSubmission)
+  val pendingRISubmission               = Submission.pendingResponsibleIndividual(instant, "bob@example.com")(submittedSubmission)
+  val warningsSubmission                = Submission.warnings(instant, "bob@example.com")(submittedSubmission)
+  val failSubmission                    = Submission.fail(instant, "bob@example.com")(submittedSubmission)
+  val answeredSubmissionWithAttachment  = createdSubmission.hasCompletelyAnsweredWith(sampleNonUkWithoutUkBranchAnswersExpiredAttachment)
+  val submittedSubmissionWithAttachment = Submission.submit(instant, "bob@example.com")(answeredSubmissionWithAttachment)
 
   val partialQuestionnaireProgress        = Map(
     ResponsibleIndividualDetails.questionnaire.id            -> QuestionnaireProgress(
@@ -245,7 +247,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
     val fullName        = FullName(Some("Bob"), Some("Roberts"))
     val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
-    val attachment      = Attachment(Some("12345678"), Some("tax-document.pdf"))
+    val attachment      = Attachment(Some("12345678"), Some(instant))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
@@ -307,7 +309,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
   val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
   val fullName        = FullName(Some("Bob"), Some("Roberts"))
   val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
-  val attachment      = Attachment(Some("12345678"), Some("tax-document.pdf"))
+  val attachment      = Attachment(Some("12345678"), Some(instant))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
     val answers: List[Option[ActualAnswer]] = question match {
