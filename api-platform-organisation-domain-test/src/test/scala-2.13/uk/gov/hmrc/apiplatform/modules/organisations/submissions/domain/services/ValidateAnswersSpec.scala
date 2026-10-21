@@ -313,10 +313,12 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val validNoAnswer: AnswerMatching  = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
       val failureMissing: AnswerMatching = Left(ValidationErrors(ValidationError("text", "Question requires an answer")))
       val failureChoice: AnswerMatching  = Left(ValidationErrors(ValidationError("isPresent", "Radio button selection required")))
+      val failureUrl: AnswerMatching     = Left(ValidationErrors(ValidationError("text", "Test.com is not a valid Url")))
       val cases                          = Table(
         ("description", "question", "answers", "expects"),
         ("Yes with valid URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq(website)), validAnswer),
         ("Yes with blank URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("")), failureMissing),
+        ("Yes with invalid URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("Test.com")), failureUrl),
         ("No ignores posted text", question, Map("isPresent" -> Seq("No"), "text" -> Seq("Test.com")), validNoAnswer),
         ("no choice selected", question, Map.empty[String, Seq[String]], failureChoice)
       )

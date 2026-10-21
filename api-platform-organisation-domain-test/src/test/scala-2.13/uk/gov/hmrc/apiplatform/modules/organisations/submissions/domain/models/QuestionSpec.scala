@@ -25,19 +25,15 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   def jsonTextQuestion(mark: String = "fail") = {
     s"""{
-       |  "id" : "b2dbf6a1-e39b-4c38-a524-19f0854ca1cc",
-       |  "wording" : "What is your organisation’s website address?",
-       |  "hintText" : {
-       |    "text" : "For example https://example.com",
-       |    "statementType" : "text"
-       |  },
+       |  "id" : "e3dbf6a2-e31b-4c89-a755-23f0652ab17c",
+       |  "wording" : "What is your organisation’s name?",
        |  "validation" : {
-       |    "validationType" : "url"
+       |    "validationType" : "organisationName"
        |  },
-       |  "absence" : [ "My organisation doesn't have a website", "$mark" ],
+       |  "absence" : [ "My organisation doesn't have a company registration", "$mark" ],
        |  "errorInfo" : {
-       |    "summary" : "Enter a website address in the correct format, like https://example.com",
-       |    "message" : "Enter a URL in the correct format, like https://example.com"
+       |    "summary" : "Your organsation name cannot be blank",
+       |    "message" : "Enter your organisation name"
        |  }
        |}""".stripMargin
   }
@@ -125,12 +121,12 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "question absence text" in {
     OrganisationDetails.questionLtdOrgName.absenceText shouldBe None
-    ResponsibleIndividualDetails.question6.absenceText shouldBe None
+    OrganisationDetails.questionSlpOrgName.absenceText shouldBe Some("My organisation doesn't have a company registration")
   }
 
   "question absence mark" in {
     OrganisationDetails.questionLtdOrgName.absenceMark shouldBe None
-    ResponsibleIndividualDetails.question6.absenceMark shouldBe None
+    OrganisationDetails.questionSlpOrgName.absenceMark shouldBe Some(Mark.Fail)
   }
 
   "question is optional" in {
@@ -150,9 +146,17 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     testFromJson[Question.ConditionalTextQuestion](jsonConditionalTextQuestion)(ResponsibleIndividualDetails.question6)
   }
 
+  "toJson for text question" in {
+    Json.prettyPrint(Json.toJson(OrganisationDetails.questionSlpOrgName)) shouldBe jsonTextQuestion()
+  }
+
+  "read text question from json" in {
+    testFromJson[Question.TextQuestion](jsonTextQuestion())(OrganisationDetails.questionSlpOrgName)
+  }
+
   "read invalid text question from json" in {
     intercept[Exception] {
-      Json.parse(jsonTextQuestion("invalid")).as[Question.TextQuestion]
+      testFromJson[Question.TextQuestion](jsonTextQuestion("invalid"))(OrganisationDetails.questionSlpOrgName)
     }
   }
 

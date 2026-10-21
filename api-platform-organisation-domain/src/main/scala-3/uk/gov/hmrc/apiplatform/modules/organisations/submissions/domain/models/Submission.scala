@@ -516,20 +516,13 @@ case class Submission(
   }
 
   lazy val websiteUrl: Option[String] = organisationType match {
-    case Some(Organisation.OrganisationType.UkLimitedCompany)                => getWebsiteAnswer("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.RegisteredSociety)               => getWebsiteAnswer("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getWebsiteAnswer("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getWebsiteAnswer("websiteUrlNonUkWithoutId")
-    case Some(orgType) if orgType.isPartnership                              => getWebsiteAnswer("websiteUrlPartnershipId")
-    case Some(Organisation.OrganisationType.SoleTrader)                      => getWebsiteAnswer("websiteUrlSoleTraderId")
+    case Some(Organisation.OrganisationType.UkLimitedCompany)                => getCompanyNameFromTextQuestion("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.RegisteredSociety)               => getCompanyNameFromTextQuestion("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getCompanyNameFromTextQuestion("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getCompanyNameFromTextQuestion("websiteUrlNonUkWithoutId")
+    case Some(orgType) if orgType.isPartnership                              => getCompanyNameFromTextQuestion("websiteUrlPartnershipId")
+    case Some(Organisation.OrganisationType.SoleTrader)                      => getCompanyNameFromTextQuestion("websiteUrlSoleTraderId")
     case _                                                                   => None
-  }
-
-  private def getWebsiteAnswer(key: String): Option[String] = {
-    ActualAnswersAsText(getAnswerToQuestionOfInterest(key)) match {
-      case "n/a" => None
-      case value => Some(value)
-    }
   }
 
   lazy val organisationAddress: Option[OrganisationAddress] = organisationType match {

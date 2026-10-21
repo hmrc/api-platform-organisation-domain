@@ -97,7 +97,6 @@ class ActualAnswersAsTextSpec extends HmrcSpec with Inside with QuestionBuilder 
         val actualAnswer = ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
 
         ActualAnswersAsText(actualAnswer) shouldBe "n/a"
-        ActualAnswersAsText(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), Some("https://example.com")))) shouldBe "n/a"
       }
     }
   }

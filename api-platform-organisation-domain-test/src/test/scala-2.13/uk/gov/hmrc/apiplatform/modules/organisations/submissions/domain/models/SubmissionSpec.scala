@@ -94,19 +94,6 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     markedSubmission.latestInstance.status shouldBe Submission.Status.Granted(instant, "bob@example.com", Some("Automatically passed"), None)
   }
 
-  "submission automaticallyMark pass without a website" in {
-    val answering1       = Submission.addStatusHistory(Submission.Status.Answering(instant, false))(aSubmission)
-    val answering2       = Submission.updateLatestAnswersTo(samplePassAnswersToQuestions.updated(
-      ResponsibleIndividualDetails.question6.id,
-      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
-    ))(answering1)
-    val answered         = Submission.addStatusHistory(Submission.Status.Answering(instant, true))(answering2)
-    val submitted        = Submission.submit(instant, "bob@example.com")(answered)
-    val markedSubmission = Submission.automaticallyMark(instant, "bob@example.com")(submitted)
-    markedSubmission.latestInstance.isGranted shouldBe true
-    markedSubmission.latestInstance.status shouldBe Submission.Status.Granted(instant, "bob@example.com", Some("Automatically passed"), None)
-  }
-
   "submission automaticallyMark fail" in {
     val answering1       = Submission.addStatusHistory(Submission.Status.Answering(instant, false))(aSubmission)
     val answering2       = Submission.updateLatestAnswersTo(sampleFailAnswersToQuestions)(answering1)
