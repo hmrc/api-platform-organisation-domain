@@ -478,7 +478,7 @@ case class Submission(
     }
   }
 
-  private def getCompanyNameFromTextQuestion(key: String): Option[String] = {
+  private def getTextFromQuestion(key: String): Option[String] = {
     ActualAnswersAsText(getAnswerToQuestionOfInterest(key)) match {
       case "n/a" => None
       case value => Some(value)
@@ -494,10 +494,10 @@ case class Submission(
 
   lazy val organisationName: Option[String] = {
     organisationType match {
-      case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getCompanyNameFromTextQuestion("organisationNameNonUkWithoutId")
-      case Some(Organisation.OrganisationType.GeneralPartnership)              => getCompanyNameFromTextQuestion("organisationNamePartnershipId")
-      case Some(Organisation.OrganisationType.ScottishPartnership)             => getCompanyNameFromTextQuestion("organisationNamePartnershipId")
-      case Some(Organisation.OrganisationType.SoleTrader)                      => getCompanyNameFromTextQuestion("organisationNameSoleTraderId")
+      case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getTextFromQuestion("organisationNameNonUkWithoutId")
+      case Some(Organisation.OrganisationType.GeneralPartnership)              => getTextFromQuestion("organisationNamePartnershipId")
+      case Some(Organisation.OrganisationType.ScottishPartnership)             => getTextFromQuestion("organisationNamePartnershipId")
+      case Some(Organisation.OrganisationType.SoleTrader)                      => getTextFromQuestion("organisationNameSoleTraderId")
       case _                                                                   => getCompanyNameFromAdditionalData()
     }
   }
@@ -516,12 +516,12 @@ case class Submission(
   }
 
   lazy val websiteUrl: Option[String] = organisationType match {
-    case Some(Organisation.OrganisationType.UkLimitedCompany)                => getCompanyNameFromTextQuestion("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.RegisteredSociety)               => getCompanyNameFromTextQuestion("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getCompanyNameFromTextQuestion("websiteUrlLtdId")
-    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getCompanyNameFromTextQuestion("websiteUrlNonUkWithoutId")
-    case Some(orgType) if orgType.isPartnership                              => getCompanyNameFromTextQuestion("websiteUrlPartnershipId")
-    case Some(Organisation.OrganisationType.SoleTrader)                      => getCompanyNameFromTextQuestion("websiteUrlSoleTraderId")
+    case Some(Organisation.OrganisationType.UkLimitedCompany)                => getTextFromQuestion("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.RegisteredSociety)               => getTextFromQuestion("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.NonUkWithPlaceOfBusinessInUk)    => getTextFromQuestion("websiteUrlLtdId")
+    case Some(Organisation.OrganisationType.NonUkWithoutPlaceOfBusinessInUk) => getTextFromQuestion("websiteUrlNonUkWithoutId")
+    case Some(orgType) if orgType.isPartnership                              => getTextFromQuestion("websiteUrlPartnershipId")
+    case Some(Organisation.OrganisationType.SoleTrader)                      => getTextFromQuestion("websiteUrlSoleTraderId")
     case _                                                                   => None
   }
 
