@@ -52,6 +52,23 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
        |}""".stripMargin
   }
 
+  val jsonConditionalTextQuestion =
+    """{
+      |  "id" : "b2dbf6a1-e39b-4c38-a524-19f0854ca1cc",
+      |  "wording" : "What is your organisation’s website address?",
+      |  "hintText" : {
+      |    "text" : "For example https://example.com",
+      |    "statementType" : "text"
+      |  },
+      |  "validation" : {
+      |    "validationType" : "url"
+      |  },
+      |  "errorInfo" : {
+      |    "summary" : "Enter a website address in the correct format, like https://example.com",
+      |    "message" : "Enter a URL in the correct format, like https://example.com"
+      |  }
+      |}""".stripMargin
+
   val jsonYesNoQuestion =
     """{
       |  "id" : "99d9362d-e365-4af1-aa46-88e95f9858f7",
@@ -149,13 +166,30 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     }
   }
 
-  "convert conditional text question to and from json" in {
-    val question: Question = ResponsibleIndividualDetails.question6
-    val json               = Json.toJson[Question](question)
+  "conditional text question is required" in {
+    ResponsibleIndividualDetails.question6.isOptional shouldBe false
+    ResponsibleIndividualDetails.question6.absenceText shouldBe None
+    ResponsibleIndividualDetails.question6.absenceMark shouldBe None
+  }
 
-    (json \ "questionType").as[String] shouldBe "conditionalText"
-    (json \ "absence").toOption shouldBe None
-    Json.fromJson[Question](json).get shouldBe question
+  "toJson for conditional text question" in {
+    Json.prettyPrint(Json.toJson(ResponsibleIndividualDetails.question6)) shouldBe jsonConditionalTextQuestion
+  }
+
+  "read conditional text question from json" in {
+    testFromJson[Question.ConditionalTextQuestion](jsonConditionalTextQuestion)(ResponsibleIndividualDetails.question6)
+  }
+
+  "toJson for conditional text question union" in {
+    val json = Json.parse(jsonConditionalTextQuestion).as[JsObject] + ("questionType" -> JsString("conditionalText"))
+
+    Json.toJson[Question](ResponsibleIndividualDetails.question6) shouldBe json
+  }
+
+  "read conditional text question union from json" in {
+    val json = Json.parse(jsonConditionalTextQuestion).as[JsObject] + ("questionType" -> JsString("conditionalText"))
+
+    testFromJson[Question](Json.stringify(json))(ResponsibleIndividualDetails.question6)
   }
 
   "toJson for yesno question" in {

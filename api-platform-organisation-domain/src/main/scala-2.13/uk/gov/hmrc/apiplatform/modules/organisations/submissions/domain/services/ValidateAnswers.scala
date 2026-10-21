@@ -56,12 +56,12 @@ object ValidateAnswers {
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
           .map(a => validateAgainstPossibleTextValidationRule(q, a.head))
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
-      case q: Question.ConditionalTextQuestion                                                  => validateConditionalText(q, rawAnswers)
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.InternationalAddressQuestion                                             => validateInternationalAddress(rawAnswers)
       case _: Question.NameQuestion                                                             => validateName(rawAnswers)
       case _: Question.ConfirmNameQuestion                                                      => validateConfirmName(rawAnswers)
+      case q: Question.ConditionalTextQuestion                                                  => validateConditionalText(q, rawAnswers)
       case _: Question.AttachmentQuestion                                                       => validateAttachment(rawAnswers)
       case q: Question.CompanyNumberQuestion                                                    =>
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
@@ -80,21 +80,6 @@ object ValidateAnswers {
       .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
       .map(ActualAnswer.TextAnswer(_))
       .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
-  }
-
-  def validateConditionalText(question: Question.ConditionalTextQuestion, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
-    rawAnswers.get("isPresent").filter(_.length == 1).flatMap(_.headOption) match {
-      case Some("Yes") =>
-        rawAnswers.get("text").filter(_.length == 1).flatMap(_.headOption).filter(_.trim.nonEmpty) match {
-          case Some(text) =>
-            question.validation.fold(text.asRight[String])(_.validate(text))
-              .map(value => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(value))))
-              .left.map(message => ValidationErrors(ValidationError("text", message)))
-          case None       => Left(ValidationErrors(ValidationError("text", "Question requires an answer")))
-        }
-      case Some("No")  => Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
-      case _           => Left(ValidationErrors(ValidationError("isPresent", "Radio button selection required")))
-    }
   }
 
   def validateAgainstPossibleAnswers(question: Question.MultiChoiceQuestion, rawAnswers: Set[String]): Either[ValidationErrors, ActualAnswer] = {
@@ -206,6 +191,23 @@ object ValidateAnswers {
         Some(lastName)
       ))
     ).leftMap(err => ValidationErrors(err: _*))
+  }
+
+  def validateConditionalText(question: Question.ConditionalTextQuestion, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    val trimmedAnswers = rawAnswers.filter { case (_, values) => values.size == 1 }.map { case (key, values) => key -> values.map(_.trim).filter(_.nonEmpty) }
+    val choiceError    = ValidationError("isPresent", "Radio button selection required")
+
+    validateStringField("isPresent", rawAnswers = trimmedAnswers, error = choiceError).flatMap {
+      case "Yes" =>
+        validateStringField("text", rawAnswers = trimmedAnswers, error = ValidationError("text", "Question requires an answer"))
+          .flatMap(text =>
+            question.validation.fold(text.asRight[String])(_.validate(text))
+              .left.map(msg => Seq(ValidationError("text", msg)))
+          )
+          .map(text => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(text))))
+      case "No"  => Either.right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
+      case _     => Either.left(Seq(choiceError))
+    }.leftMap(err => ValidationErrors(err: _*))
   }
 
   def validateCompanyNumber(rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {

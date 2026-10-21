@@ -94,6 +94,19 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     markedSubmission.latestInstance.status shouldBe Submission.Status.Granted(instant, "bob@example.com", Some("Automatically passed"), None)
   }
 
+  "submission automaticallyMark pass without a website" in {
+    val answering1       = Submission.addStatusHistory(Submission.Status.Answering(instant, false))(aSubmission)
+    val answering2       = Submission.updateLatestAnswersTo(samplePassAnswersToQuestions.updated(
+      ResponsibleIndividualDetails.question6.id,
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
+    ))(answering1)
+    val answered         = Submission.addStatusHistory(Submission.Status.Answering(instant, true))(answering2)
+    val submitted        = Submission.submit(instant, "bob@example.com")(answered)
+    val markedSubmission = Submission.automaticallyMark(instant, "bob@example.com")(submitted)
+    markedSubmission.latestInstance.isGranted shouldBe true
+    markedSubmission.latestInstance.status shouldBe Submission.Status.Granted(instant, "bob@example.com", Some("Automatically passed"), None)
+  }
+
   "submission automaticallyMark fail" in {
     val answering1       = Submission.addStatusHistory(Submission.Status.Answering(instant, false))(aSubmission)
     val answering2       = Submission.updateLatestAnswersTo(sampleFailAnswersToQuestions)(answering1)
@@ -275,30 +288,49 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     createdSubmission.answeringWith(sampleLlpAnswersToQuestions).websiteUrl shouldBe Some("https://www.dave.com")
     createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).websiteUrl shouldBe None
     createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).websiteUrl shouldBe Some("https://www.overseas-sa.com")
-    val soleTraderAnswers = Map(
-      OrganisationDetails.questionOrgType.id     -> ActualAnswer.SingleChoiceAnswer("Sole trader"),
-      OrganisationDetails.questionSoleWebsite.id -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))
-    )
-    createdSubmission.answeringWith(soleTraderAnswers).websiteUrl shouldBe Some("https://example.com")
-    createdSubmission.answeringWith(soleTraderAnswers.updated(
-      OrganisationDetails.questionSoleWebsite.id,
-      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
-    )).websiteUrl shouldBe None
-    val legacyAnswers     = samplePassAnswersToQuestions.updated(ResponsibleIndividualDetails.question6.id, ActualAnswer.TextAnswer("https://legacy.example.com"))
-    createdSubmission.answeringWith(legacyAnswers).websiteUrl shouldBe Some("https://legacy.example.com")
     answeringSubmission.websiteUrl shouldBe None
   }
 
-  "website answers pass automatic marking for Yes and No" in {
-    val websiteAnswers = List(
-      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com"))),
-      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
-    )
-    websiteAnswers.foreach { answer =>
-      val answers   = samplePassAnswersToQuestions.updated(ResponsibleIndividualDetails.question6.id, answer)
-      val submitted = createdSubmission.hasCompletelyAnsweredWith(answers).submitted
+  val websiteQuestions = List(
+    ("UK limited company", None, ResponsibleIndividualDetails.question6.id),
+    ("Registered society", None, ResponsibleIndividualDetails.question6.id),
+    ("Non-UK company with a branch or place of business in the UK", None, ResponsibleIndividualDetails.question6.id),
+    ("Non-UK company without a branch or place of business in the UK", None, OrganisationDetails.questionNonUkWithoutWebsite.id),
+    ("Sole trader", None, OrganisationDetails.questionSoleWebsite.id),
+    ("Partnership", Some("General partnership"), OrganisationDetails.questionPartnershipWebsite.id),
+    ("Partnership", Some("Limited liability partnership"), OrganisationDetails.questionPartnershipWebsite.id),
+    ("Partnership", Some("Limited partnership"), OrganisationDetails.questionPartnershipWebsite.id),
+    ("Partnership", Some("Scottish partnership"), OrganisationDetails.questionPartnershipWebsite.id),
+    ("Partnership", Some("Scottish limited partnership"), OrganisationDetails.questionPartnershipWebsite.id)
+  )
 
-      Submission.automaticallyMark(instant, "bob@example.com")(submitted).latestInstance.isGranted shouldBe true
+  websiteQuestions.foreach { case (organisationType, partnershipType, questionId) =>
+    val answers: Submission.AnswersToQuestions = Map(OrganisationDetails.questionOrgType.id -> ActualAnswer.SingleChoiceAnswer(organisationType)) ++
+      partnershipType.map(value => OrganisationDetails.questionPartnershipType.id -> ActualAnswer.SingleChoiceAnswer(value))
+    val website                                = "https://example.com"
+
+    s"websiteUrl for ${partnershipType.getOrElse(organisationType)}" should {
+      "return the website for Yes" in {
+        val websiteAnswer = ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(website)))
+
+        createdSubmission.answeringWith(answers.updated(questionId, websiteAnswer)).websiteUrl shouldBe Some(website)
+      }
+
+      "return none for No" in {
+        val websiteAnswer         = ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
+        val websiteAnswerWithText = ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), Some(website)))
+
+        createdSubmission.answeringWith(answers.updated(questionId, websiteAnswer)).websiteUrl shouldBe None
+        createdSubmission.answeringWith(answers.updated(questionId, websiteAnswerWithText)).websiteUrl shouldBe None
+      }
+
+      "return the website from a legacy text answer" in {
+        createdSubmission.answeringWith(answers.updated(questionId, ActualAnswer.TextAnswer(website))).websiteUrl shouldBe Some(website)
+      }
+
+      "return none without a website answer" in {
+        createdSubmission.answeringWith(answers).websiteUrl shouldBe None
+      }
     }
   }
 

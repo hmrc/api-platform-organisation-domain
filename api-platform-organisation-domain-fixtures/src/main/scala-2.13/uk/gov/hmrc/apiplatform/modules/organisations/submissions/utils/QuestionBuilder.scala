@@ -105,6 +105,10 @@ trait QuestionBuilder {
   def conditionalTextQuestion(counter: Int): Question.ConditionalTextQuestion = Question.ConditionalTextQuestion(
     Question.Id.random,
     Wording(s"Wording$counter"),
+    None,
+    None,
+    None,
+    None,
     None
   )
 

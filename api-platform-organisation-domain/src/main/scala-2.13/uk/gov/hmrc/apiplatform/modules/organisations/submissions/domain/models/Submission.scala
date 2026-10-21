@@ -525,9 +525,9 @@ case class Submission(
 
   private def getWebsiteAnswer(key: String): Option[String] = {
     getAnswerToQuestionOfInterest(key) match {
-      case ActualAnswer.ConditionalTextAnswer(value) => value.text
-      case ActualAnswer.TextAnswer(value)            => Some(value)
-      case _                                         => None
+      case ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), text)) => text
+      case ActualAnswer.TextAnswer(value)                                         => Some(value)
+      case _                                                                      => None
     }
   }
 

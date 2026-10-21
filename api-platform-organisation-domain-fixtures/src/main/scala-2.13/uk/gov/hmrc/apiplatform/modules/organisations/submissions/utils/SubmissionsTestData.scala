@@ -247,12 +247,12 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
     val fullName        = FullName(Some("Bob"), Some("Roberts"))
     val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+    val conditionalText = ConditionalText(Some("Yes"), Some("https://example.com"))
     val attachment      = Attachment(Some("12345678"), Some(instant))
 
     def passAnswer(question: Question): ActualAnswer = {
       question match {
         case Question.TextQuestion(id, wording, statement, _, _, _, _, absence, _, _, _)                                      => ActualAnswer.TextAnswer("some random text")
-        case _: Question.ConditionalTextQuestion                                                                              => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))
         case Question.ChooseOneOfQuestion(id, wording, statement, _, _, _, marking, absence, _, _, _)                         => ActualAnswer.SingleChoiceAnswer(marking.filter {
             case (pa, Mark.Pass) => true; case _ => false
           }.head._1.value)
@@ -266,6 +266,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _, _)                                              => ActualAnswer.InternationalAddressAnswer(intlAddress)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
         case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _, _)                                                       => ActualAnswer.ConfirmNameAnswer(confirmFullName)
+        case Question.ConditionalTextQuestion(_, _, _, _, _, _, _, _, _, _)                                                   => ActualAnswer.ConditionalTextAnswer(conditionalText)
         case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _, _)                                                     => ActualAnswer.CompanyNumberAnswer("12345678")
         case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _, _)                                                        => ActualAnswer.AttachmentAnswer(attachment)
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _, _)                 =>
@@ -310,6 +311,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
   val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
   val fullName        = FullName(Some("Bob"), Some("Roberts"))
   val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+  val conditionalText = ConditionalText(Some("Yes"), Some("https://example.com"))
   val attachment      = Attachment(Some("12345678"), Some(instant))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
@@ -351,13 +353,14 @@ trait AnsweringQuestionsHelper extends FixedClock {
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
       case Question.AcknowledgementOnly(id, _, _, _, _)                        => List(Some(ActualAnswer.AcknowledgedAnswer))
-      case _: Question.ConditionalTextQuestion                                 => List(Some(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))))
       case Question.ForwardToQuestion(id, _, _, _, _, _)                       => List(Some(ActualAnswer.AcknowledgedAnswer))
       case Question.DateQuestion(_, _, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
       case Question.AddressQuestion(_, _, _, _, _, _, _, _, _, _)              => List(Some(ActualAnswer.AddressAnswer(address)))
       case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.InternationalAddressAnswer(intlAddress)))
       case Question.NameQuestion(_, _, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.NameAnswer(fullName)))
       case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.ConfirmNameAnswer(confirmFullName)))
+      case Question.ConditionalTextQuestion(_, _, _, _, _, _, _, _, _, _)      =>
+        if (desiredMark == Mark.Pass) List(Some(ActualAnswer.ConditionalTextAnswer(conditionalText))) else List.empty[Option[ActualAnswer]]
       case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _, _)        => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
       case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _, _)           => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
 
@@ -404,13 +407,19 @@ trait MarkedSubmissionsTestData extends SubmissionsTestData with AnsweringQuesti
   val markedAnswers: Map[Question.Id, Mark] = Map(
     (OrganisationDetails.questionOrgType.id       -> Mark.Pass),
     (OrganisationDetails.questionCompanyNumber.id -> Mark.Pass),
-    (OrganisationDetails.questionLtdOrgName.id    -> Mark.Pass),
+    (OrganisationDetails.questionLtdOrgName.id    -> Mark.Fail),
     (ResponsibleIndividualDetails.question3.id    -> Mark.Pass),
     (ResponsibleIndividualDetails.question4.id    -> Mark.Pass),
-    (ResponsibleIndividualDetails.question6.id    -> Mark.Fail)
+    (ResponsibleIndividualDetails.question6.id    -> Mark.Pass)
   )
 
-  val markedSubmission = MarkedSubmission(submittedSubmission, markedAnswers)
+  val markedSubmission = MarkedSubmission(
+    Submission.updateLatestAnswersTo(submittedSubmission.latestInstance.answersToQuestions.updated(
+      OrganisationDetails.questionLtdOrgName.id,
+      ActualAnswer.SingleChoiceAnswer("No")
+    ))(submittedSubmission),
+    markedAnswers
+  )
 
   def markAsPass(requestedBy: String = "bob@example.com")(submission: Submission): MarkedSubmission = {
     val answers = answersForGroups(Mark.Pass)(submission.groups)

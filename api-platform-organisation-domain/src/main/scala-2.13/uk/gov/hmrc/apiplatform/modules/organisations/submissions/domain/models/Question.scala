@@ -224,11 +224,12 @@ object Question extends MapJsonFormatters {
       label: Option[Question.Label] = None,
       hintText: Option[NonBulletStatementFragment] = None,
       validation: Option[TextValidation] = None,
-      absence: Option[(String, Mark)] = None,
       errorInfo: Option[ErrorInfo] = None,
       summary: Option[String] = None,
       clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
-    ) extends Question with LabelAndHints with ErrorMessaging
+    ) extends Question with LabelAndHints with ErrorMessaging {
+    val absence = None
+  }
 
   case class AcknowledgementOnly(
       id: Question.Id,
