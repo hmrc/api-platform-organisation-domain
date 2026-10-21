@@ -48,6 +48,11 @@ case class ConfirmFullName(
     lastName: Option[String]
   )
 
+case class ConditionalText(
+    isPresent: Option[String],
+    text: Option[String]
+  )
+
 case class Attachment(
     fileRef: Option[String],
     createdOn: Option[Instant]
@@ -63,6 +68,7 @@ object ActualAnswer {
   case class InternationalAddressAnswer(value: InternationalAddress) extends ActualAnswer
   case class NameAnswer(value: FullName)                             extends ActualAnswer
   case class ConfirmNameAnswer(value: ConfirmFullName)               extends ActualAnswer
+  case class ConditionalTextAnswer(value: ConditionalText)           extends ActualAnswer
   case class CompanyNumberAnswer(value: String)                      extends ActualAnswer
   case class AttachmentAnswer(value: Attachment)                     extends ActualAnswer
   case object AcknowledgedAnswer                                     extends ActualAnswer

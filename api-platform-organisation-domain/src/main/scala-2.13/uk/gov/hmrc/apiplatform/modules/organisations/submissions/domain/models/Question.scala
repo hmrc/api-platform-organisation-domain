@@ -216,6 +216,20 @@ object Question extends MapJsonFormatters {
       clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
     ) extends Question with LabelAndHints with ErrorMessaging
 
+  case class ConditionalTextQuestion(
+      id: Question.Id,
+      wording: Wording,
+      statement: Option[Statement],
+      afterStatement: Option[Statement] = None,
+      label: Option[Question.Label] = None,
+      hintText: Option[NonBulletStatementFragment] = None,
+      validation: Option[TextValidation] = None,
+      absence: Option[(String, Mark)] = None,
+      errorInfo: Option[ErrorInfo] = None,
+      summary: Option[String] = None,
+      clearQuestionsOnChange: Option[NonEmptyList[Question.Id]] = None
+    ) extends Question with LabelAndHints with ErrorMessaging
+
   case class AcknowledgementOnly(
       id: Question.Id,
       wording: Wording,

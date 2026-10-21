@@ -56,6 +56,10 @@ object ValidateAnswers {
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
           .map(a => validateAgainstPossibleTextValidationRule(q, a.head))
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
+      case q: Question.ConditionalTextQuestion                                                  =>
+        rawAnswers.get(Question.answerKey).filter(_.length == 1)
+          .map(a => validateAgainstPossibleConditionalTextValidationRule(q, a.head))
+          .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.InternationalAddressQuestion                                             => validateInternationalAddress(rawAnswers)
@@ -78,6 +82,13 @@ object ValidateAnswers {
     question.validation
       .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
       .map(ActualAnswer.TextAnswer(_))
+      .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
+  }
+
+  def validateAgainstPossibleConditionalTextValidationRule(question: Question.ConditionalTextQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
+    question.validation
+      .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
+      .map(value => ActualAnswer.ConditionalTextAnswer(ConditionalText(isPresent = Some("Yes"), text = Some(value))))
       .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
   }
 
