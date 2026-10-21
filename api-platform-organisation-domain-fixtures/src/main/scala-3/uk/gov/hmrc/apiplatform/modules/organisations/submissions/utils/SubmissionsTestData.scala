@@ -359,8 +359,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
       case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.InternationalAddressAnswer(intlAddress)))
       case Question.NameQuestion(_, _, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.NameAnswer(fullName)))
       case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.ConfirmNameAnswer(confirmFullName)))
-      case Question.ConditionalTextQuestion(_, _, _, _, _, _, _, _, _, _)      =>
-        if (desiredMark == Mark.Pass) List(Some(ActualAnswer.ConditionalTextAnswer(conditionalText))) else List.empty[Option[ActualAnswer]]
+      case Question.ConditionalTextQuestion(_, _, _, _, _, _, _, _, _, _)      => List(Some(ActualAnswer.ConditionalTextAnswer(conditionalText)))
       case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _, _)        => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
       case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _, _)           => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
 
@@ -407,19 +406,13 @@ trait MarkedSubmissionsTestData extends SubmissionsTestData with AnsweringQuesti
   val markedAnswers: Map[Question.Id, Mark] = Map(
     (OrganisationDetails.questionOrgType.id       -> Mark.Pass),
     (OrganisationDetails.questionCompanyNumber.id -> Mark.Pass),
-    (OrganisationDetails.questionLtdOrgName.id    -> Mark.Fail),
+    (OrganisationDetails.questionLtdOrgName.id    -> Mark.Pass),
     (ResponsibleIndividualDetails.question3.id    -> Mark.Pass),
     (ResponsibleIndividualDetails.question4.id    -> Mark.Pass),
     (ResponsibleIndividualDetails.question6.id    -> Mark.Pass)
   )
 
-  val markedSubmission = MarkedSubmission(
-    Submission.updateLatestAnswersTo(submittedSubmission.latestInstance.answersToQuestions.updated(
-      OrganisationDetails.questionLtdOrgName.id,
-      ActualAnswer.SingleChoiceAnswer("No")
-    ))(submittedSubmission),
-    markedAnswers
-  )
+  val markedSubmission = MarkedSubmission(submittedSubmission, markedAnswers)
 
   def markAsPass(requestedBy: String = "bob@example.com")(submission: Submission): MarkedSubmission = {
     val answers = answersForGroups(Mark.Pass)(submission.groups)

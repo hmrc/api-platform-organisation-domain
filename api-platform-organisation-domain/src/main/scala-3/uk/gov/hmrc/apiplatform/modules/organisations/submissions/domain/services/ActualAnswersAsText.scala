@@ -33,7 +33,7 @@ object ActualAnswersAsText {
       Seq(add.addressLineOne, add.addressLineTwo, add.addressLineThree, add.locality, add.region, add.postalCode, add.country).filter(_.isDefined).map(_.get).mkString(", ")
     case ActualAnswer.NameAnswer(name)                                          => Seq(name.firstName, name.lastName).filter(_.isDefined).map(_.get).mkString(" ")
     case ActualAnswer.ConfirmNameAnswer(name)                                   => Seq(name.firstName, name.lastName).filter(_.isDefined).map(_.get).mkString(" ")
-    case ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), text)) => text.getOrElse("n/a")
+    case ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), text)) => text.getOrElse("")
     case ActualAnswer.ConditionalTextAnswer(_)                                  => "n/a"
     case ActualAnswer.CompanyNumberAnswer(value)                                => value
     case ActualAnswer.NoAnswer                                                  => "n/a"

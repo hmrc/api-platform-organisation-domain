@@ -524,10 +524,9 @@ case class Submission(
   }
 
   private def getWebsiteAnswer(key: String): Option[String] = {
-    getAnswerToQuestionOfInterest(key) match {
-      case ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), text)) => text
-      case ActualAnswer.TextAnswer(value)                                         => Some(value)
-      case _                                                                      => None
+    ActualAnswersAsText(getAnswerToQuestionOfInterest(key)) match {
+      case "n/a" => None
+      case value => Some(value)
     }
   }
 

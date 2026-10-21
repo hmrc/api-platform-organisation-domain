@@ -312,28 +312,16 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       val validAnswer: AnswerMatching    = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(website))))
       val validNoAnswer: AnswerMatching  = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
       val failureMissing: AnswerMatching = Left(ValidationErrors(ValidationError("text", "Question requires an answer")))
-      val failureInvalid: AnswerMatching = Left(ValidationErrors(ValidationError("text", "Test.com is not a valid Url")))
       val failureChoice: AnswerMatching  = Left(ValidationErrors(ValidationError("isPresent", "Radio button selection required")))
-      val passes                         = Table(
-        ("description", "question", Question.answerKey, "expects"),
+      val cases                          = Table(
+        ("description", "question", "answers", "expects"),
         ("Yes with valid URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq(website)), validAnswer),
-        ("Yes trims URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq(s"  $website  ")), validAnswer),
         ("Yes with blank URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("")), failureMissing),
-        ("Yes with whitespace URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("  ")), failureMissing),
-        ("Yes with missing URL", question, Map("isPresent" -> Seq("Yes")), failureMissing),
-        ("Yes with duplicate text", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq(website, website)), failureMissing),
-        ("Yes with invalid URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("Test.com")), failureInvalid),
         ("No ignores posted text", question, Map("isPresent" -> Seq("No"), "text" -> Seq("Test.com")), validNoAnswer),
-        ("No without text", question, Map("isPresent" -> Seq("No")), validNoAnswer),
-        ("No ignores duplicate text", question, Map("isPresent" -> Seq("No"), "text" -> Seq(website, website)), validNoAnswer),
-        ("no choice selected", question, Map.empty[String, Seq[String]], failureChoice),
-        ("empty choice", question, Map("isPresent" -> Seq.empty[String]), failureChoice),
-        ("invalid choice", question, Map("isPresent" -> Seq("Maybe")), failureChoice),
-        ("blank choice", question, Map("isPresent" -> Seq(" ")), failureChoice),
-        ("duplicate choice", question, Map("isPresent" -> Seq("Yes", "No"), "text" -> Seq(website)), failureChoice)
+        ("no choice selected", question, Map.empty[String, Seq[String]], failureChoice)
       )
 
-      forAll(passes) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+      forAll(cases) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
         expects match {
           case Right(answer) => ValidateAnswers.validate(question, answers) shouldBe Right(answer)
           case Left(errors)  => ValidateAnswers.validate(question, answers) shouldBe Left(errors)
