@@ -305,6 +305,33 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       }
     }
 
+    "for conditional text questions" in {
+      val question      = conditionalTextQuestion(1).copy(validation = Some(TextValidation.Url))
+      val website       = "https://example.com"
+      val yesAnswer     = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(website))))
+      val noAnswer      = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
+      val missingText   = Left(ValidationErrors(ValidationError("text", "Question requires an answer")))
+      val invalidChoice = Left(ValidationErrors(ValidationError("isPresent", "Radio button selection required")))
+      val passes        = Table(
+        ("description", "answers", "expects"),
+        ("Yes with valid URL", Map("isPresent" -> Seq("Yes"), "text" -> Seq(website)), yesAnswer),
+        ("Yes with blank URL", Map("isPresent" -> Seq("Yes"), "text" -> Seq("")), missingText),
+        ("Yes with whitespace URL", Map("isPresent" -> Seq("Yes"), "text" -> Seq("  ")), missingText),
+        ("Yes with missing URL", Map("isPresent" -> Seq("Yes")), missingText),
+        ("Yes with invalid URL", Map("isPresent" -> Seq("Yes"), "text" -> Seq("Test.com")), Left(ValidationErrors(ValidationError("text", "Test.com is not a valid Url")))),
+        ("No ignores posted text", Map("isPresent" -> Seq("No"), "text" -> Seq("Test.com")), noAnswer),
+        ("No without text", Map("isPresent" -> Seq("No")), noAnswer),
+        ("no choice selected", Map.empty[String, Seq[String]], invalidChoice),
+        ("empty choice", Map("isPresent" -> Seq.empty[String]), invalidChoice),
+        ("invalid choice", Map("isPresent" -> Seq("Maybe")), invalidChoice),
+        ("multiple choices", Map("isPresent" -> Seq("Yes", "No")), invalidChoice)
+      )
+
+      forAll(passes) { (_: String, answers: Map[String, Seq[String]], expects: Either[ValidationErrors, ActualAnswer]) =>
+        ValidateAnswers.validate(question, answers) shouldBe expects
+      }
+    }
+
     "for company number questions" in {
       val question = companyNumberQuestion(1)
       type AnswerMatching = Either[Unit, ActualAnswer]

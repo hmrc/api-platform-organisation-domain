@@ -396,6 +396,7 @@ object Question extends MapJsonFormatters {
   implicit val jsonFormatInternationalAddressQuestion: OFormat[InternationalAddressQuestion]   = Json.format[InternationalAddressQuestion]
   implicit val jsonFormatNameQuestion: OFormat[NameQuestion]                                   = Json.format[NameQuestion]
   implicit val jsonFormatConfirmNameQuestion: OFormat[ConfirmNameQuestion]                     = Json.format[ConfirmNameQuestion]
+  implicit val jsonFormatConditionalTextQuestion: OFormat[ConditionalTextQuestion]             = Json.format[ConditionalTextQuestion]
   implicit val jsonFormatCompanyNumberQuestion: OFormat[CompanyNumberQuestion]                 = Json.format[CompanyNumberQuestion]
   implicit val jsonFormatAttachmentQuestion: OFormat[AttachmentQuestion]                       = Json.format[AttachmentQuestion]
 
@@ -415,6 +416,7 @@ object Question extends MapJsonFormatters {
     .and[InternationalAddressQuestion]("internationalAddress")
     .and[NameQuestion]("name")
     .and[ConfirmNameQuestion]("confirmName")
+    .and[ConditionalTextQuestion]("conditionalText")
     .and[CompanyNumberQuestion]("companyNumber")
     .and[AttachmentQuestion]("attachment")
     .and[TextQuestion]("text")

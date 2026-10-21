@@ -40,6 +40,7 @@ object MarkAnswer {
     (question, answer) match {
       case (_, ActualAnswer.NoAnswer)                                                             => question.absenceMark.getOrElse(throw new RuntimeException(s"Failed with $answer for $question"))
       case (_: Question.TextQuestion, _: ActualAnswer.TextAnswer)                                 => Mark.Pass
+      case (_: Question.ConditionalTextQuestion, _: ActualAnswer.ConditionalTextAnswer)           => Mark.Pass
       case (q: Question.MultiChoiceQuestion, a: ActualAnswer.MultipleChoiceAnswer)                => markMultiChoiceAnswer(q, a)
       case (q: Question.SingleChoiceQuestion, a: ActualAnswer.SingleChoiceAnswer)                 => markSingleChoiceAnswer(q, a)
       case (_: Question.AcknowledgementOnly, ActualAnswer.AcknowledgedAnswer)                     => Mark.Pass

@@ -29,6 +29,11 @@ class ActualAnswerSpec extends HmrcSpec with TableDrivenPropertyChecks {
     ("ActualAnswer", "Expected Json"),
     (ActualAnswer.SingleChoiceAnswer("abc"), Json.parse("""{"answerType":"singleChoice","value":"abc"}""")),
     (ActualAnswer.MultipleChoiceAnswer(Set("Bobby", "Freddy")), Json.parse("""{"answerType":"multipleChoice","values":["Bobby","Freddy"]}""")),
+    (
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com"))),
+      Json.parse("""{"answerType":"conditionalText","value":{"isPresent":"Yes","text":"https://example.com"}}""")
+    ),
+    (ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)), Json.parse("""{"answerType":"conditionalText","value":{"isPresent":"No"}}""")),
     (ActualAnswer.AcknowledgedAnswer, Json.parse("""{"answerType":"acknowledged"}""")),
     (ActualAnswer.NoAnswer, Json.parse("""{"answerType":"noAnswer"}"""))
   )

@@ -23,6 +23,16 @@ import uk.gov.hmrc.apiplatform.modules.organisations.submissions.utils.Submissio
 
 class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
+  val textQuestion = Question.TextQuestion(
+    ResponsibleIndividualDetails.question6.id,
+    ResponsibleIndividualDetails.question6.wording,
+    statement = None,
+    hintText = ResponsibleIndividualDetails.question6.hintText,
+    validation = ResponsibleIndividualDetails.question6.validation,
+    absence = Some(("My organisation doesn't have a website", Mark.Fail)),
+    errorInfo = ResponsibleIndividualDetails.question6.errorInfo
+  )
+
   def jsonTextQuestion(mark: String = "fail") = {
     s"""{
        |  "id" : "b2dbf6a1-e39b-4c38-a524-19f0854ca1cc",
@@ -108,12 +118,12 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
 
   "question absence text" in {
     OrganisationDetails.questionLtdOrgName.absenceText shouldBe None
-    ResponsibleIndividualDetails.question6.absenceText shouldBe Some("My organisation doesn't have a website")
+    textQuestion.absenceText shouldBe Some("My organisation doesn't have a website")
   }
 
   "question absence mark" in {
     OrganisationDetails.questionLtdOrgName.absenceMark shouldBe None
-    ResponsibleIndividualDetails.question6.absenceMark shouldBe Some(Mark.Fail)
+    textQuestion.absenceMark shouldBe Some(Mark.Fail)
   }
 
   "question is optional" in {
@@ -126,17 +136,26 @@ class QuestionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
   }
 
   "toJson for text question" in {
-    Json.prettyPrint(Json.toJson(ResponsibleIndividualDetails.question6)) shouldBe jsonTextQuestion()
+    Json.prettyPrint(Json.toJson(textQuestion)) shouldBe jsonTextQuestion()
   }
 
   "read text question from json" in {
-    testFromJson[Question.TextQuestion](jsonTextQuestion())(ResponsibleIndividualDetails.question6)
+    testFromJson[Question.TextQuestion](jsonTextQuestion())(textQuestion)
   }
 
   "read invalid text question from json" in {
     intercept[Exception] {
-      testFromJson[Question.TextQuestion](jsonTextQuestion("invalid"))(ResponsibleIndividualDetails.question6)
+      testFromJson[Question.TextQuestion](jsonTextQuestion("invalid"))(textQuestion)
     }
+  }
+
+  "convert conditional text question to and from json" in {
+    val question: Question = ResponsibleIndividualDetails.question6
+    val json               = Json.toJson[Question](question)
+
+    (json \ "questionType").as[String] shouldBe "conditionalText"
+    (json \ "absence").toOption shouldBe None
+    Json.fromJson[Question](json).get shouldBe question
   }
 
   "toJson for yesno question" in {

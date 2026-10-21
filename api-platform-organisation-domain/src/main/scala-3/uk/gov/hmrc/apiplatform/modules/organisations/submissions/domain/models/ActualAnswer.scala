@@ -87,6 +87,8 @@ object ActualAnswer {
   given OFormat[ConfirmFullName]            = Json.format[ConfirmFullName]
   given OFormat[NameAnswer]                 = Json.format[NameAnswer]
   given OFormat[ConfirmNameAnswer]          = Json.format[ConfirmNameAnswer]
+  given OFormat[ConditionalText]            = Json.format[ConditionalText]
+  given OFormat[ConditionalTextAnswer]      = Json.format[ConditionalTextAnswer]
   given OFormat[CompanyNumberAnswer]        = Json.format[CompanyNumberAnswer]
   given OFormat[Attachment]                 = Json.format[Attachment]
   given OFormat[AttachmentAnswer]           = Json.format[AttachmentAnswer]
@@ -101,6 +103,7 @@ object ActualAnswer {
     .and[InternationalAddressAnswer]("internationalAddress")
     .and[NameAnswer]("name")
     .and[ConfirmNameAnswer]("confirmName")
+    .and[ConditionalTextAnswer]("conditionalText")
     .and[CompanyNumberAnswer]("companyNumber")
     .and[AttachmentAnswer]("attachment")
     .and[TextAnswer]("text")

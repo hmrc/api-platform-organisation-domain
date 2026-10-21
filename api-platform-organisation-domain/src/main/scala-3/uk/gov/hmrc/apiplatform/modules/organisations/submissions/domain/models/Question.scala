@@ -397,6 +397,7 @@ object Question {
   given OFormat[InternationalAddressQuestion]  = Json.format[InternationalAddressQuestion]
   given OFormat[NameQuestion]                  = Json.format[NameQuestion]
   given OFormat[ConfirmNameQuestion]           = Json.format[ConfirmNameQuestion]
+  given OFormat[ConditionalTextQuestion]       = Json.format[ConditionalTextQuestion]
   given OFormat[CompanyNumberQuestion]         = Json.format[CompanyNumberQuestion]
   given OFormat[AttachmentQuestion]            = Json.format[AttachmentQuestion]
 
@@ -416,6 +417,7 @@ object Question {
     .and[InternationalAddressQuestion]("internationalAddress")
     .and[NameQuestion]("name")
     .and[ConfirmNameQuestion]("confirmName")
+    .and[ConditionalTextQuestion]("conditionalText")
     .and[CompanyNumberQuestion]("companyNumber")
     .and[AttachmentQuestion]("attachment")
     .and[TextQuestion]("text")

@@ -252,6 +252,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     def passAnswer(question: Question): ActualAnswer = {
       question match {
         case Question.TextQuestion(id, wording, statement, _, _, _, _, absence, _, _, _)                                      => ActualAnswer.TextAnswer("some random text")
+        case _: Question.ConditionalTextQuestion                                                                              => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))
         case Question.ChooseOneOfQuestion(id, wording, statement, _, _, _, marking, absence, _, _, _)                         => ActualAnswer.SingleChoiceAnswer(marking.filter {
             case (_, Mark.Pass) => true; case _ => false
           }.head._1.value)
@@ -350,6 +351,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
           List(Some(ActualAnswer.NoAnswer)) // Cos we can't do anything else
 
       case Question.AcknowledgementOnly(id, _, _, _, _)                        => List(Some(ActualAnswer.AcknowledgedAnswer))
+      case _: Question.ConditionalTextQuestion                                 => List(Some(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))))
       case Question.ForwardToQuestion(id, _, _, _, _, _)                       => List(Some(ActualAnswer.AcknowledgedAnswer))
       case Question.DateQuestion(_, _, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.DateAnswer(now.toLocalDate)))
       case Question.AddressQuestion(_, _, _, _, _, _, _, _, _, _)              => List(Some(ActualAnswer.AddressAnswer(address)))

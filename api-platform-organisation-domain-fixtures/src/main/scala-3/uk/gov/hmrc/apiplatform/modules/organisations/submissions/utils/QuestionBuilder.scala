@@ -117,6 +117,12 @@ trait QuestionBuilder {
     None
   )
 
+  def conditionalTextQuestion(counter: Int): Question.ConditionalTextQuestion = Question.ConditionalTextQuestion(
+    Question.Id.random,
+    Wording(s"Wording$counter"),
+    None
+  )
+
   def companyNumberQuestion(counter: Int): Question.CompanyNumberQuestion = Question.CompanyNumberQuestion(
     Question.Id.random,
     Wording(s"Wording$counter"),

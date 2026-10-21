@@ -87,6 +87,8 @@ object ActualAnswer {
   implicit val jfConfirmFullName: OFormat[ConfirmFullName]                       = Json.format[ConfirmFullName]
   implicit val jfNameAnswer: OFormat[NameAnswer]                                 = Json.format[NameAnswer]
   implicit val jfConfirmNameAnswer: OFormat[ConfirmNameAnswer]                   = Json.format[ConfirmNameAnswer]
+  implicit val jfConditionalText: OFormat[ConditionalText]                       = Json.format[ConditionalText]
+  implicit val jfConditionalTextAnswer: OFormat[ConditionalTextAnswer]           = Json.format[ConditionalTextAnswer]
   implicit val jfCompanyNumberAnswer: OFormat[CompanyNumberAnswer]               = Json.format[CompanyNumberAnswer]
   implicit val jfAttachment: OFormat[Attachment]                                 = Json.format[Attachment]
   implicit val jfAttachmentAnswer: OFormat[AttachmentAnswer]                     = Json.format[AttachmentAnswer]
@@ -101,6 +103,7 @@ object ActualAnswer {
     .and[InternationalAddressAnswer]("internationalAddress")
     .and[NameAnswer]("name")
     .and[ConfirmNameAnswer]("confirmName")
+    .and[ConditionalTextAnswer]("conditionalText")
     .and[CompanyNumberAnswer]("companyNumber")
     .and[AttachmentAnswer]("attachment")
     .and[TextAnswer]("text")

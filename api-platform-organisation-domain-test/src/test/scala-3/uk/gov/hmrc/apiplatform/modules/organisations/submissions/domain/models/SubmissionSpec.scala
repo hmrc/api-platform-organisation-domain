@@ -275,7 +275,31 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     createdSubmission.answeringWith(sampleLlpAnswersToQuestions).websiteUrl shouldBe Some("https://www.dave.com")
     createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).websiteUrl shouldBe None
     createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).websiteUrl shouldBe Some("https://www.overseas-sa.com")
+    val soleTraderAnswers = Map(
+      OrganisationDetails.questionOrgType.id     -> ActualAnswer.SingleChoiceAnswer("Sole trader"),
+      OrganisationDetails.questionSoleWebsite.id -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))
+    )
+    createdSubmission.answeringWith(soleTraderAnswers).websiteUrl shouldBe Some("https://example.com")
+    createdSubmission.answeringWith(soleTraderAnswers.updated(
+      OrganisationDetails.questionSoleWebsite.id,
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
+    )).websiteUrl shouldBe None
+    val legacyAnswers     = samplePassAnswersToQuestions.updated(ResponsibleIndividualDetails.question6.id, ActualAnswer.TextAnswer("https://legacy.example.com"))
+    createdSubmission.answeringWith(legacyAnswers).websiteUrl shouldBe Some("https://legacy.example.com")
     answeringSubmission.websiteUrl shouldBe None
+  }
+
+  "website answers pass automatic marking for Yes and No" in {
+    val websiteAnswers = List(
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com"))),
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
+    )
+    websiteAnswers.foreach { answer =>
+      val answers   = samplePassAnswersToQuestions.updated(ResponsibleIndividualDetails.question6.id, answer)
+      val submitted = createdSubmission.hasCompletelyAnsweredWith(answers).submitted
+
+      Submission.automaticallyMark(instant, "bob@example.com")(submitted).latestInstance.isGranted shouldBe true
+    }
   }
 
   "organisationAddress for UK company" in {

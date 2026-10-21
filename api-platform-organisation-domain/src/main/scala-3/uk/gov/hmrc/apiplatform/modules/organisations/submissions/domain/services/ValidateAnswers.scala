@@ -24,7 +24,6 @@ import cats.implicits.*
 import play.api.libs.json.{Json, OFormat}
 
 import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.models.*
-import uk.gov.hmrc.apiplatform.modules.organisations.submissions.domain.services.ValidateAnswers.validateAgainstPossibleConditionalTextValidationRule
 
 case class ValidationErrors(errors: ValidationError*)
 case class ValidationError(key: String = Question.answerKey, message: String)
@@ -57,10 +56,7 @@ object ValidateAnswers {
         rawAnswers.get(Question.answerKey).filter(_.length == 1)
           .map(a => validateAgainstPossibleTextValidationRule(q, a.head))
           .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
-      case q: Question.ConditionalTextQuestion                                                  =>
-        rawAnswers.get(Question.answerKey).filter(_.length == 1)
-          .map(a => validateAgainstPossibleConditionalTextValidationRule(q, a.head))
-          .getOrElse(ValidationErrors(ValidationError(message = "Question requires an answer")).asLeft)
+      case q: Question.ConditionalTextQuestion                                                  => validateConditionalText(q, rawAnswers)
       case _: Question.DateQuestion                                                             => validateDate(rawAnswers)
       case _: Question.AddressQuestion                                                          => validateAddress(rawAnswers)
       case _: Question.InternationalAddressQuestion                                             => validateInternationalAddress(rawAnswers)
@@ -86,11 +82,19 @@ object ValidateAnswers {
       .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
   }
 
-  def validateAgainstPossibleConditionalTextValidationRule(question: Question.ConditionalTextQuestion, rawAnswer: String): Either[ValidationErrors, ActualAnswer] = {
-    question.validation
-      .fold(rawAnswer.asRight[String])(v => v.validate(rawAnswer))
-      .map(value => ActualAnswer.ConditionalTextAnswer(ConditionalText(isPresent = Some("Yes"), text = Some(value))))
-      .left.map(msg => ValidationErrors(ValidationError(Question.answerKey, msg)))
+  def validateConditionalText(question: Question.ConditionalTextQuestion, rawAnswers: Map[String, Seq[String]]): Either[ValidationErrors, ActualAnswer] = {
+    rawAnswers.get("isPresent").filter(_.length == 1).flatMap(_.headOption) match {
+      case Some("Yes") =>
+        rawAnswers.get("text").filter(_.length == 1).flatMap(_.headOption).filter(_.trim.nonEmpty) match {
+          case Some(text) =>
+            question.validation.fold(text.asRight[String])(_.validate(text))
+              .map(value => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(value))))
+              .left.map(message => ValidationErrors(ValidationError("text", message)))
+          case None       => Left(ValidationErrors(ValidationError("text", "Question requires an answer")))
+        }
+      case Some("No")  => Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
+      case _           => Left(ValidationErrors(ValidationError("isPresent", "Radio button selection required")))
+    }
   }
 
   def validateAgainstPossibleAnswers(question: Question.MultiChoiceQuestion, rawAnswers: Set[String]): Either[ValidationErrors, ActualAnswer] = {
