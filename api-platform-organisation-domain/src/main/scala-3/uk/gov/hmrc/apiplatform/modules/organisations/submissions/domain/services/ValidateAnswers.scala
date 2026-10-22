@@ -79,7 +79,10 @@ object ValidateAnswers {
         validateStringField("text", rawAnswers = rawAnswers, error = textError)
           .flatMap(text =>
             if (text.isBlank) Seq(textError).asLeft
-            else question.validation.fold(text.asRight[String])(_.validate(text)).left.map(msg => Seq(ValidationError("text", msg)))
+            else question.validation
+              .fold(text.asRight[String])(_.validate(text))
+              .left
+              .map(msg => Seq(ValidationError("text", msg)))
           )
           .map(text => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(text))))
       case "No"  => ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)).asRight
