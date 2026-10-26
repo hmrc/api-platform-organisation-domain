@@ -84,5 +84,20 @@ class ActualAnswersAsTextSpec extends HmrcSpec with Inside with QuestionBuilder 
         ActualAnswersAsText(actualAnswer) shouldBe s"$firstName $lastName"
       }
     }
+
+    "conditional text answer" should {
+      "return website for Yes" in new Setup {
+        val website      = "https://example.com"
+        val actualAnswer = ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(website)))
+
+        ActualAnswersAsText(actualAnswer) shouldBe website
+      }
+
+      "return n/a for No" in new Setup {
+        val actualAnswer = ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
+
+        ActualAnswersAsText(actualAnswer) shouldBe "n/a"
+      }
+    }
   }
 }

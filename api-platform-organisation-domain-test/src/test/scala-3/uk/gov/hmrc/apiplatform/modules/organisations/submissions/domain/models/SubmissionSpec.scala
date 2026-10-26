@@ -275,6 +275,21 @@ class SubmissionSpec extends BaseJsonFormattersSpec with SubmissionsTestData {
     createdSubmission.answeringWith(sampleLlpAnswersToQuestions).websiteUrl shouldBe Some("https://www.dave.com")
     createdSubmission.answeringWith(sampleGeneralPartnershipAnswersToQuestions).websiteUrl shouldBe None
     createdSubmission.answeringWith(sampleNonUkWithoutUkBranchAnswersToQuestions).websiteUrl shouldBe Some("https://www.overseas-sa.com")
+    createdSubmission.answeringWith(samplePassAnswersToQuestions.updated(
+      OrganisationDetails.questionOrgType.id,
+      ActualAnswer.SingleChoiceAnswer("Sole trader")
+    ).updated(
+      OrganisationDetails.questionSoleWebsite.id,
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))
+    )).websiteUrl shouldBe Some("https://example.com")
+    createdSubmission.answeringWith(samplePassAnswersToQuestions.updated(
+      ResponsibleIndividualDetails.question6.id,
+      ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))
+    )).websiteUrl shouldBe None
+    createdSubmission.answeringWith(samplePassAnswersToQuestions.updated(
+      ResponsibleIndividualDetails.question6.id,
+      ActualAnswer.TextAnswer("https://example.com")
+    )).websiteUrl shouldBe Some("https://example.com")
     answeringSubmission.websiteUrl shouldBe None
   }
 

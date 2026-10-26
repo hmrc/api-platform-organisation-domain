@@ -122,6 +122,15 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your organsation name cannot be blank", "Enter your organisation name").some
     )
 
+    val questionSoleWebsite = Question.ConditionalTextQuestion(
+      Question.Id("1ea720a2-7000-4d43-ae92-43d7e84c9b22"),
+      Wording("What is your organisation’s website address?"),
+      statement = None,
+      hintText = StatementText("For example https://example.com").some,
+      validation = TextValidation.Url.some,
+      errorInfo = ErrorInfo("Enter a website address in the correct format, like https://example.com", "Enter a URL in the correct format, like https://example.com").some
+    )
+
     val questionDate = Question.DateQuestion(
       Question.Id("0622cacd-e670-4a6c-879a-8fe2d54e4d3d"),
       Wording("What date was your organisation founded?"),
@@ -257,12 +266,11 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your Corporation Tax Unique Taxpayer Reference cannot be blank", "Enter your Corporation Tax Unique Taxpayer Reference, like 1234567890").some
     )
 
-    val questionPartnershipWebsite = Question.TextQuestion(
+    val questionPartnershipWebsite = Question.ConditionalTextQuestion(
       Question.Id("8beee360-c221-43f0-bb74-9ac61905818b"),
       Wording("What is your partnership’s website address?"),
       statement = None,
       hintText = StatementText("For example https://example.com").some,
-      absence = ("My organisation doesn't have a website", Mark.Fail).some,
       validation = TextValidation.Url.some,
       errorInfo = ErrorInfo("Enter a website address in the correct format, like https://example.com", "Enter a URL in the correct format, like https://example.com").some
     )
@@ -281,12 +289,11 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your Corporation Tax Unique Taxpayer Reference cannot be blank", "Enter your Corporation Tax Unique Taxpayer Reference, like 1234567890").some
     )
 
-    val questionRsWebsite = Question.TextQuestion(
+    val questionRsWebsite = Question.ConditionalTextQuestion(
       Question.Id("4b784dc1-3173-483d-934b-87b6763361ba"),
       Wording("What is your registered society’s website address?"),
       statement = None,
       hintText = StatementText("For example https://example.com").some,
-      absence = ("My organisation doesn't have a website", Mark.Fail).some,
       validation = TextValidation.Url.some,
       errorInfo = ErrorInfo("Enter a website address in the correct format, like https://example.com", "Enter a URL in the correct format, like https://example.com").some
     )
@@ -298,22 +305,20 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Your Corporation Tax Unique Taxpayer Reference cannot be blank", "Enter your Corporation Tax Unique Taxpayer Reference, like 1234567890").some
     )
 
-    val questionNonUkWithWebsite = Question.TextQuestion(
+    val questionNonUkWithWebsite = Question.ConditionalTextQuestion(
       Question.Id("1eb0a74e-3bf0-4d53-992a-0fc14ff204fd"),
       Wording("What is the company’s website address?"),
       statement = None,
       hintText = StatementText("For example https://example.com").some,
-      absence = ("My organisation doesn't have a website", Mark.Fail).some,
       validation = TextValidation.Url.some,
       errorInfo = ErrorInfo("Enter a website address in the correct format, like https://example.com", "Enter a URL in the correct format, like https://example.com").some
     )
 
-    val questionNonUkWithoutWebsite = Question.TextQuestion(
+    val questionNonUkWithoutWebsite = Question.ConditionalTextQuestion(
       Question.Id("1f9a80d7-720f-4574-b61f-f81bc3620ec5"),
       Wording("What is the company’s website address?"),
       statement = None,
       hintText = StatementText("For example https://example.com").some,
-      absence = ("My organisation doesn't have a website", Mark.Fail).some,
       validation = TextValidation.Url.some,
       errorInfo = ErrorInfo("Enter a website address in the correct format, like https://example.com", "Enter a URL in the correct format, like https://example.com").some
     )
@@ -333,6 +338,7 @@ trait QuestionnaireTestData {
         QuestionItem(questionAcknowledgement, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionForwardToQuestion, AskWhen.AskWhenAnswer(questionOrgType, "UK limited company")),
         QuestionItem(questionSoleName, AskWhen.AskWhenAnswer(questionOrgType, "Sole trader")),
+        QuestionItem(questionSoleWebsite, AskWhen.AskWhenAnswer(questionOrgType, "Sole trader")),
         QuestionItem(questionRsOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Registered society")),
         QuestionItem(questionCioOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Charitable Incorporated Organisation (CIO)")),
         QuestionItem(questionNonUkWithOrgName, AskWhen.AskWhenAnswer(questionOrgType, "Non-UK company with a branch or place of business in the UK")),
@@ -411,12 +417,11 @@ trait QuestionnaireTestData {
       errorInfo = ErrorInfo("Enter a telephone number", "Telephone number cannot be blank").some
     )
 
-    val question6 = Question.TextQuestion(
+    val question6 = Question.ConditionalTextQuestion(
       Question.Id("b2dbf6a1-e39b-4c38-a524-19f0854ca1cc"),
       Wording("What is your organisation’s website address?"),
       statement = None,
       hintText = StatementText("For example https://example.com").some,
-      absence = ("My organisation doesn't have a website", Mark.Fail).some,
       validation = TextValidation.Url.some,
       errorInfo = ErrorInfo("Enter a website address in the correct format, like https://example.com", "Enter a URL in the correct format, like https://example.com").some
     )
@@ -460,6 +465,7 @@ trait QuestionnaireTestData {
       "utrRegSocietyId"                -> OrganisationDetails.questionRsUtr.id,
       "utrNonUkBranchId"               -> OrganisationDetails.questionNonUkWithUtr.id,
       "websiteUrlLtdId"                -> ResponsibleIndividualDetails.question6.id,
+      "websiteUrlSoleTraderId"         -> OrganisationDetails.questionSoleWebsite.id,
       "websiteUrlPartnershipId"        -> OrganisationDetails.questionPartnershipWebsite.id,
       "websiteUrlRegSocietyId"         -> OrganisationDetails.questionRsWebsite.id,
       "websiteUrlNonUkBranchId"        -> OrganisationDetails.questionNonUkWithWebsite.id,
@@ -502,7 +508,7 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.bobsburgers.com"))))
   )
 
   val sampleFailAnswersToQuestions = Map(
@@ -516,7 +522,7 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.bobsburgers.com"))))
   )
 
   val sampleWarningsAnswersToQuestions = Map(
@@ -530,7 +536,7 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question4.id    -> ActualAnswer.TextAnswer("bob@burgers.com")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.bobsburgers.com"))))
   )
 
   val sampleAnswersToQuestions1 = Map(
@@ -542,13 +548,13 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question1.id    -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (ResponsibleIndividualDetails.question3.id    -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id    -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+    (ResponsibleIndividualDetails.question6.id    -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.bobsburgers.com"))))
   )
 
   val sampleAnswersToQuestions2 = Map(
     (OrganisationDetails.questionOrgType.id             -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
     (OrganisationDetails.questionNonUkWithoutOrgName.id -> ActualAnswer.TextAnswer("Overseas SA")),
-    (OrganisationDetails.questionNonUkWithoutWebsite.id -> ActualAnswer.TextAnswer("https://www.overseas-sa.com")),
+    (OrganisationDetails.questionNonUkWithoutWebsite.id -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.overseas-sa.com")))),
     (OrganisationDetails.questionNonUkWithoutAddress.id -> ActualAnswer.InternationalAddressAnswer(InternationalAddress(
       Some("1 Cr Victor Hugo"),
       Some("Zone Industrielle"),
@@ -561,7 +567,7 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question1.id          -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (ResponsibleIndividualDetails.question3.id          -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id          -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id          -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+    (ResponsibleIndividualDetails.question6.id          -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.bobsburgers.com"))))
   )
 
   val sampleNonUkWithoutUkBranchAnswersToQuestions = sampleAnswersToQuestions2
@@ -571,7 +577,7 @@ trait QuestionnaireTestData {
   val sampleNonUkWithoutUkBranchAnswersExpiredAttachment = Map(
     (OrganisationDetails.questionOrgType.id                -> ActualAnswer.SingleChoiceAnswer("Non-UK company without a branch or place of business in the UK")),
     (OrganisationDetails.questionNonUkWithoutOrgName.id    -> ActualAnswer.TextAnswer("Overseas SA")),
-    (OrganisationDetails.questionNonUkWithoutWebsite.id    -> ActualAnswer.TextAnswer("https://www.overseas-sa.com")),
+    (OrganisationDetails.questionNonUkWithoutWebsite.id    -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.overseas-sa.com")))),
     (OrganisationDetails.questionNonUkWithoutAddress.id    -> ActualAnswer.InternationalAddressAnswer(InternationalAddress(
       Some("1 Cr Victor Hugo"),
       Some("Zone Industrielle"),
@@ -587,7 +593,7 @@ trait QuestionnaireTestData {
     (ResponsibleIndividualDetails.question1.id             -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (ResponsibleIndividualDetails.question3.id             -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id             -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id             -> ActualAnswer.TextAnswer("https://www.bobsburgers.com"))
+    (ResponsibleIndividualDetails.question6.id             -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.bobsburgers.com"))))
   )
 
   val sampleLlpAnswersToQuestions = Map(
@@ -595,11 +601,11 @@ trait QuestionnaireTestData {
     (OrganisationDetails.questionPartnershipType.id    -> ActualAnswer.SingleChoiceAnswer("Limited liability partnership")),
     (OrganisationDetails.questionLpOrgName.id          -> ActualAnswer.TextAnswer("Dave's Limited Partnership Ltd")),
     (OrganisationDetails.questionPartnershipUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
-    (OrganisationDetails.questionPartnershipWebsite.id -> ActualAnswer.TextAnswer("https://www.dave.com")),
+    (OrganisationDetails.questionPartnershipWebsite.id -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.dave.com")))),
     (ResponsibleIndividualDetails.question1.id         -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (ResponsibleIndividualDetails.question3.id         -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id         -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id         -> ActualAnswer.TextAnswer("https://www.dave.com"))
+    (ResponsibleIndividualDetails.question6.id         -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.dave.com"))))
   )
 
   val sampleGeneralPartnershipAnswersToQuestions = Map(
@@ -614,11 +620,11 @@ trait QuestionnaireTestData {
       Some("AB1 2CD")
     ))),
     (OrganisationDetails.questionPartnershipUtr.id     -> ActualAnswer.TextAnswer("1234567890")),
-    (OrganisationDetails.questionPartnershipWebsite.id -> ActualAnswer.NoAnswer),
+    (OrganisationDetails.questionPartnershipWebsite.id -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None))),
     (ResponsibleIndividualDetails.question1.id         -> ActualAnswer.SingleChoiceAnswer("Yes")),
     (ResponsibleIndividualDetails.question3.id         -> ActualAnswer.TextAnswer("Managing Director")),
     (ResponsibleIndividualDetails.question5.id         -> ActualAnswer.TextAnswer("01234 567890")),
-    (ResponsibleIndividualDetails.question6.id         -> ActualAnswer.TextAnswer("https://www.dave.com"))
+    (ResponsibleIndividualDetails.question6.id         -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://www.dave.com"))))
   )
 
   def firstQuestion(questionnaire: Questionnaire) = questionnaire.questions.head.question.id

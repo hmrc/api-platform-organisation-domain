@@ -247,6 +247,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
     val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
     val fullName        = FullName(Some("Bob"), Some("Roberts"))
     val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+    val conditionalText = ConditionalText(Some("Yes"), Some("https://example.com"))
     val attachment      = Attachment(Some("12345678"), Some(instant))
 
     def passAnswer(question: Question): ActualAnswer = {
@@ -265,6 +266,7 @@ trait SubmissionsTestData extends QuestionBuilder with QuestionnaireTestData wit
         case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _, _)                                              => ActualAnswer.InternationalAddressAnswer(intlAddress)
         case Question.NameQuestion(_, _, _, _, _, _, _, _, _, _)                                                              => ActualAnswer.NameAnswer(fullName)
         case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _, _)                                                       => ActualAnswer.ConfirmNameAnswer(confirmFullName)
+        case Question.ConditionalTextQuestion(_, _, _, _, _, _, _, _, _, _)                                                   => ActualAnswer.ConditionalTextAnswer(conditionalText)
         case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _, _)                                                     => ActualAnswer.CompanyNumberAnswer("12345678")
         case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _, _)                                                        => ActualAnswer.AttachmentAnswer(attachment)
         case Question.YesNoQuestion(id, wording, statement, _, _, _, yesMarking, noMarking, absence, _, _, _)                 =>
@@ -309,6 +311,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
   val intlAddress     = InternationalAddress(Some("1 Cr Victor Hugo"), None, None, Some("St Etienne"), Some("Auvergne"), Some("123456"), Some("France"))
   val fullName        = FullName(Some("Bob"), Some("Roberts"))
   val confirmFullName = ConfirmFullName(Some("Yes"), Some("Bob"), Some("Roberts"))
+  val conditionalText = ConditionalText(Some("Yes"), Some("https://example.com"))
   val attachment      = Attachment(Some("12345678"), Some(instant))
 
   def answerForQuestion(desiredMark: Mark)(question: Question): Map[Question.Id, Option[ActualAnswer]] = {
@@ -356,6 +359,7 @@ trait AnsweringQuestionsHelper extends FixedClock {
       case Question.InternationalAddressQuestion(_, _, _, _, _, _, _, _, _, _) => List(Some(ActualAnswer.InternationalAddressAnswer(intlAddress)))
       case Question.NameQuestion(_, _, _, _, _, _, _, _, _, _)                 => List(Some(ActualAnswer.NameAnswer(fullName)))
       case Question.ConfirmNameQuestion(_, _, _, _, _, _, _, _, _, _)          => List(Some(ActualAnswer.ConfirmNameAnswer(confirmFullName)))
+      case Question.ConditionalTextQuestion(_, _, _, _, _, _, _, _, _, _)      => List(Some(ActualAnswer.ConditionalTextAnswer(conditionalText)))
       case Question.CompanyNumberQuestion(_, _, _, _, _, _, _, _, _, _)        => List(Some(ActualAnswer.CompanyNumberAnswer("12345678")))
       case Question.AttachmentQuestion(_, _, _, _, _, _, _, _, _, _)           => List(Some(ActualAnswer.AttachmentAnswer(attachment)))
 
@@ -405,7 +409,7 @@ trait MarkedSubmissionsTestData extends SubmissionsTestData with AnsweringQuesti
     (OrganisationDetails.questionLtdOrgName.id    -> Mark.Pass),
     (ResponsibleIndividualDetails.question3.id    -> Mark.Pass),
     (ResponsibleIndividualDetails.question4.id    -> Mark.Pass),
-    (ResponsibleIndividualDetails.question6.id    -> Mark.Fail)
+    (ResponsibleIndividualDetails.question6.id    -> Mark.Pass)
   )
 
   val markedSubmission = MarkedSubmission(submittedSubmission, markedAnswers)

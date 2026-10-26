@@ -164,7 +164,7 @@ class AnswerQuestionSpec extends HmrcSpec with Inside with QuestionBuilder with 
           ResponsibleIndividualDetails.question1.id -> ActualAnswer.SingleChoiceAnswer("Yes"),
           ResponsibleIndividualDetails.question3.id -> ActualAnswer.TextAnswer("Manager"),
           ResponsibleIndividualDetails.question5.id -> ActualAnswer.TextAnswer("01234 567890"),
-          ResponsibleIndividualDetails.question6.id -> ActualAnswer.TextAnswer("https://example.com")
+          ResponsibleIndividualDetails.question6.id -> ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some("https://example.com")))
         )
         val res     = AnswerQuestion.deriveProgressOfQuestionnaire(ResponsibleIndividualDetails.questionnaire, context, answers)
 

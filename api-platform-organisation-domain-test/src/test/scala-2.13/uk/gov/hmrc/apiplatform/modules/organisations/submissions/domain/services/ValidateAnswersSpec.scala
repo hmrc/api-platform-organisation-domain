@@ -305,6 +305,32 @@ class ValidateAnswersSpec extends HmrcSpec with Inside with QuestionBuilder with
       }
     }
 
+    "for conditional text questions" in {
+      val question = conditionalTextQuestion(1).copy(validation = Some(TextValidation.Url))
+      type AnswerMatching = Either[ValidationErrors, ActualAnswer]
+      val website                        = "https://example.com"
+      val validAnswer: AnswerMatching    = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("Yes"), Some(website))))
+      val validNoAnswer: AnswerMatching  = Right(ActualAnswer.ConditionalTextAnswer(ConditionalText(Some("No"), None)))
+      val failureMissing: AnswerMatching = Left(ValidationErrors(ValidationError("text", "Question requires an answer")))
+      val failureChoice: AnswerMatching  = Left(ValidationErrors(ValidationError("isPresent", "Radio button selection required")))
+      val failureUrl: AnswerMatching     = Left(ValidationErrors(ValidationError("text", "Test.com is not a valid Url")))
+      val cases                          = Table(
+        ("description", "question", "answers", "expects"),
+        ("Yes with valid URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq(website)), validAnswer),
+        ("Yes with blank URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("")), failureMissing),
+        ("Yes with invalid URL", question, Map("isPresent" -> Seq("Yes"), "text" -> Seq("Test.com")), failureUrl),
+        ("No ignores posted text", question, Map("isPresent" -> Seq("No"), "text" -> Seq("Test.com")), validNoAnswer),
+        ("no choice selected", question, Map.empty[String, Seq[String]], failureChoice)
+      )
+
+      forAll(cases) { (_: String, question: Question, answers: Map[String, Seq[String]], expects: AnswerMatching) =>
+        expects match {
+          case Right(answer) => ValidateAnswers.validate(question, answers) shouldBe Right(answer)
+          case Left(errors)  => ValidateAnswers.validate(question, answers) shouldBe Left(errors)
+        }
+      }
+    }
+
     "for company number questions" in {
       val question = companyNumberQuestion(1)
       type AnswerMatching = Either[Unit, ActualAnswer]
